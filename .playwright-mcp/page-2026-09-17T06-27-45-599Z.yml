@@ -1,0 +1,1298 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e7]: The data (based on the search query performed), on this webpage of 99acres.com has been made available for informational purposes only and no representation or warranty is expressly or impliedly given as to its accuracy. Any investment decisions that you take should not be based relying solely on the information that is available on the website 99acres.com or downloaded from it. Nothing contained herein shall be deemed to constitute legal advice, solicitation, invitation to acquire by the developer/builder or any other entity. You are advised to visit the relevant RERA website and contact builder/advertisers directly to know more about the project before taking any decision based on the contents displayed on the website 99acres.com. If you have any question or want to share feedback, feel free to write to us at projects-feedback@99acres.com. Trademarks belong to the respective owners.
+      - button "OK, Got it" [ref=e9] [cursor=pointer]
+    - generic [ref=e13]:
+      - link [ref=e15] [cursor=pointer]:
+        - /url: https://www.99acres.com
+        - img "Logo" [ref=e16]
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19] [cursor=pointer]: Projects
+          - generic [ref=e24]:
+            - generic [ref=e25] [cursor=pointer]: Ghaziabad
+            - textbox "Add more" [ref=e29]
+            - generic [ref=e30]:
+              - generic [ref=e33]: "|"
+              - generic [ref=e34] [cursor=pointer]
+        - generic:
+          - generic:
+            - list
+      - generic [ref=e35]:
+        - generic [ref=e37] [cursor=pointer]:
+          - generic [ref=e38]: Post property
+          - generic [ref=e39]: FREE
+        - generic [ref=e43] [cursor=pointer]
+        - generic [ref=e46] [cursor=pointer]
+    - generic [ref=e48]:
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e54] [cursor=pointer]:
+            - img "Truvae Fragrance Homes Elevation" [ref=e55]
+            - generic [ref=e56]:
+              - generic [ref=e57]: All Photos & Videos
+              - emphasis [ref=e60]: "21"
+          - generic [ref=e61]:
+            - generic [ref=e65] [cursor=pointer]:
+              - generic [ref=e66]: Videos
+              - emphasis [ref=e69]: "3"
+            - generic [ref=e71] [cursor=pointer]:
+              - img "Truvae Fragrance Homes Aerial View" [ref=e72]
+              - generic [ref=e73]:
+                - generic [ref=e74]: Outdoors
+                - emphasis [ref=e77]: "6"
+        - generic [ref=e78]:
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - link "Home" [ref=e85] [cursor=pointer]:
+                - /url: https://www.99acres.com
+              - generic [ref=e86]: ›
+            - generic [ref=e87]:
+              - link "Projects in Ghaziabad" [ref=e90] [cursor=pointer]:
+                - /url: https://www.99acres.com/new-projects-in-ghaziabad-ffid
+              - generic [ref=e91]: ›
+            - generic [ref=e92]:
+              - link "Nai Basti Dundahera" [ref=e95] [cursor=pointer]:
+                - /url: https://www.99acres.com/new-projects-in-nai-basti-dundahera-ghaziabad-ffid
+              - generic [ref=e96]: ›
+            - generic [ref=e97]:
+              - link "Siddharth Vihar" [ref=e100] [cursor=pointer]:
+                - /url: https://www.99acres.com/new-projects-in-siddharth-vihar-ghaziabad-ffid
+              - generic [ref=e101]: ›
+            - generic [ref=e102]: Truvae Fragrance Homes
+          - generic [ref=e104]:
+            - generic [ref=e105]:
+              - generic [ref=e106]:
+                - img "Truvae Fragrance Homes Ghaziabad" [ref=e108]
+                - heading "Truvae Fragrance Homes Shortlist-Button Siddharth Vihar, Ghaziabad" [level=1] [ref=e109]:
+                  - text: Truvae Fragrance Homes
+                  - img "Shortlist-Button" [ref=e113] [cursor=pointer]
+                  - generic [ref=e114]: Siddharth Vihar, Ghaziabad
+              - generic [ref=e117]:
+                - generic [ref=e118] [cursor=pointer]: RERA
+                - generic [ref=e123]: No Brokerage
+                - generic [ref=e124]: 3D Floor Plans Available
+                - generic [ref=e126]: +40 Top Facilities
+            - generic [ref=e127]:
+              - button "View Number" [ref=e130] [cursor=pointer]
+              - generic [ref=e131] [cursor=pointer]:
+                - generic [ref=e133]:
+                  - generic [ref=e134]: "3.2"
+                  - generic [ref=e135]: ★
+                - generic [ref=e136]:
+                  - generic [ref=e137]: Overall Rating
+                  - generic [ref=e141]:
+                    - text: Based on
+                    - generic [ref=e142]: 6 Reviews by residents
+          - generic [ref=e147]:
+            - generic [ref=e148]: Construction Status
+            - generic [ref=e149]: Ready To Move
+            - generic [ref=e150]: Since Dec, 2023
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - generic [ref=e159]:
+                - generic [ref=e160]:
+                  - heading "₹ 1.04 - 1.36 Cr" [level=2] [ref=e161]
+                  - generic [ref=e162] [cursor=pointer]: + Charges
+                - button "Download Brochure" [ref=e163] [cursor=pointer]
+              - generic [ref=e166]: PRICE RANGE
+              - generic [ref=e167]: 2, 3 BHK Apartment
+            - generic [ref=e171]:
+              - generic [ref=e172]:
+                - generic [ref=e173]:
+                  - generic [ref=e174]: 2 BHK
+                  - generic [ref=e175]: Apartment
+                - generic [ref=e176]: Super Built-up Area
+                - generic [ref=e177]:
+                  - generic [ref=e178]: 1105 - 1280 sqft
+                  - generic [ref=e179]: (102.66 - 118.92 sqm)
+                  - generic [ref=e180] [cursor=pointer]
+                - generic [ref=e182]:
+                  - generic [ref=e183]: ₹ 1.04 - 1.11 Cr
+                  - generic [ref=e184] [cursor=pointer]: + Charges
+              - generic [ref=e185]:
+                - generic [ref=e186]:
+                  - generic [ref=e187]: 3 BHK
+                  - generic [ref=e188]: Apartment
+                - generic [ref=e189]: Super Built-up Area
+                - generic [ref=e190]:
+                  - generic [ref=e191]: 1350 sqft
+                  - generic [ref=e192]: (125.42 sqm)
+                  - generic [ref=e193] [cursor=pointer]
+                - generic [ref=e195]:
+                  - generic [ref=e196]: ₹ 1.36 Cr
+                  - generic [ref=e197] [cursor=pointer]: + Charges
+      - generic [ref=e218]:
+        - generic [ref=e219]:
+          - heading "Why you should consider Truvae Fragrance Homes?" [level=2] [ref=e225]
+          - generic [ref=e227]:
+            - list [ref=e228]:
+              - listitem [ref=e229]: High entrance door with a height of 8'0' (approx)
+              - listitem [ref=e230]: offers a luxury clubhouse with recreational facilities
+              - listitem [ref=e231]: A strategically planned project that prioritizes low density
+            - generic [ref=e232] [cursor=pointer]: View 4 more
+        - generic [ref=e234]:
+          - generic [ref=e235]:
+            - generic [ref=e236]: DEVELOPED BY
+            - generic [ref=e237]: FRAGRANCE DREAM HOMES PVT. LTD.
+            - button "Contact Builder" [ref=e241] [cursor=pointer]
+          - img "FRAGRANCE DREAM HOMES PVT. LTD." [ref=e243]
+  - generic [ref=e268]:
+    - generic [ref=e272]:
+      - generic [ref=e275]:
+        - heading "Top Facilities" [level=2] [ref=e276]
+        - link "View All (44)" [ref=e277] [cursor=pointer]:
+          - /url: "javascript:throw new Error('React has blocked a javascript: URL as a security precaution.')"
+      - generic [ref=e278]:
+        - paragraph
+        - paragraph [ref=e281]: Truvae Fragrance Homes Ghaziabad presents an exclusive opportunity to own a stun
+        - paragraph
+      - generic [ref=e283]:
+        - generic [ref=e284]: Swimming Pool
+        - generic [ref=e287]: Gymnasium
+        - generic [ref=e290]: Club House
+        - generic [ref=e293]: Children's Play Area
+        - generic [ref=e296]: Park
+        - generic [ref=e299]: Amphitheatre
+        - generic [ref=e302]: Jogging Track
+        - generic [ref=e305]: Badminton Court
+        - generic [ref=e308]: Basketball Court
+      - link "View Facility Photos" [ref=e313] [cursor=pointer]:
+        - /url: "javascript:throw new Error('React has blocked a javascript: URL as a security precaution.')"
+    - generic [ref=e317]:
+      - generic [ref=e319]:
+        - heading "Location Advantages" [level=2] [ref=e322]
+        - emphasis [ref=e325] [cursor=pointer]: View All (7)
+      - generic [ref=e326]:
+        - paragraph
+        - paragraph [ref=e329]: Siddharth Vihar is one of the prime locations to buy a home in Ghaziabad. There
+        - paragraph
+      - generic [ref=e332]:
+        - generic [ref=e335]:
+          - generic [ref=e336]: Delhi Public School
+          - generic [ref=e337]: 1.5 KM
+        - generic [ref=e340]:
+          - generic [ref=e341]: Santosh Deemed to be University
+          - generic [ref=e342]: 2.1 KM
+        - generic [ref=e345]:
+          - generic [ref=e346]: Fortis Hospital
+          - generic [ref=e347]: 9.7 KM
+        - generic [ref=e350]:
+          - generic [ref=e351]: Shaheed Sthal Metro Station
+          - generic [ref=e352]: 4.6 KM
+        - generic [ref=e355]:
+          - generic [ref=e356]: NE 3
+          - generic [ref=e357]: 7.8 KM
+        - generic [ref=e360]:
+          - generic [ref=e361]: Jaipuria Mall
+          - generic [ref=e362]: 7.2 KM
+        - generic [ref=e365]:
+          - generic [ref=e366]: IGI Airport
+          - generic [ref=e367]: 36.6 KM
+    - generic [ref=e369]:
+      - generic [ref=e370]:
+        - heading "More about Truvae Fragrance Homes" [level=2] [ref=e371]
+        - paragraph [ref=e374]: Truvae Fragrance Homes in Siddharth Vihar, Ghaziabad is a ready-to-move housing society. It offers apartments in varied budget range. These units are a perfect combination of comfort and style, specifically designed to suit your requirements and conv
+      - generic [ref=e375]:
+        - generic [ref=e376] [cursor=pointer]
+        - heading "Project Details" [level=2] [ref=e378]
+        - generic [ref=e382]:
+          - generic [ref=e383]:
+            - generic [ref=e384]: About Project
+            - generic [ref=e385]: Specifications
+          - generic [ref=e392]:
+            - generic [ref=e393]: Overview
+            - table [ref=e395]:
+              - rowgroup [ref=e396]:
+                - row [ref=e397]:
+                  - cell "Towers" [ref=e398]
+                  - cell "7" [ref=e399]
+                - row [ref=e400]:
+                  - cell "Floors" [ref=e401]
+                  - cell "21" [ref=e402]
+                - row [ref=e403]:
+                  - cell "Units" [ref=e404]
+                  - cell "472" [ref=e405]
+                - row [ref=e406]:
+                  - cell "Total Project Area" [ref=e407]
+                  - cell "4 acres (16.2K sq.m.)" [ref=e408]
+                - row [ref=e409]:
+                  - cell "Open Area" [ref=e410]
+                  - cell "70 %" [ref=e411]
+            - generic [ref=e412]: FLOORING 4'X2' Vitrified Designer tiles in Drawing/Dining/ Bedrooms & Kitchen. Anti-skid ceramic tiles in toilet and balconies. Wooden finish tiles in Master Bed Room. DOORS & WINDOWS High entrance door with height of 8'0" (approx). Skin molded doors in bedroom & toilets. All external doors/windows of UPVC/aluminum. WOOD WORK Complete wood work (below & above platform) in kitchen & cupboards in all bedrooms (Optional). TOILETS Toilet with designer ceramic tiles up to door level. Branded WC, Washbasins & CP Fittings. (Jaguar or equivalent). KITCHEN Kitchen with 2'0" wide granite working platform with stainless steel sink and designer ceramic tiles upto 2'0" ht above working platform. CEILINGS Designer false ceiling in Dining area (Optional). WALL FINISHES Oil bound emulsion, P.O.P. punning work in all bedrooms & kitchen. ELECTRICALS All copper wiring in P.V.C. concealed conduits. Provision of adequate lights and proper points as/ layouts. Modular switches shall be used. Ceiling fans in drawing, dining and in all bedrooms. SUPER STRUCTURE Earthquake resistant RCC framed structure. EXTERNAL FINISH Exterior in superior paints finish. FEATURES Club house with recreational facilities and well equipped gym, SPA. Swimming pool with deck loungers'. Amphitheatres, Jogging tracks, Yoga/ Meditation and theme parks. Indoor activity zones for snooker, TT & stick hockey table. 24x7 water, electricity & security. Paved roads with lush green area and water features.
+          - button "I'm interested in this project" [ref=e416] [cursor=pointer]
+    - generic [ref=e417]:
+      - generic [ref=e418]:
+        - heading "View official brochure" [level=2] [ref=e419]
+        - text: Truvae Fragrance Homes Brochure & Payment Plan
+      - generic [ref=e420]:
+        - generic [ref=e424]: Download Payment Plan of Truvae Fragrance Homes
+        - button "Download" [ref=e426] [cursor=pointer]
+    - generic [ref=e430]:
+      - generic [ref=e431]:
+        - generic [ref=e432]:
+          - generic [ref=e433]:
+            - heading "Resale Properties in this project" [level=3] [ref=e434]
+            - generic [ref=e436]:
+              - emphasis [ref=e437]: Showing for
+              - generic [ref=e438] [cursor=pointer]: All Options
+          - generic [ref=e443]:
+            - emphasis [ref=e444] [cursor=pointer]: View all 22 Properties
+            - generic [ref=e445] [cursor=pointer]: in
+            - link "Truvae Fragrance Homes for Resale" [ref=e446] [cursor=pointer]:
+              - /url: https://www.99acres.com/truvae-fragrance-homes-resale-in-siddharth-vihar-ghaziabad-43406-npffid
+        - generic [ref=e452]:
+          - generic [ref=e456] [cursor=pointer]:
+            - generic [ref=e457]: ₹ 1.35 Cr
+            - generic [ref=e458]: By Dealer
+            - generic [ref=e459]: Posted on 06th Aug, 2026
+          - generic [ref=e466] [cursor=pointer]:
+            - generic [ref=e467]: ₹ 1.1 Cr
+            - generic [ref=e468]: By Dealer
+            - generic [ref=e469]: Posted on 06th Aug, 2026
+          - generic [ref=e476] [cursor=pointer]:
+            - generic [ref=e477]: ₹ 1.33 Cr
+            - generic [ref=e478]: By Dealer
+            - generic [ref=e479]: Posted on 18th Aug, 2026
+          - generic [ref=e486] [cursor=pointer]:
+            - generic [ref=e487]: ₹ 1.35 Cr
+            - generic [ref=e488]: By Dealer
+            - generic [ref=e489]: Posted on 18th Aug, 2026
+          - generic [ref=e496] [cursor=pointer]:
+            - generic [ref=e497]: ₹ 1.02 Cr
+            - generic [ref=e498]: By Dealer
+            - generic [ref=e499]: Posted on 01st Aug, 2026
+      - generic [ref=e503]:
+        - generic [ref=e504]:
+          - generic [ref=e505]:
+            - heading "Properties for rent in this project" [level=3] [ref=e506]
+            - generic [ref=e508]:
+              - emphasis [ref=e509]: Showing for
+              - generic [ref=e510] [cursor=pointer]: All Options
+          - generic [ref=e515]:
+            - emphasis [ref=e516] [cursor=pointer]: View all 9 Properties
+            - generic [ref=e517] [cursor=pointer]: in
+            - link "Truvae Fragrance Homes for Rent" [ref=e518] [cursor=pointer]:
+              - /url: https://www.99acres.com/truvae-fragrance-homes-for-rent-in-siddharth-vihar-ghaziabad-43406-rnpffid
+        - generic [ref=e524]:
+          - generic [ref=e528] [cursor=pointer]:
+            - generic [ref=e529]: ₹ 25,000
+            - generic [ref=e530]: By Owner
+            - generic [ref=e531]: Posted on 14th Sep, 2026
+          - generic [ref=e538] [cursor=pointer]:
+            - generic [ref=e539]: ₹ 26,000
+            - generic [ref=e540]: By Dealer
+            - generic [ref=e541]: Posted on 04th Aug, 2026
+          - generic [ref=e548] [cursor=pointer]:
+            - generic [ref=e549]: ₹ 21,000
+            - generic [ref=e550]: By Dealer
+            - generic [ref=e551]: Posted on 08th Sep, 2026
+          - generic [ref=e558] [cursor=pointer]:
+            - generic [ref=e559]: ₹ 23,500
+            - generic [ref=e560]: By Dealer
+            - generic [ref=e561]: Posted on 26th Jul, 2026
+          - generic [ref=e568] [cursor=pointer]:
+            - generic [ref=e569]: ₹ 23,000
+            - generic [ref=e570]: By Dealer
+            - generic [ref=e571]: Posted on 18th Aug, 2026
+    - generic [ref=e578]:
+      - heading "People who viewed this also viewed" [level=2] [ref=e580]
+      - generic [ref=e584]:
+        - generic [ref=e585]:
+          - generic [ref=e586]:
+            - generic [ref=e588]:
+              - generic "99acres"
+              - img "T and T Digitown Elevation" [ref=e589]
+            - generic [ref=e590]: Under Construction
+          - generic [ref=e592]:
+            - link "T and T Digitown" [ref=e593] [cursor=pointer]:
+              - /url: https://www.99acres.com/t-and-t-digitown-siddharth-vihar-ghaziabad-npxid-r382880
+            - generic [ref=e594]: 3 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e595]: ₹ 1.94 - 2.76 Cr
+            - generic [ref=e596]: View Details
+        - generic [ref=e598]:
+          - generic [ref=e599]:
+            - generic [ref=e601]:
+              - generic "99acres"
+              - img "AU Cosmos Corner Elevation" [ref=e602]
+            - generic [ref=e603]: Possession from Apr 2031
+          - generic [ref=e605]:
+            - link "AU Cosmos Corner" [ref=e606] [cursor=pointer]:
+              - /url: https://www.99acres.com/au-cosmos-corner-siddharth-vihar-ghaziabad-npxid-r467549
+            - generic [ref=e607]: 3, 5 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e608]: ₹ 1.23 - 2.19 Cr
+            - generic [ref=e609]: View Details
+        - generic [ref=e611]:
+          - generic [ref=e612]:
+            - generic [ref=e614]:
+              - generic "99acres"
+              - img "Apex The Kremlin Elevation" [ref=e615]
+            - generic [ref=e616]: Ready To Move
+          - generic [ref=e618]:
+            - link "Apex The Kremlin" [ref=e619] [cursor=pointer]:
+              - /url: https://www.99acres.com/apex-the-kremlin-siddharth-vihar-ghaziabad-npxid-r83363
+            - generic [ref=e620]: 2, 3, 4 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e621]: ₹ 97.68 L - 2.2 Cr
+            - generic [ref=e622]: View Details
+        - generic [ref=e624]:
+          - generic [ref=e625]:
+            - generic [ref=e627]:
+              - generic "99acres"
+              - img "SG Shikhar Height Elevation" [ref=e628]
+            - generic [ref=e629]: Ready To Move
+          - generic [ref=e631]:
+            - link "SG Shikhar Height" [ref=e632] [cursor=pointer]:
+              - /url: https://www.99acres.com/sg-shikhar-height-siddharth-vihar-ghaziabad-npxid-r278633
+            - generic [ref=e633]: 2, 3 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e634]: ₹ 1.21 - 2.21 Cr
+            - generic [ref=e635]: View Details
+        - generic [ref=e637]:
+          - generic [ref=e638]:
+            - generic [ref=e640]:
+              - generic "99acres"
+              - img "Apex Quebec Aerial View" [ref=e641]
+            - generic [ref=e642]: Possession from Mar 2027
+          - generic [ref=e644]:
+            - link "Apex Quebec" [ref=e645] [cursor=pointer]:
+              - /url: https://www.99acres.com/apex-quebec-siddharth-vihar-ghaziabad-npxid-r390759
+            - generic [ref=e646]: 2, 3 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e647]: ₹ 1.05 - 2.29 Cr
+            - generic [ref=e648]: View Details
+        - generic [ref=e650]:
+          - generic [ref=e651]:
+            - generic [ref=e653]:
+              - generic "99acres"
+              - img "T and T Eutopia Elevation" [ref=e654]
+            - generic [ref=e655]: Under Construction
+          - generic [ref=e657]:
+            - link "T and T Eutopia" [ref=e658] [cursor=pointer]:
+              - /url: https://www.99acres.com/t-and-t-eutopia-siddharth-vihar-ghaziabad-npxid-r370562
+            - generic [ref=e659]: 3, 4 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e660]: ₹ 2.52 - 3.11 Cr
+            - generic [ref=e661]: View Details
+        - generic [ref=e663]:
+          - generic [ref=e664]:
+            - generic [ref=e666]:
+              - generic "99acres"
+              - img "Saya Gold Avenue Elevation" [ref=e667]
+            - generic [ref=e668]: Ready To Move
+          - generic [ref=e670]:
+            - link "Saya Gold Avenue" [ref=e671] [cursor=pointer]:
+              - /url: https://www.99acres.com/saya-gold-avenue-vaibhav-khand-ghaziabad-npxid-r63501
+            - generic [ref=e672]: 3, 4, 5 BHK Apartment in Vaibhav Khand, Ghaziabad
+            - generic [ref=e673]: ₹ 1.85 - 7.36 Cr
+            - generic [ref=e674]: View Details
+        - generic [ref=e676]:
+          - generic [ref=e677]:
+            - generic [ref=e679]:
+              - generic "99acres"
+              - img "Marina Suites Aerial View" [ref=e680]
+            - generic [ref=e681]: Ready To Move
+          - generic [ref=e683]:
+            - link "Marina Suites" [ref=e684] [cursor=pointer]:
+              - /url: https://www.99acres.com/marina-suites-nh-24-highway-ghaziabad-npxid-r72931
+            - generic [ref=e685]: 2, 3 BHK Apartment in NH 24 Highway, Ghaziabad
+            - generic [ref=e686]: ₹ 71.7 L - 1.3 Cr
+            - generic [ref=e687]: View Details
+        - generic [ref=e689]:
+          - generic [ref=e690]:
+            - generic [ref=e692]:
+              - generic "99acres"
+              - img "Trine Towers Elevation" [ref=e693]
+            - generic [ref=e694]: Ready To Move
+          - generic [ref=e696]:
+            - link "Trine Towers" [ref=e697] [cursor=pointer]:
+              - /url: https://www.99acres.com/trine-towers-ahinsa-khand-2-ghaziabad-npxid-r271189
+            - generic [ref=e698]: 2, 3 BHK Apartment in Ahinsa Khand 2, Ghaziabad
+            - generic [ref=e699]: ₹ 85.5 L - 1.65 Cr
+            - generic [ref=e700]: View Details
+        - generic [ref=e702]:
+          - generic [ref=e703]:
+            - generic [ref=e705]:
+              - generic "99acres"
+              - img "Wave City Elevation" [ref=e706]
+            - generic [ref=e707]: Ready To Move
+          - generic [ref=e709]:
+            - link "Wave City" [ref=e710] [cursor=pointer]:
+              - /url: https://www.99acres.com/wave-city-nh-24-highway-ghaziabad-npxid-r2738
+            - generic [ref=e711]: 2 BHK Apartment | Land in NH 24 Highway, Ghaziabad
+            - generic [ref=e712]: ₹ 91.7 L - 4.84 Cr
+            - generic [ref=e713]: View Details
+    - generic [ref=e720]:
+      - generic [ref=e721]:
+        - heading "Similar Projects" [level=2] [ref=e722]
+        - generic [ref=e723]: Projects similar to the current one in terms of price and other property attributes
+      - generic [ref=e729]:
+        - generic [ref=e730]:
+          - generic [ref=e731]:
+            - generic [ref=e733]:
+              - generic "99acres"
+              - img "Prateek Grand Begonia Elevation" [ref=e734]
+            - generic [ref=e735]: Possession from Jun 2029
+          - generic [ref=e737]:
+            - link "Prateek Grand Begonia" [ref=e738] [cursor=pointer]:
+              - /url: https://www.99acres.com/prateek-grand-begonia-siddharth-vihar-ghaziabad-npxid-r438048
+            - generic [ref=e739]: 2, 3 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e740]: ₹ 1.3 - 2.64 Cr
+            - generic [ref=e741]: View Details
+        - generic [ref=e743]:
+          - generic [ref=e744]:
+            - generic [ref=e746]:
+              - generic "99acres"
+              - img "T Homes Aerial View" [ref=e747]
+            - generic [ref=e748]: Under Construction
+          - generic [ref=e750]:
+            - link "T Homes" [ref=e751] [cursor=pointer]:
+              - /url: https://www.99acres.com/t-homes-siddharth-vihar-ghaziabad-npxid-r312765
+            - generic [ref=e752]: 3, 4 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e753]: ₹ 1.76 - 2.54 Cr
+            - generic [ref=e754]: View Details
+        - generic [ref=e756]:
+          - generic [ref=e757]:
+            - generic [ref=e759]:
+              - generic "99acres"
+              - img "SKA Atlantis Elevation" [ref=e760]
+            - generic [ref=e761]: Possession from Apr 2031
+          - generic [ref=e763]:
+            - link "SKA Atlantis" [ref=e764] [cursor=pointer]:
+              - /url: https://www.99acres.com/ska-atlantis-siddharth-vihar-ghaziabad-npxid-r459279
+            - generic [ref=e765]: 3, 4 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e766]: ₹ 1.8 - 3.65 Cr
+            - generic [ref=e767]: View Details
+        - generic [ref=e769]:
+          - generic [ref=e770]:
+            - generic [ref=e772]:
+              - generic "99acres"
+              - img "Panchsheel Prime 390 Elevation" [ref=e773]
+            - generic [ref=e774]: Ready To Move
+          - generic [ref=e776]:
+            - link "Panchsheel Prime 390" [ref=e777] [cursor=pointer]:
+              - /url: https://www.99acres.com/panchsheel-prime-390-govind-puram-ghaziabad-npxid-r265239
+            - generic [ref=e778]: 3 BHK Apartment in Govind Puram, Ghaziabad
+            - generic [ref=e779]: ₹ 1.35 Cr
+            - generic [ref=e780]: View Details
+        - generic [ref=e782]:
+          - generic [ref=e783]:
+            - generic [ref=e785]:
+              - generic "99acres"
+              - img "SVP Gulmohur Residency Elevation" [ref=e786]
+            - generic [ref=e787]: Ready To Move
+          - generic [ref=e789]:
+            - link "SVP Gulmohur Residency" [ref=e790] [cursor=pointer]:
+              - /url: https://www.99acres.com/svp-gulmohur-residency-ahinsa-khand-2-ghaziabad-npxid-r14760
+            - generic [ref=e791]: 2, 3 BHK Apartment in Ahinsa Khand 2, Ghaziabad
+            - generic [ref=e792]: ₹ 1.1 - 1.49 Cr
+            - generic [ref=e793]: View Details
+        - generic [ref=e795]:
+          - generic [ref=e796]:
+            - generic [ref=e798]:
+              - generic "99acres"
+              - img "Prateek Grand City Elevation" [ref=e799]
+            - generic [ref=e800]: Ready To Move
+          - generic [ref=e802]:
+            - link "Prateek Grand City" [ref=e803] [cursor=pointer]:
+              - /url: https://www.99acres.com/prateek-grand-city-siddharth-vihar-ghaziabad-npxid-r24988
+            - generic [ref=e804]: 2, 3 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e805]: ₹ 92.4 L - 2.15 Cr
+            - generic [ref=e806]: View Details
+        - generic [ref=e808]:
+          - generic [ref=e809]:
+            - generic [ref=e811]:
+              - generic "99acres"
+              - img "Gaurs Siddhartham Elevation" [ref=e812]
+            - generic [ref=e813]: Ready To Move
+          - generic [ref=e815]:
+            - link "Gaurs Siddhartham" [ref=e816] [cursor=pointer]:
+              - /url: https://www.99acres.com/gaurs-siddhartham-siddharth-vihar-ghaziabad-npxid-r268877
+            - generic [ref=e817]: 2, 3 BHK Apartment in Siddharth Vihar, Ghaziabad
+            - generic [ref=e818]: ₹ 96.39 L - 1.22 Cr
+            - generic [ref=e819]: View Details
+        - generic [ref=e821]:
+          - generic [ref=e822]:
+            - generic [ref=e824]:
+              - generic "99acres"
+              - img "99acres" [ref=e825]
+            - generic [ref=e826]: Ready To Move
+          - generic [ref=e828]:
+            - link "Landcraft Golflinks" [ref=e829] [cursor=pointer]:
+              - /url: https://www.99acres.com/landcraft-golflinks-nh-24-highway-ghaziabad-npxid-r7380
+            - generic [ref=e830]: 2, 3 BHK Apartment in NH 24 Highway, Ghaziabad
+            - generic [ref=e831]: ₹ 90.8 L - 1.9 Cr
+            - generic [ref=e832]: View Details
+        - generic [ref=e834]:
+          - generic [ref=e835]:
+            - generic [ref=e837]:
+              - generic "99acres"
+              - img "Mahagun Montage Elevation" [ref=e838]
+            - generic [ref=e839]: Possession from Jun 2028
+          - generic [ref=e841]:
+            - link "Mahagun Montage" [ref=e842] [cursor=pointer]:
+              - /url: https://www.99acres.com/mahagun-montage-crossing-republik-ghaziabad-npxid-r268613
+            - generic [ref=e843]: 2, 3, 4, 5 BHK Apartment in Crossing Republik, Ghaziabad
+            - generic [ref=e844]: ₹ 53.99 L - 2.06 Cr
+            - generic [ref=e845]: View Details
+        - generic [ref=e847]:
+          - generic [ref=e848]:
+            - generic [ref=e850]:
+              - generic "99acres"
+              - img "Migsun Atharva Elevation" [ref=e851]
+            - generic [ref=e852]: Under Construction
+          - generic [ref=e854]:
+            - link "Migsun Atharva" [ref=e855] [cursor=pointer]:
+              - /url: https://www.99acres.com/migsun-atharva-raj-nagar-extension-ghaziabad-npxid-r337829
+            - generic [ref=e856]: 3, 4 BHK Apartment in Raj Nagar Extension, Ghaziabad
+            - generic [ref=e857]: ₹ 1 - 1.92 Cr
+            - generic [ref=e858]: View Details
+    - generic [ref=e867]:
+      - generic [ref=e869]:
+        - heading "Check prices in registry records In Truvae Fragrance Homes, Siddharth Vihar" [level=2] [ref=e870]
+        - generic [ref=e871] [cursor=pointer]
+      - table [ref=e872]:
+        - rowgroup [ref=e873]:
+          - row
+          - row [ref=e874]:
+            - cell "6 recent transactions in this project in last 3 years Avg. transaction rates are Rs. 7821/sqft Based on last 6 transactions" [ref=e875]:
+              - generic [ref=e881] [cursor=pointer]:
+                - generic [ref=e882]: 6 recent transactions in this project
+                - generic [ref=e883]: in last 3 years
+              - generic [ref=e891] [cursor=pointer]:
+                - generic [ref=e892]: Avg. transaction rates are Rs. 7821/sqft
+                - generic [ref=e893]: Based on last 6 transactions
+    - generic [ref=e899]:
+      - generic [ref=e900]:
+        - generic [ref=e903]:
+          - heading "Society Reviews" [level=2] [ref=e904]
+          - generic [ref=e906]: Truvae Fragrance Homes Ratings and Reviews
+        - button "Review your Society / Locality" [ref=e908] [cursor=pointer]
+      - generic [ref=e910]:
+        - generic [ref=e912]:
+          - generic [ref=e913]:
+            - generic [ref=e915]:
+              - generic [ref=e916]: "3.2"
+              - generic [ref=e917]: /5
+            - generic [ref=e951]: Average Rating
+            - generic [ref=e952]: (6 Total Reviews)
+          - generic [ref=e953]:
+            - generic [ref=e956]:
+              - generic [ref=e957]: "5"
+              - generic [ref=e958]: ★
+            - generic [ref=e961]:
+              - generic [ref=e962]: "4"
+              - generic [ref=e963]: ★
+            - generic [ref=e966]:
+              - generic [ref=e967]: "3"
+              - generic [ref=e968]: ★
+            - generic [ref=e971]:
+              - generic [ref=e972]: "2"
+              - generic [ref=e973]: ★
+            - generic [ref=e976]:
+              - generic [ref=e977]: "1"
+              - generic [ref=e978]: ★
+          - generic [ref=e979]: See how ratings are calculated
+        - generic [ref=e981]:
+          - generic [ref=e982]: Ratings by features
+          - list [ref=e984]:
+            - listitem [ref=e985]:
+              - generic [ref=e986]:
+                - generic [ref=e994]:
+                  - generic [ref=e995]: Construction
+                  - generic [ref=e996]: 3 out of 5
+                - generic [ref=e1004]:
+                  - generic [ref=e1005]: Amenities
+                  - generic [ref=e1006]: 3.2 out of 5
+                - generic [ref=e1014]:
+                  - generic [ref=e1015]: Management
+                  - generic [ref=e1016]: 3 out of 5
+                - generic [ref=e1024]:
+                  - generic [ref=e1025]: Connectivity
+                  - generic [ref=e1026]: 4 out of 5
+                - generic [ref=e1034]:
+                  - generic [ref=e1035]: Green Area
+                  - generic [ref=e1036]: 3.5 out of 5
+          - generic [ref=e1038]: Popular Mentions
+          - generic [ref=e1041]:
+            - generic:
+              - generic "4 Positive Mentions"
+              - generic "2 Negative Mentions"
+            - generic [ref=e1042]: 67% Positive Mentions
+      - generic [ref=e1045]:
+        - generic [ref=e1047]:
+          - heading "Reviews by residents" [level=2] [ref=e1048]
+          - generic [ref=e1050]: Truvae Fragrance Homes Reviews
+        - button [ref=e1051] [cursor=pointer]:
+          - link "View All" [ref=e1053]:
+            - /url: https://www.99acres.com/truvae-fragrance-homes-reviews-ratings-siddharth-vihar-ghaziabad-npxid-r30288
+      - generic [ref=e1054]:
+        - generic [ref=e1055] [cursor=pointer]: Recommended
+        - generic [ref=e1056] [cursor=pointer]: Negative First
+        - generic [ref=e1057] [cursor=pointer]: Recent First
+      - generic [ref=e1061]:
+        - generic [ref=e1063]:
+          - generic [ref=e1066]:
+            - generic [ref=e1068]:
+              - generic [ref=e1069]: "3.2"
+              - generic [ref=e1070]: ★
+            - generic [ref=e1071]: 4 people found it helpful
+          - generic [ref=e1072]: Positives
+          - paragraph [ref=e1075]: Well, I've been calling Truvae Fragrance home for over five years now. Gotta say, the location is a real winner. Connectivity is excellent; I can hop on a bus o
+          - generic [ref=e1076]:
+            - generic [ref=e1077]: S
+            - generic [ref=e1078]:
+              - generic [ref=e1079]: Shoaib
+              - generic [ref=e1080]: Owner | 1Y ago
+        - generic [ref=e1082]:
+          - generic [ref=e1085]:
+            - generic [ref=e1087]:
+              - generic [ref=e1088]: "2.5"
+              - generic [ref=e1089]: ★
+            - generic [ref=e1090]: 2 people found it helpful
+          - generic [ref=e1091]: Positives
+          - paragraph [ref=e1094]: I gotta say, the location is pretty sweet, being so close to the Noida Metro makes getting around a breeze. Plus, the layout of the place is actually quite nice
+          - generic [ref=e1095]:
+            - generic [ref=e1096]: S
+            - generic [ref=e1097]:
+              - generic [ref=e1098]: Shabana
+              - generic [ref=e1099]: Owner | 1Y ago
+        - generic [ref=e1101]:
+          - generic [ref=e1106]:
+            - generic [ref=e1107]: "2.7"
+            - generic [ref=e1108]: ★
+          - generic [ref=e1109]: Positives
+          - paragraph [ref=e1112]: Okay, so Truvae Fragrance has some good points, I'll give it that. The layout seems suitable for families. The security system gives me peace of mind. It's also
+          - generic [ref=e1113]:
+            - generic [ref=e1114]: D
+            - generic [ref=e1115]:
+              - generic [ref=e1116]: Devansh
+              - generic [ref=e1117]: Owner | 1Y ago
+        - generic [ref=e1119]:
+          - generic [ref=e1122]: Read All
+          - generic [ref=e1123]: 6 Reviews
+      - generic [ref=e1124]:
+        - generic [ref=e1125]:
+          - generic [ref=e1126]: Is this helpful?
+          - generic [ref=e1127]: "Yes"
+          - generic [ref=e1129]: "No"
+        - button "Review your Society / Locality" [ref=e1132] [cursor=pointer]
+    - generic [ref=e1134]:
+      - heading "Explore Siddharth Vihar, Ghaziabad" [level=3] [ref=e1135]
+      - generic [ref=e1136]: Uttar Pradesh | Pincode - 201009
+      - link "Siddharth Vihar, Ghaziabad Overview" [ref=e1137] [cursor=pointer]:
+        - /url: https://www.99acres.com/siddharth-vihar-ghaziabad-overview-piffid
+      - generic [ref=e1139]:
+        - heading "Points to Consider" [level=3] [ref=e1141]
+        - generic [ref=e1145]:
+          - generic [ref=e1146]: What's great here!
+          - list [ref=e1147]:
+            - listitem [ref=e1148]:
+              - paragraph [ref=e1149]: Siddharth Vihar is one of the prime real estate hotspots in Ghaziabad
+            - listitem [ref=e1150]:
+              - paragraph [ref=e1151]: Its location along NE-3 and good road access to Delhi attract buyers
+            - listitem [ref=e1152]:
+              - paragraph [ref=e1153]: This rapidly developing locale is known for its planned infrastructure
+            - listitem [ref=e1154]:
+              - paragraph [ref=e1155]: It offers 2 & 3 BHK apartments from mid to premium budget segment
+            - listitem [ref=e1156]:
+              - paragraph [ref=e1157]: Presence of key real estate players has garnered investors' attention here
+            - listitem [ref=e1158]:
+              - paragraph [ref=e1159]: Prestige Group and T & T Group have new project launches here
+            - listitem [ref=e1160]:
+              - paragraph [ref=e1161]: Prateek, Gaurs, Apex, and Antriksh groups have ready projects here
+            - listitem [ref=e1162]:
+              - paragraph [ref=e1163]: Uttar Pradesh Housing and Development Board also provides home units
+            - listitem [ref=e1164]:
+              - paragraph [ref=e1165]: The locality enjoys access to Ghaziabad Railway Station at 4km
+            - listitem [ref=e1166]:
+              - paragraph [ref=e1167]: RRTS Station at Ghaziabad is also accessible within a radius of 5km
+            - listitem [ref=e1168]:
+              - paragraph [ref=e1169]: Noida Electronic City Station on Blue Metro Line is about 6km away
+            - listitem [ref=e1170]:
+              - paragraph [ref=e1171]: The area is 9km from Sahibabad and Meerut Road industrial areas
+            - listitem [ref=e1172]:
+              - paragraph [ref=e1173]: Good connectivity to Sector 62 & 63's job hubs (8km) attracts tenants here
+            - listitem [ref=e1174]:
+              - paragraph [ref=e1175]: St Andrews, Indirapuram Public, & Golden Public schools are at 4-7km
+            - listitem [ref=e1176]:
+              - paragraph [ref=e1177]: Indirapuram Habitat Centre, a famous mall, is about 6km away
+            - listitem [ref=e1178]:
+              - paragraph [ref=e1179]: Noida Multispeciality, Kailash and Manipal hospitals are located at 9-10km
+            - listitem [ref=e1180]:
+              - paragraph [ref=e1181]: Indira Priyadarshini & Hindon Eco are popular parks within 5km
+            - listitem [ref=e1182]:
+              - paragraph [ref=e1183]: Anand Vihar Bus Terminal is at 15km, offering intercity access
+            - listitem [ref=e1184]:
+              - paragraph [ref=e1185]: Siddhartha Vihar is 34km from Indira Gandhi International Airport
+    - generic [ref=e1188]:
+      - heading "About FRAGRANCE DREAM HOMES PVT. LTD." [level=2] [ref=e1190]
+      - generic [ref=e1191]:
+        - img "FRAGRANCE DREAM HOMES PVT. LTD." [ref=e1193]
+        - generic [ref=e1194]:
+          - link "FRAGRANCE DREAM HOMES PVT. LTD." [ref=e1196] [cursor=pointer]:
+            - /url: https://builders.99acres.com/truvae-group-builders-developers-bid-22603
+          - button "Contact Builder" [ref=e1198] [cursor=pointer]
+      - paragraph [ref=e1202]: Truvae Group is a real estate developer focused on creating quality homes and communities. Their website showcases their projects and commitment to customer satisfaction.
+    - generic [ref=e1206]:
+      - heading "Frequently Asked Questions" [level=4] [ref=e1211]
+      - generic [ref=e1214]:
+        - generic [ref=e1215]:
+          - generic [ref=e1216]: Q
+          - generic [ref=e1218]:
+            - generic [ref=e1219]: Are there any metro stations near Truvae Fragrance Homes?
+            - generic [ref=e1220]: Hindon river metro station is closest from Truvae Fragrance Homes location.
+        - generic [ref=e1221]:
+          - generic [ref=e1222]: Q
+          - generic [ref=e1224]:
+            - generic [ref=e1225]: How is Siddharth Vihar in terms of safety and security?
+            - generic [ref=e1226]: Residents have rated this locality 4/5 on safety. This will help you in making the right decision if you are worried about the safety in this locality.
+        - generic [ref=e1227]:
+          - generic [ref=e1228]: Q
+          - generic [ref=e1230]:
+            - generic [ref=e1231]: Does Truvae Fragrance Homes has any sports facility?
+            - generic [ref=e1232]: Truvae Fragrance Homes offers Indoor Games, Swimming Pool, Table Tennis and Billiards facilities to its residents.
+        - generic [ref=e1233]:
+          - generic [ref=e1234]: Q
+          - generic [ref=e1236]:
+            - generic [ref=e1237]: Are there any security features in Truvae Fragrance Homes?
+            - generic [ref=e1238]: Truvae Fragrance Homes brings Intercom, 24x7 Security, Security Cabin and Video Door Security to ensure all the residents feel safe and secure.
+        - generic [ref=e1239]:
+          - generic [ref=e1240]: Q
+          - generic [ref=e1242]:
+            - generic [ref=e1243]: How much stamp duty do I need to pay on Truvae Fragrance Homes?
+            - generic [ref=e1244]: You need to pay minimum 6.0% percent as stamp duty on this project.
+        - generic [ref=e1245]:
+          - generic [ref=e1246]: Q
+          - generic [ref=e1248]:
+            - generic [ref=e1249]: Who are the top builders/brokers dealing in this Truvae Fragrance Homes?
+            - generic [ref=e1250]: FRAGRANCE DREAM HOMES PVT. LTD. and Propfin Solutions Pvt Ltd are some of the top builders/brokers dealing in this project.
+        - generic [ref=e1251]:
+          - generic [ref=e1252]: Q
+          - generic [ref=e1254]:
+            - generic [ref=e1255]: How far is Truvae Fragrance Homes location from the airport?
+            - generic [ref=e1256]: Truvae Fragrance Homes location is 36.6 Km from the airport.
+        - generic [ref=e1257]:
+          - generic [ref=e1258]: Q
+          - generic [ref=e1260]:
+            - generic [ref=e1261]: Are there any hospitals near Truvae Fragrance Homes?
+            - generic [ref=e1262]: Krishna Family Hospital and Infertility Center, Dr. Mala Sharma and Santosh Medical and Dental College Hospitals are closest to Truvae Fragrance Homes location.
+      - generic [ref=e1264]: Load More
+    - generic [ref=e1267]:
+      - heading "Truvae Fragrance Homes - Quick Links" [level=6] [ref=e1268]
+      - generic [ref=e1270]:
+        - link "Truvae Fragrance Homes Floor Plans":
+          - /url: https://www.99acres.com/truvae-fragrance-homes-floor-plan-siddharth-vihar-ghaziabad-npxid-r30288
+        - generic [ref=e1271] [cursor=pointer]:
+          - link "Truvae Fragrance Homes Floor Plans":
+            - /url: https://www.99acres.com/truvae-fragrance-homes-floor-plan-siddharth-vihar-ghaziabad-npxid-r30288
+          - link "Truvae Fragrance Homes Floor Plans" [ref=e1272]:
+            - /url: https://www.99acres.com/truvae-fragrance-homes-floor-plan-siddharth-vihar-ghaziabad-npxid-r30288
+        - link "Truvae Fragrance Homes Photos and Videos":
+          - /url: https://www.99acres.com/truvae-fragrance-homes-photos-siddharth-vihar-ghaziabad-npxid-r30288
+        - generic [ref=e1273] [cursor=pointer]:
+          - link "Truvae Fragrance Homes Photos and Videos":
+            - /url: https://www.99acres.com/truvae-fragrance-homes-photos-siddharth-vihar-ghaziabad-npxid-r30288
+          - link "Truvae Fragrance Homes Photos and Videos" [ref=e1274]:
+            - /url: https://www.99acres.com/truvae-fragrance-homes-photos-siddharth-vihar-ghaziabad-npxid-r30288
+        - link "Truvae Fragrance Homes Directions":
+          - /url: https://www.99acres.com/truvae-fragrance-homes-location-map-siddharth-vihar-ghaziabad-npxid-r30288
+        - generic [ref=e1275] [cursor=pointer]:
+          - link "Truvae Fragrance Homes Directions":
+            - /url: https://www.99acres.com/truvae-fragrance-homes-location-map-siddharth-vihar-ghaziabad-npxid-r30288
+          - link "Truvae Fragrance Homes Directions" [ref=e1276]:
+            - /url: https://www.99acres.com/truvae-fragrance-homes-location-map-siddharth-vihar-ghaziabad-npxid-r30288
+        - link "Truvae Fragrance Homes Amenities":
+          - /url: https://www.99acres.com/truvae-fragrance-homes-facilities-siddharth-vihar-ghaziabad-npxid-r30288
+        - generic [ref=e1277] [cursor=pointer]:
+          - link "Truvae Fragrance Homes Amenities":
+            - /url: https://www.99acres.com/truvae-fragrance-homes-facilities-siddharth-vihar-ghaziabad-npxid-r30288
+          - link "Truvae Fragrance Homes Amenities" [ref=e1278]:
+            - /url: https://www.99acres.com/truvae-fragrance-homes-facilities-siddharth-vihar-ghaziabad-npxid-r30288
+        - link "Truvae Fragrance Homes FAQs":
+          - /url: https://www.99acres.com/truvae-fragrance-homes-faqs-siddharth-vihar-ghaziabad-npxid-r30288
+        - generic [ref=e1279] [cursor=pointer]:
+          - link "Truvae Fragrance Homes FAQs":
+            - /url: https://www.99acres.com/truvae-fragrance-homes-faqs-siddharth-vihar-ghaziabad-npxid-r30288
+          - link "Truvae Fragrance Homes FAQs" [ref=e1280]:
+            - /url: https://www.99acres.com/truvae-fragrance-homes-faqs-siddharth-vihar-ghaziabad-npxid-r30288
+        - link "Truvae Fragrance Homes Reviews":
+          - /url: https://www.99acres.com/truvae-fragrance-homes-reviews-ratings-siddharth-vihar-ghaziabad-npxid-r30288
+        - generic [ref=e1281] [cursor=pointer]:
+          - link "Truvae Fragrance Homes Reviews":
+            - /url: https://www.99acres.com/truvae-fragrance-homes-reviews-ratings-siddharth-vihar-ghaziabad-npxid-r30288
+          - link "Truvae Fragrance Homes Reviews" [ref=e1282]:
+            - /url: https://www.99acres.com/truvae-fragrance-homes-reviews-ratings-siddharth-vihar-ghaziabad-npxid-r30288
+    - region [ref=e1284]:
+      - generic [ref=e1285]:
+        - heading "Related to your search" [level=4] [ref=e1286]
+        - generic [ref=e1290]:
+          - navigation [ref=e1291]:
+            - heading "Popular Projects" [level=3] [ref=e1292]
+            - list [ref=e1294]:
+              - listitem [ref=e1295]:
+                - link "SKA Atlantis in Siddharth Vihar" [ref=e1297] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ska-atlantis-siddharth-vihar-ghaziabad-npxid-r459279
+              - listitem [ref=e1299]:
+                - link "T and T Eutopia in Siddharth Vihar" [ref=e1301] [cursor=pointer]:
+                  - /url: https://www.99acres.com/t-and-t-eutopia-siddharth-vihar-ghaziabad-npxid-r370562
+              - listitem [ref=e1303]:
+                - link "AU Cosmos Corner in Siddharth Vihar" [ref=e1305] [cursor=pointer]:
+                  - /url: https://www.99acres.com/au-cosmos-corner-siddharth-vihar-ghaziabad-npxid-r467549
+              - listitem [ref=e1307]:
+                - link "Gaurs Siddhartham in Siddharth Vihar" [ref=e1309] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gaurs-siddhartham-siddharth-vihar-ghaziabad-npxid-r268877
+              - listitem [ref=e1311]:
+                - link "SG Shikhar Height in Siddharth Vihar" [ref=e1313] [cursor=pointer]:
+                  - /url: https://www.99acres.com/sg-shikhar-height-siddharth-vihar-ghaziabad-npxid-r278633
+              - listitem [ref=e1315]:
+                - link "SG Nakshatra in Siddharth Vihar" [ref=e1317] [cursor=pointer]:
+                  - /url: https://www.99acres.com/sg-nakshatra-siddharth-vihar-ghaziabad-npxid-r471795
+              - listitem [ref=e1319]:
+                - link "Trine Towers in Ahinsa Khand 2" [ref=e1321] [cursor=pointer]:
+                  - /url: https://www.99acres.com/trine-towers-ahinsa-khand-2-ghaziabad-npxid-r271189
+              - listitem [ref=e1323]:
+                - link "Prateek Grand City in Siddharth Vihar" [ref=e1325] [cursor=pointer]:
+                  - /url: https://www.99acres.com/prateek-grand-city-siddharth-vihar-ghaziabad-npxid-r24988
+              - listitem [ref=e1327]:
+                - link "Apex The Kremlin in Siddharth Vihar" [ref=e1329] [cursor=pointer]:
+                  - /url: https://www.99acres.com/apex-the-kremlin-siddharth-vihar-ghaziabad-npxid-r83363
+              - listitem [ref=e1331]:
+                - link "Saya Gold Avenue in Vaibhav Khand" [ref=e1333] [cursor=pointer]:
+                  - /url: https://www.99acres.com/saya-gold-avenue-vaibhav-khand-ghaziabad-npxid-r63501
+              - listitem [ref=e1335]:
+                - link "Rishabh Cloud9 Skylish Towers in Indirapuram" [ref=e1337] [cursor=pointer]:
+                  - /url: https://www.99acres.com/rishabh-cloud9-skylish-towers-indirapuram-ghaziabad-npxid-r155035
+              - listitem [ref=e1339]:
+                - link "ATS Advantage in Ahinsa Khand 1" [ref=e1341] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ats-advantage-ahinsa-khand-1-ghaziabad-npxid-r87
+              - listitem [ref=e1343]:
+                - link "T Homes in Siddharth Vihar" [ref=e1345] [cursor=pointer]:
+                  - /url: https://www.99acres.com/t-homes-siddharth-vihar-ghaziabad-npxid-r312765
+              - listitem [ref=e1347]:
+                - link "Property Parlour Residencies in Indirapuram" [ref=e1349] [cursor=pointer]:
+                  - /url: https://www.99acres.com/property-parlour-residencies-indirapuram-ghaziabad-npxid-r470590
+              - listitem [ref=e1351]:
+                - link "SVP Gulmohur Residency in Ahinsa Khand 2" [ref=e1353] [cursor=pointer]:
+                  - /url: https://www.99acres.com/svp-gulmohur-residency-ahinsa-khand-2-ghaziabad-npxid-r14760
+              - listitem [ref=e1355]:
+                - link "Niho Scottish Garden in Ahinsa Khand 2" [ref=e1357] [cursor=pointer]:
+                  - /url: https://www.99acres.com/niho-scottish-garden-ahinsa-khand-2-ghaziabad-npxid-r28536
+              - listitem [ref=e1359]:
+                - link "Apex Quebec in Siddharth Vihar" [ref=e1361] [cursor=pointer]:
+                  - /url: https://www.99acres.com/apex-quebec-siddharth-vihar-ghaziabad-npxid-r390759
+            - generic [ref=e1364]: View 14 More
+          - navigation [ref=e1365]:
+            - heading "New Launched Projects" [level=3] [ref=e1366]
+            - list [ref=e1368]:
+              - listitem [ref=e1369]:
+                - link "Harmony One Of One The Horizon Residences in Vaibhav Khand" [ref=e1371] [cursor=pointer]:
+                  - /url: https://www.99acres.com/harmony-one-of-one-the-horizon-residences-vaibhav-khand-ghaziabad-npxid-r454200
+              - listitem [ref=e1373]:
+                - link "Rhomes Miraabilis in Ramprastha Greens" [ref=e1375] [cursor=pointer]:
+                  - /url: https://www.99acres.com/rhomes-miraabilis-ramprastha-greens-ghaziabad-npxid-r445935
+              - listitem [ref=e1377]:
+                - link "Angel Green Homez in Mohan Nagar" [ref=e1379] [cursor=pointer]:
+                  - /url: https://www.99acres.com/angel-green-homez-mohan-nagar-ghaziabad-npxid-r83133
+              - listitem [ref=e1381]:
+                - link "Karyan Trevana Residences in Mehrauli" [ref=e1383] [cursor=pointer]:
+                  - /url: https://www.99acres.com/karyan-trevana-residences-mehrauli-ghaziabad-npxid-r462038
+              - listitem [ref=e1385]:
+                - link "Ska Imperia in Wave City" [ref=e1387] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ska-imperia-wave-city-ghaziabad-npxid-r467896
+              - listitem [ref=e1389]:
+                - link "Baba Kailasha Estate in Noor Nagar" [ref=e1391] [cursor=pointer]:
+                  - /url: https://www.99acres.com/baba-kailasha-estate-noor-nagar-ghaziabad-npxid-r442514
+              - listitem [ref=e1393]:
+                - link "Windsor Majesty in Raj Nagar Extension" [ref=e1395] [cursor=pointer]:
+                  - /url: https://www.99acres.com/windsor-majesty-raj-nagar-extension-ghaziabad-npxid-r443579
+              - listitem [ref=e1397]:
+                - link "Jai Jagdishpuram Grand Homz in Noor Nagar" [ref=e1399] [cursor=pointer]:
+                  - /url: https://www.99acres.com/jai-jagdishpuram-grand-homz-noor-nagar-ghaziabad-npxid-r457837
+              - listitem [ref=e1401]:
+                - link "SG Orchard in Bhovapur" [ref=e1403] [cursor=pointer]:
+                  - /url: https://www.99acres.com/sg-orchard-bhovapur-ghaziabad-npxid-r462539
+              - listitem [ref=e1405]:
+                - link "Jade County in Wave City" [ref=e1407] [cursor=pointer]:
+                  - /url: https://www.99acres.com/jade-county-wave-city-ghaziabad-npxid-r445044
+              - listitem [ref=e1409]:
+                - link "T and T Atlas in Raj Nagar Extension" [ref=e1411] [cursor=pointer]:
+                  - /url: https://www.99acres.com/t-and-t-atlas-raj-nagar-extension-ghaziabad-npxid-r450167
+              - listitem [ref=e1413]:
+                - link "Gulshan Empire in Wave City" [ref=e1415] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gulshan-empire-wave-city-ghaziabad-npxid-r466563
+              - listitem [ref=e1417]:
+                - link "SKA Calisto in Wave City" [ref=e1419] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ska-calisto-wave-city-ghaziabad-npxid-r471015
+              - listitem [ref=e1421]:
+                - link "Aditya Rosemont Residency in NH 24 Highway" [ref=e1423] [cursor=pointer]:
+                  - /url: https://www.99acres.com/aditya-rosemont-residency-nh-24-highway-ghaziabad-npxid-r467574
+              - listitem [ref=e1425]:
+                - link "The Prestige City in Indirapuram Extension" [ref=e1427] [cursor=pointer]:
+                  - /url: https://www.99acres.com/the-prestige-city-indirapuram-extension-ghaziabad-npxid-r426690
+              - listitem [ref=e1429]:
+                - link "Uninav Residena in Raj Nagar Extension" [ref=e1431] [cursor=pointer]:
+                  - /url: https://www.99acres.com/uninav-residena-raj-nagar-extension-ghaziabad-npxid-r435533
+            - generic [ref=e1434]: View 13 More
+          - navigation [ref=e1435]:
+            - heading "Under Construction Projects" [level=3] [ref=e1436]
+            - list [ref=e1438]:
+              - listitem [ref=e1439]:
+                - link "Prateek Grand Begonia in Siddharth Vihar" [ref=e1441] [cursor=pointer]:
+                  - /url: https://www.99acres.com/prateek-grand-begonia-siddharth-vihar-ghaziabad-npxid-r438048
+              - listitem [ref=e1443]:
+                - link "T and T Digitown in Siddharth Vihar" [ref=e1445] [cursor=pointer]:
+                  - /url: https://www.99acres.com/t-and-t-digitown-siddharth-vihar-ghaziabad-npxid-r382880
+              - listitem [ref=e1447]:
+                - link "Envyrons Vaastu Homes in Siddharth Vihar" [ref=e1449] [cursor=pointer]:
+                  - /url: https://www.99acres.com/envyrons-vaastu-homes-siddharth-vihar-ghaziabad-npxid-r434135
+              - listitem [ref=e1451]:
+                - link "The Element in Siddharth Vihar" [ref=e1453] [cursor=pointer]:
+                  - /url: https://www.99acres.com/the-element-siddharth-vihar-ghaziabad-npxid-r398469
+              - listitem [ref=e1455]:
+                - link "Gaur Aero Heights in Ajantapuram" [ref=e1457] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gaur-aero-heights-ajantapuram-ghaziabad-npxid-r399797
+              - listitem [ref=e1459]:
+                - link "Rockfort Shriram North View Apartments in Raj Nagar Extension" [ref=e1461] [cursor=pointer]:
+                  - /url: https://www.99acres.com/rockfort-shriram-north-view-apartments-raj-nagar-extension-ghaziabad-npxid-r431016
+              - listitem [ref=e1463]:
+                - link "Symbol Towers in Raj Nagar Extension" [ref=e1465] [cursor=pointer]:
+                  - /url: https://www.99acres.com/symbol-towers-raj-nagar-extension-ghaziabad-npxid-r138953
+              - listitem [ref=e1467]:
+                - link "AIGIN Royal Park in NH 24 Highway" [ref=e1469] [cursor=pointer]:
+                  - /url: https://www.99acres.com/aigin-royal-park-nh-24-highway-ghaziabad-npxid-r419026
+              - listitem [ref=e1471]:
+                - link "Aditya The Kutumb in Aditya World City" [ref=e1473] [cursor=pointer]:
+                  - /url: https://www.99acres.com/aditya-the-kutumb-aditya-world-city-ghaziabad-npxid-r436680
+              - listitem [ref=e1475]:
+                - link "Divyansh Orion Homes in Bamheta" [ref=e1477] [cursor=pointer]:
+                  - /url: https://www.99acres.com/divyansh-orion-homes-bamheta-ghaziabad-npxid-r428193
+              - listitem [ref=e1479]:
+                - link "AU The Sunflower in Aditya World City" [ref=e1481] [cursor=pointer]:
+                  - /url: https://www.99acres.com/au-the-sunflower-aditya-world-city-ghaziabad-npxid-r425773
+              - listitem [ref=e1483]:
+                - link "Amaatra Aero Heights in Sahibabad" [ref=e1485] [cursor=pointer]:
+                  - /url: https://www.99acres.com/amaatra-aero-heights-sahibabad-ghaziabad-npxid-r313511
+              - listitem [ref=e1487]:
+                - link "Wave Eligo in NH 24 Highway" [ref=e1489] [cursor=pointer]:
+                  - /url: https://www.99acres.com/wave-eligo-nh-24-highway-ghaziabad-npxid-r397089
+              - listitem [ref=e1491]:
+                - link "Sikka Kannan Greens in Modinagar" [ref=e1493] [cursor=pointer]:
+                  - /url: https://www.99acres.com/sikka-kannan-greens-modinagar-ghaziabad-npxid-r291757
+              - listitem [ref=e1495]:
+                - link "Ramprastha Imperial Heights in Indirapuram" [ref=e1497] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ramprastha-imperial-heights-indirapuram-ghaziabad-npxid-r352441
+              - listitem [ref=e1499]:
+                - link "Mahagun Montage in Crossing Republik" [ref=e1501] [cursor=pointer]:
+                  - /url: https://www.99acres.com/mahagun-montage-crossing-republik-ghaziabad-npxid-r268613
+              - listitem [ref=e1503]:
+                - link "Metro Suites Bellavie in Sector 13 Vasundhara" [ref=e1505] [cursor=pointer]:
+                  - /url: https://www.99acres.com/metro-suites-bellavie-sector-13-vasundhara-ghaziabad-npxid-r429100
+            - generic [ref=e1508]: View 14 More
+          - navigation [ref=e1509]:
+            - heading "Ready to Move Projects" [level=3] [ref=e1510]
+            - list [ref=e1512]:
+              - listitem [ref=e1513]:
+                - link "Siddharth Vihar Residency in Siddharth Vihar" [ref=e1515] [cursor=pointer]:
+                  - /url: https://www.99acres.com/siddharth-vihar-residency-siddharth-vihar-ghaziabad-npxid-r355834
+              - listitem [ref=e1517]:
+                - link "Rishabh Cloud 9 Towers in Sector 1 Vaishali" [ref=e1519] [cursor=pointer]:
+                  - /url: https://www.99acres.com/rishabh-cloud-9-towers-sector-1-vaishali-ghaziabad-npxid-r245425
+              - listitem [ref=e1521]:
+                - link "Mahagun Puram in NH 24 Highway" [ref=e1523] [cursor=pointer]:
+                  - /url: https://www.99acres.com/mahagun-puram-nh-24-highway-ghaziabad-npxid-r3510
+              - listitem [ref=e1525]:
+                - link "Krishna Apra Gardens in Vaibhav Khand" [ref=e1527] [cursor=pointer]:
+                  - /url: https://www.99acres.com/krishna-apra-gardens-vaibhav-khand-ghaziabad-npxid-r12332
+              - listitem [ref=e1529]:
+                - link "Ajnara Gen 10 in Crossing Republik" [ref=e1531] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ajnara-gen-10-crossing-republik-ghaziabad-npxid-r517
+              - listitem [ref=e1533]:
+                - link "ABA Corp Orange County in Ahinsa Khand 1" [ref=e1535] [cursor=pointer]:
+                  - /url: https://www.99acres.com/aba-corp-orange-county-ahinsa-khand-1-ghaziabad-npxid-r9012
+              - listitem [ref=e1537]:
+                - link "Jaipurias Sunrise Greens in Ahinsa Khand 1" [ref=e1539] [cursor=pointer]:
+                  - /url: https://www.99acres.com/jaipurias-sunrise-greens-ahinsa-khand-1-ghaziabad-npxid-r27756
+              - listitem [ref=e1541]:
+                - link "Aditya Luxuria Estate in Bamheta" [ref=e1543] [cursor=pointer]:
+                  - /url: https://www.99acres.com/aditya-luxuria-estate-bamheta-ghaziabad-npxid-r2176
+              - listitem [ref=e1545]:
+                - link "Paramount Symphony in Crossing Republik" [ref=e1547] [cursor=pointer]:
+                  - /url: https://www.99acres.com/paramount-symphony-crossing-republik-ghaziabad-npxid-r24704
+              - listitem [ref=e1549]:
+                - link "Wave Floors in Wave City" [ref=e1551] [cursor=pointer]:
+                  - /url: https://www.99acres.com/wave-floors-wave-city-ghaziabad-npxid-r199843
+              - listitem [ref=e1553]:
+                - link "Divyansh Onyx in NH 24 Highway" [ref=e1555] [cursor=pointer]:
+                  - /url: https://www.99acres.com/divyansh-onyx-nh-24-highway-ghaziabad-npxid-r78371
+              - listitem [ref=e1557]:
+                - link "Aditya Mega City in Vaibhav Khand" [ref=e1559] [cursor=pointer]:
+                  - /url: https://www.99acres.com/aditya-mega-city-vaibhav-khand-ghaziabad-npxid-r12318
+              - listitem [ref=e1561]:
+                - link "ABA Olive County in Sector 5 Vasundhara" [ref=e1563] [cursor=pointer]:
+                  - /url: https://www.99acres.com/aba-olive-county-sector-5-vasundhara-ghaziabad-npxid-r28474
+              - listitem [ref=e1565]:
+                - link "Gardenia Square 1 in Crossing Republik" [ref=e1567] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gardenia-square-1-crossing-republik-ghaziabad-npxid-r27782
+              - listitem [ref=e1569]:
+                - link "Shipra Krishna Vista in Ahinsa Khand 1" [ref=e1571] [cursor=pointer]:
+                  - /url: https://www.99acres.com/shipra-krishna-vista-ahinsa-khand-1-ghaziabad-npxid-r28986
+              - listitem [ref=e1573]:
+                - link "Prateek The Royal Cliff in Crossing Republik" [ref=e1575] [cursor=pointer]:
+                  - /url: https://www.99acres.com/prateek-the-royal-cliff-crossing-republik-ghaziabad-npxid-r40834
+              - listitem [ref=e1577]:
+                - link "Express Garden in Vaibhav Khand" [ref=e1579] [cursor=pointer]:
+                  - /url: https://www.99acres.com/express-garden-vaibhav-khand-ghaziabad-npxid-r25348
+            - generic [ref=e1582]: View 14 More
+          - navigation [ref=e1583]:
+            - heading "Resale Properties" [level=3] [ref=e1584]
+            - list [ref=e1586]:
+              - listitem [ref=e1587]:
+                - link "Bulland Heights in Crossing Republik" [ref=e1589] [cursor=pointer]:
+                  - /url: https://www.99acres.com/bulland-heights-crossing-republik-ghaziabad-npxid-r27468
+              - listitem [ref=e1591]:
+                - link "Assotech The Nest in Crossing Republik" [ref=e1593] [cursor=pointer]:
+                  - /url: https://www.99acres.com/assotech-the-nest-crossing-republik-ghaziabad-npxid-r163
+              - listitem [ref=e1595]:
+                - link "Landcraft River Heights in Raj Nagar Extension" [ref=e1597] [cursor=pointer]:
+                  - /url: https://www.99acres.com/landcraft-river-heights-raj-nagar-extension-ghaziabad-npxid-r18196
+              - listitem [ref=e1599]:
+                - link "SKG The Merlin in Sector 13 Vasundhara" [ref=e1601] [cursor=pointer]:
+                  - /url: https://www.99acres.com/skg-the-merlin-sector-13-vasundhara-ghaziabad-npxid-r237732
+              - listitem [ref=e1603]:
+                - link "Mahagun Mansion 1 and 2 in Vaibhav Khand" [ref=e1605] [cursor=pointer]:
+                  - /url: https://www.99acres.com/mahagun-mansion-1-and-2-vaibhav-khand-ghaziabad-npxid-r25300
+              - listitem [ref=e1607]:
+                - link "Amrapali Royal in Vaibhav Khand" [ref=e1609] [cursor=pointer]:
+                  - /url: https://www.99acres.com/amrapali-royal-vaibhav-khand-ghaziabad-npxid-r27822
+              - listitem [ref=e1611]:
+                - link "GDA Media Enclave in Sector 6 Vaishali" [ref=e1613] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gda-media-enclave-sector-6-vaishali-ghaziabad-npxid-r63175
+              - listitem [ref=e1615]:
+                - link "Skardi Greens in NH 24 Highway" [ref=e1617] [cursor=pointer]:
+                  - /url: https://www.99acres.com/skardi-greens-nh-24-highway-ghaziabad-npxid-r64884
+              - listitem [ref=e1619]:
+                - link "Parakh The Golden Gate in NH 24 Highway" [ref=e1621] [cursor=pointer]:
+                  - /url: https://www.99acres.com/parakh-the-golden-gate-nh-24-highway-ghaziabad-npxid-r152779
+              - listitem [ref=e1623]:
+                - link "Assotech Windsor Park in Vaibhav Khand" [ref=e1625] [cursor=pointer]:
+                  - /url: https://www.99acres.com/assotech-windsor-park-vaibhav-khand-ghaziabad-npxid-r27768
+              - listitem [ref=e1627]:
+                - link "Gardenia Square-ll in Crossing Republik" [ref=e1629] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gardenia-square-ll-crossing-republik-ghaziabad-npxid-r27794
+              - listitem [ref=e1631]:
+                - link "Express One in Sector 14 Vasundhara" [ref=e1633] [cursor=pointer]:
+                  - /url: https://www.99acres.com/express-one-sector-14-vasundhara-ghaziabad-npxid-r23270
+              - listitem [ref=e1635]:
+                - link "Gaur Global Village in Crossing Republik" [ref=e1637] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gaur-global-village-crossing-republik-ghaziabad-npxid-r25334
+              - listitem [ref=e1639]:
+                - link "Uninav Heights in Raj Nagar Extension" [ref=e1641] [cursor=pointer]:
+                  - /url: https://www.99acres.com/uninav-heights-raj-nagar-extension-ghaziabad-npxid-r2100
+              - listitem [ref=e1643]:
+                - link "Divyansh Arc Angels in Raj Nagar Extension" [ref=e1645] [cursor=pointer]:
+                  - /url: https://www.99acres.com/divyansh-arc-angels-raj-nagar-extension-ghaziabad-npxid-r16616
+              - listitem [ref=e1647]:
+                - link "Gaur Green City in Vaibhav Khand" [ref=e1649] [cursor=pointer]:
+                  - /url: https://www.99acres.com/gaur-green-city-vaibhav-khand-ghaziabad-npxid-r43048
+              - listitem [ref=e1651]:
+                - link "Proview Laboni Apartments in Crossing Republik" [ref=e1653] [cursor=pointer]:
+                  - /url: https://www.99acres.com/proview-laboni-apartments-crossing-republik-ghaziabad-npxid-r25320
+            - generic [ref=e1656]: View 14 More
+          - navigation [ref=e1657]:
+            - heading "Property for Sale in Ghaziabad" [level=3] [ref=e1658]
+            - list [ref=e1660]:
+              - listitem [ref=e1661]:
+                - link "Builders in Ghaziabad" [ref=e1663] [cursor=pointer]:
+                  - /url: https://www.99acres.com/builders-in-ghaziabad-bffid
+              - listitem [ref=e1665]:
+                - link "Flats in Ghaziabad" [ref=e1667] [cursor=pointer]:
+                  - /url: https://www.99acres.com/flats-in-ghaziabad-ffid
+              - listitem [ref=e1669]:
+                - link "House for sale in Ghaziabad" [ref=e1671] [cursor=pointer]:
+                  - /url: https://www.99acres.com/independent-house-in-ghaziabad-ffid
+              - listitem [ref=e1673]:
+                - link "Ready To Move Flats in Ghaziabad" [ref=e1675] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ready-to-move-flats-apartments-in-ghaziabad-ffid
+            - generic [ref=e1678]: View 1 More
+          - navigation [ref=e1679]:
+            - heading "Properties in Siddharth Vihar" [level=3] [ref=e1680]
+            - list [ref=e1682]:
+              - listitem [ref=e1683]:
+                - link "Flats in Siddharth Vihar" [ref=e1685] [cursor=pointer]:
+                  - /url: https://www.99acres.com/flats-in-siddharth-vihar-ghaziabad-ffid
+              - listitem [ref=e1687]:
+                - link "House for sale in Siddharth Vihar" [ref=e1689] [cursor=pointer]:
+                  - /url: https://www.99acres.com/independent-house-in-siddharth-vihar-ghaziabad-ffid
+          - navigation [ref=e1692]:
+            - heading "About Siddharth Vihar" [level=3] [ref=e1693]
+            - list [ref=e1695]:
+              - listitem [ref=e1696]:
+                - link "Property Rates in Siddharth Vihar Ghaziabad" [ref=e1698] [cursor=pointer]:
+                  - /url: https://www.99acres.com/property-rates-and-price-trends-in-siddharth-vihar-ghaziabad-prffid
+          - navigation [ref=e1701]:
+            - heading "Recently Launched Projects in Ghaziabad" [level=3] [ref=e1702]
+            - list [ref=e1704]:
+              - listitem [ref=e1705]:
+                - link "KS Khatudham Extension in Duhai" [ref=e1707] [cursor=pointer]:
+                  - /url: https://www.99acres.com/ks-khatudham-extension-duhai-ghaziabad-npxid-r470451
+              - listitem [ref=e1709]:
+                - link "LP Premium Floors in Indirapuram" [ref=e1711] [cursor=pointer]:
+                  - /url: https://www.99acres.com/lp-premium-floors-indirapuram-ghaziabad-npxid-r468747
+              - listitem [ref=e1713]:
+                - link "Rudra Homes Crown in Sector 3 Vasundhara" [ref=e1715] [cursor=pointer]:
+                  - /url: https://www.99acres.com/rudra-homes-crown-sector-3-vasundhara-ghaziabad-npxid-r471466
+              - listitem [ref=e1717]:
+                - link "AKJ Flora Homez in Vijay Nagar" [ref=e1719] [cursor=pointer]:
+                  - /url: https://www.99acres.com/akj-flora-homez-vijay-nagar-ghaziabad-npxid-r471459
+              - listitem [ref=e1721]:
+                - link "Realty Grid Luxury Floors in Vaishali" [ref=e1723] [cursor=pointer]:
+                  - /url: https://www.99acres.com/realty-grid-luxury-floors-vaishali-ghaziabad-npxid-r470571
+              - listitem [ref=e1725]:
+                - link "Prime Realty Luxury Floors in Indirapuram" [ref=e1727] [cursor=pointer]:
+                  - /url: https://www.99acres.com/prime-realty-luxury-floors-indirapuram-ghaziabad-npxid-r470538
+              - listitem [ref=e1729]:
+                - link "PRG Luxury Floors in Indirapuram" [ref=e1731] [cursor=pointer]:
+                  - /url: https://www.99acres.com/prg-luxury-floors-indirapuram-ghaziabad-npxid-r470522
+              - listitem [ref=e1733]:
+                - link "Kadamba Kunjh in Loni" [ref=e1735] [cursor=pointer]:
+                  - /url: https://www.99acres.com/kadamba-kunjh-loni-ghaziabad-npxid-r468232
+            - generic [ref=e1738]: View 5 More
+    - contentinfo [ref=e1741]:
+      - generic [ref=e1742]:
+        - generic [ref=e1743]:
+          - generic [ref=e1744]:
+            - paragraph [ref=e1745]: 99acres
+            - list [ref=e1746]:
+              - listitem [ref=e1747]:
+                - link "Mobile Apps" [ref=e1748] [cursor=pointer]:
+                  - /url: https://www.99acres.com/mobile-apps
+              - listitem [ref=e1749]:
+                - link "Our Services" [ref=e1750] [cursor=pointer]:
+                  - /url: https://www.99acres.com/do/buyourservices/
+              - listitem [ref=e1751]:
+                - link "Price Trends" [ref=e1752] [cursor=pointer]:
+                  - /url: https://www.99acres.com/real-estate-property-rates-index
+              - listitem [ref=e1753]:
+                - link "Post your Property" [ref=e1754] [cursor=pointer]:
+                  - /url: https://www.99acres.com/postproperty/
+              - listitem [ref=e1755]:
+                - link "Real Estate Investments" [ref=e1756] [cursor=pointer]:
+                  - /url: https://www.99acres.com/real-estate-investments-reint
+              - listitem [ref=e1757]:
+                - link "Builders in India" [ref=e1758] [cursor=pointer]:
+                  - /url: https://builders.99acres.com/
+              - listitem [ref=e1759]:
+                - link "Area Converter" [ref=e1760] [cursor=pointer]:
+                  - /url: https://www.99acres.com/area-converter-utyp
+              - listitem [ref=e1761]:
+                - link "Articles" [ref=e1762] [cursor=pointer]:
+                  - /url: https://www.99acres.com/articles
+              - listitem [ref=e1763]:
+                - link "Rent Receipt" [ref=e1764] [cursor=pointer]:
+                  - /url: https://www.99acres.com/online-rent-receipt
+              - listitem [ref=e1765]:
+                - link "Customer Service" [ref=e1766] [cursor=pointer]:
+                  - /url: https://www.99acres.com/faq/
+              - listitem [ref=e1767]:
+                - link "Sitemap" [ref=e1768] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/sitemap
+          - generic [ref=e1769]:
+            - paragraph [ref=e1770]: Company
+            - list [ref=e1771]:
+              - listitem [ref=e1772]:
+                - link "About us" [ref=e1773] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/about-us
+              - listitem [ref=e1774]:
+                - link "Contact us" [ref=e1775] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/contact-us
+              - listitem [ref=e1776]:
+                - link "Careers with us" [ref=e1777] [cursor=pointer]:
+                  - /url: https://careers.infoedge.com/
+              - listitem [ref=e1778]:
+                - link "Terms & Conditions" [ref=e1779] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/terms-and-conditions
+              - listitem [ref=e1780]:
+                - link "Request Info" [ref=e1781] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/request-info
+              - listitem [ref=e1782]:
+                - link "Feedback" [ref=e1783] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/feedback
+              - listitem [ref=e1784]:
+                - link "Report a problem" [ref=e1785] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/feedback
+              - listitem [ref=e1786]:
+                - link "Testimonials" [ref=e1787] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/testimonials
+              - listitem [ref=e1788]:
+                - link "Privacy Policy" [ref=e1789] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/privacy
+              - listitem [ref=e1790]:
+                - link "Summons/Notices" [ref=e1791] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/summons-notices
+              - listitem [ref=e1792]:
+                - link "Grievances" [ref=e1793] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/grievance
+              - listitem [ref=e1794]:
+                - link "Safety Guide" [ref=e1795] [cursor=pointer]:
+                  - /url: https://www.99acres.com/info/safety-guide
+          - generic [ref=e1796]:
+            - paragraph [ref=e1797]: Our Partners
+            - list [ref=e1798]:
+              - listitem [ref=e1799]:
+                - link "Naukri.com - Jobs in India" [ref=e1800] [cursor=pointer]:
+                  - /url: https://www.naukri.com
+              - listitem [ref=e1801]:
+                - link "Naukrigulf.com - Jobs in middle east" [ref=e1802] [cursor=pointer]:
+                  - /url: https://www.naukrigulf.com
+              - listitem [ref=e1803]:
+                - link "Jeevansathi.com - Matrimonials" [ref=e1804] [cursor=pointer]:
+                  - /url: https://www.jeevansathi.com
+              - listitem [ref=e1805]:
+                - link "Brijj.com - Professional Networking" [ref=e1806] [cursor=pointer]:
+                  - /url: https://www.brijj.com
+              - listitem [ref=e1807]:
+                - link "Shiksha.com - Education Career Info" [ref=e1808] [cursor=pointer]:
+                  - /url: https://www.shiksha.com
+              - listitem [ref=e1809]:
+                - link "Policybazaar.com - Insurance India" [ref=e1810] [cursor=pointer]:
+                  - /url: https://www.policybazaar.com
+              - listitem [ref=e1811]:
+                - link "PaisaBazaar.com" [ref=e1812] [cursor=pointer]:
+                  - /url: https://www.paisabazaar.com/
+              - listitem [ref=e1813]:
+                - link "AmbitionBox.com" [ref=e1814] [cursor=pointer]:
+                  - /url: https://www.ambitionbox.com/
+              - listitem [ref=e1815]:
+                - link "FirstNaukri.com - A jobsite for campus hiring" [ref=e1816] [cursor=pointer]:
+                  - /url: https://www.firstnaukri.com/
+              - listitem [ref=e1817]:
+                - link "Jobhai.com – Find Jobs Near You" [ref=e1818] [cursor=pointer]:
+                  - /url: https://www.jobhai.com/
+              - listitem [ref=e1819]:
+                - link "Techminis.com - Tech news on the go" [ref=e1820] [cursor=pointer]:
+                  - /url: https://techminis.com
+        - generic [ref=e1822]:
+          - paragraph [ref=e1823]: Contact Us
+          - paragraph [ref=e1824]: Toll Free - 1800 41 99099
+          - paragraph [ref=e1825]: 9:30 AM to 6:30 PM (Mon-Sun)
+          - paragraph [ref=e1826]: Email - feedback@99acres.com
+          - paragraph [ref=e1827]: Connect with us
+          - generic [ref=e1828]:
+            - link [ref=e1829] [cursor=pointer]:
+              - /url: https://www.facebook.com/99acres/
+            - link [ref=e1831] [cursor=pointer]:
+              - /url: https://www.youtube.com/user/99acresindia
+            - link [ref=e1833] [cursor=pointer]:
+              - /url: https://twitter.com/99acresIndia
+            - link [ref=e1835] [cursor=pointer]:
+              - /url: https://www.instagram.com/99acresindia
+          - paragraph [ref=e1837]: Download the App
+          - generic:
+            - link "99acres Android App":
+              - /url: https://play.google.com/store/apps/details
+          - generic:
+            - link "99acres iOS App":
+              - /url: https://itunes.apple.com/in/app/99acres-property-search/id781765588
+          - paragraph [ref=e1838]:
+            - text: Usage of 99acres.com to upload content showing area in non standard units or which enables targeting by religion/community/caste/race is prohibited. Please report inappropriate content by writing to us at
+            - link "report abuse" [ref=e1839] [cursor=pointer]:
+              - /url: mailto:services@99acres.com
+          - generic [ref=e1840]: All trademarks are the property of their respective owners.All rights reserved - Info Edge (India) Ltd.A naukri.com group venture

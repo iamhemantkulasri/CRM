@@ -1,0 +1,202 @@
+﻿.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-width, 240px);
+  background: var(--color-card);
+  border-right: 1px solid var(--color-border);
+  padding: 16px 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: none;
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), padding 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Collapsed Sidebar State */
+.app-sidebar.collapsed {
+  width: 68px;
+  padding: 16px 8px;
+}
+
+.app-sidebar.collapsed .sidebar-title,
+.app-sidebar.collapsed .sidebar-nav-item span,
+.app-sidebar.collapsed .sidebar-badge,
+.app-sidebar.collapsed .sidebar-filters,
+.app-sidebar.collapsed .sidebar-stats-card,
+.app-sidebar.collapsed .collapse-text {
+  display: none !important;
+}
+
+.app-sidebar.collapsed .sidebar-nav-item {
+  justify-content: center;
+  padding: 10px 0;
+  gap: 0;
+  border-radius: 10px;
+}
+
+.app-sidebar.collapsed .sidebar-section {
+  align-items: center;
+}
+
+/* Sidebar Toggle Header */
+.sidebar-collapse-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 12px 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-sidebar.collapsed .sidebar-collapse-header {
+  justify-content: center;
+  padding-bottom: 8px;
+}
+
+.collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  color: var(--color-muted-fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.collapse-btn:hover {
+  background: var(--color-card);
+  color: var(--color-fg);
+  border-color: var(--color-primary);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted-fg);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
+  padding: 0 8px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  color: var(--color-muted-fg);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--border-radius-md);
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.sidebar-nav-item:hover {
+  background: var(--color-muted);
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+.sidebar-nav-item.active {
+  color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.09);
+  font-weight: 600;
+}
+
+.sidebar-badge {
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--color-muted);
+  color: var(--color-fg);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.sidebar-nav-item.active .sidebar-badge {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.sidebar-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-fg);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.filter-btn:hover {
+  background: var(--color-muted);
+}
+
+.filter-btn.active {
+  background: rgba(37, 99, 235, 0.09);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.filter-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sidebar-stats-card {
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: flex;
+  }
+}

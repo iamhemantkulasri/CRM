@@ -1,0 +1,398 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic:
+        - link "Back to Catalog" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e8]:
+          - button "Share Property" [ref=e9] [cursor=pointer]
+          - button "Save to Wishlist" [ref=e16] [cursor=pointer]
+      - generic [ref=e19]:
+        - img "Property Image 1" [ref=e21] [cursor=pointer]
+        - img "Property Image 2" [ref=e23] [cursor=pointer]
+        - img "Property Image 3" [ref=e25] [cursor=pointer]
+        - img "Property Image 4" [ref=e27] [cursor=pointer]
+        - img "Property Image 5" [ref=e29] [cursor=pointer]
+        - generic [ref=e30]:
+          - button "Video Tour" [ref=e31]
+          - generic [ref=e35] [cursor=pointer]: 5 Photos
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - heading "Estate 105 – LiveWell Residences" [level=1] [ref=e39]
+          - generic [ref=e40]: Sector Sector 105, Noida Expressway, Noida
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: ₹10 Cr
+            - generic [ref=e48]: ~ ₹26,638 / sq.ft.
+          - generic [ref=e49]:
+            - generic [ref=e50]: 4 BHK
+            - generic [ref=e51]: 3754 sqft
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - generic [ref=e57]: 2 Layouts
+              - generic [ref=e62]: Unit Selector
+            - generic [ref=e63]:
+              - button "Sq.Ft" [pressed] [ref=e64] [cursor=pointer]
+              - button "Sq.Yds" [ref=e65] [cursor=pointer]
+              - button "Sq.M" [ref=e66] [cursor=pointer]
+          - generic [ref=e67]:
+            - button "4 BHK ₹10 Cr ~₹26,638/sqft 3,754 sqft" [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]: 4 BHK
+              - generic [ref=e74]:
+                - generic [ref=e75]: ₹10 Cr
+                - generic [ref=e76]: ~₹26,638/sqft
+              - generic [ref=e77]: 3,754 sqft
+            - button "4 BHK with Family Lounge 4 BHK ₹15 Cr ~₹35,596/sqft 4,214 sqft" [ref=e85] [cursor=pointer]:
+              - generic [ref=e86]:
+                - generic [ref=e87]: 4 BHK with Family Lounge
+                - generic [ref=e88]: 4 BHK
+              - generic [ref=e89]:
+                - generic [ref=e90]: ₹15 Cr
+                - generic [ref=e91]: ~₹35,596/sqft
+              - generic [ref=e92]: 4,214 sqft
+        - generic [ref=e101]:
+          - generic [ref=e102]:
+            - generic [ref=e108]:
+              - heading "Executive Highlights" [level=3] [ref=e109]
+              - text: Why Consider This Asset
+            - generic [ref=e110]: Direct Mandate
+          - list [ref=e111]:
+            - listitem [ref=e112]:
+              - generic [ref=e117]: 100% Clear Title & Verified Land Registry
+            - listitem [ref=e118]:
+              - generic [ref=e123]: Favorable North-East Facing with cross-ventilation
+            - listitem [ref=e124]:
+              - generic [ref=e129]: 2 Covered Parking with dedicated EV charging provision
+            - listitem [ref=e130]:
+              - generic [ref=e135]: Low-density master layout ensuring privacy and expansive greens
+            - listitem [ref=e136]:
+              - generic [ref=e141]: High 8'0" grand entrance door and optimal floor-to-ceiling volume
+          - generic [ref=e142]:
+            - generic [ref=e143]: Zero-Brokerage Mandate
+            - generic [ref=e147]: TGV Institutional Standard
+        - generic [ref=e148]:
+          - generic [ref=e154]:
+            - generic [ref=e155]: Verified Direct Property
+            - generic [ref=e156]: Single-point representation. Deal directly with the assigned corridor advisor.
+          - button "Contact Now" [ref=e157]
+        - generic [ref=e158]:
+          - heading "Property Details" [level=2] [ref=e159]
+          - generic [ref=e160]:
+            - generic [ref=e161]:
+              - generic [ref=e167]: Type
+              - generic [ref=e168]: Luxury Farmhouse
+            - generic [ref=e169]:
+              - generic [ref=e174]: Beds
+              - generic [ref=e175]: 4 BHK
+            - generic [ref=e176]:
+              - generic [ref=e181]: Baths
+              - generic [ref=e182]: "5"
+            - generic [ref=e183]:
+              - generic [ref=e190]: Area
+              - generic [ref=e191]: 3754 sq.ft
+            - generic [ref=e192]:
+              - generic [ref=e197]: Facing
+              - generic [ref=e198]: North-East Facing
+            - generic [ref=e199]:
+              - generic [ref=e205]: Parking
+              - generic [ref=e206]: 2 Covered Parking
+        - generic [ref=e207]:
+          - generic [ref=e208]:
+            - heading "Top Amenities" [level=2] [ref=e209]
+            - generic [ref=e210]: 16 Verified Features
+          - generic [ref=e211]:
+            - generic [ref=e212]: Swimming Pool
+            - generic [ref=e216]: Club House
+            - generic [ref=e220]: 100% Power Backup
+            - generic [ref=e224]: 24/7 Gated Security
+            - generic [ref=e228]: Gymnasium
+            - generic [ref=e232]: Landscaped Gardens
+            - generic [ref=e236]: Jogging Track
+            - generic [ref=e240]: Tennis Court
+            - generic [ref=e244]: Badminton Court
+            - generic [ref=e248]: Yoga & Meditation Deck
+            - generic [ref=e252]: EV Charging Station
+            - generic [ref=e256]: High Speed Elevators
+            - generic [ref=e260]: Centralised Heat Pump
+            - generic [ref=e264]: UV Filtered Water
+            - generic [ref=e268]: Fresh Air Ventilation
+            - generic [ref=e272]: Lifetime Unobstructed Views
+        - generic [ref=e277]:
+          - generic [ref=e283]:
+            - text: Official Brochure
+            - heading "Master Project Brochure" [level=3] [ref=e284]
+            - paragraph [ref=e285]: Floor plans, layouts & specifications.
+          - link "Download Master PDF" [ref=e286] [cursor=pointer]:
+            - /url: https://ujdeazibiexbssfikuaz.supabase.co/storage/v1/object/public/property-brochures/DIR-1827/1789568443216-Estate_105_Sales_Deck_compressed__1_.pdf
+        - generic [ref=e292]:
+          - heading "About This Property" [level=2] [ref=e293]
+          - paragraph [ref=e294]: xperience ultra-luxury wellness living at Estate 105 (LiveWell Residences), situated directly on the Noida Expressway across 5.62 sprawling acres. Comprising two iconic towers (G+37 floors) with just 252 bespoke residences, Estate 105 offers unmatched exclusivity with 2 private high-speed elevators and a dedicated private lobby for every home. Thoughtfully crafted around health and sustainability, residences feature centralized heat pump systems, fresh-air circulation, UV-filtered drinking water, and lifetime unobstructed skyline views. Residents enjoy exclusive access to a grand 72,000 sq.ft. clubhouse packed with state-of-the-art sports facilities, leisure lounges, and serene open greens.
+        - generic [ref=e297]:
+          - generic [ref=e298]:
+            - heading "Floor Plans & Layouts" [level=2] [ref=e306]
+            - generic [ref=e307]: 4 BHK
+          - generic [ref=e308]:
+            - generic [ref=e309]:
+              - generic [ref=e310]:
+                - generic [ref=e311]: Super Area
+                - generic [ref=e312]: 3,754 sq.ft
+              - generic [ref=e314]:
+                - generic [ref=e315]: Carpet Area
+                - generic [ref=e316]: ~2,778 sq.ft
+            - generic [ref=e317]: ~74% Usable
+          - generic [ref=e323]:
+            - generic [ref=e324]:
+              - generic [ref=e325] [cursor=pointer]:
+                - img "4 BHK floor plan" [ref=e327]
+                - generic [ref=e328]: 4 BHK
+                - generic [ref=e330]: Inspect Blueprint
+              - generic [ref=e335]:
+                - generic [ref=e336]:
+                  - generic [ref=e337]:
+                    - heading "4 BHK" [level=3] [ref=e338]
+                    - generic [ref=e339]: ₹10 Cr
+                  - generic [ref=e340]:
+                    - generic [ref=e341]: 3,754 sq.ft
+                    - generic [ref=e342]: •
+                    - generic [ref=e343]: ~2,778 sq.ft Carpet
+                - generic [ref=e344]:
+                  - button "Selected Unit" [ref=e345] [cursor=pointer]
+                  - button "View dimensions" [ref=e346] [cursor=pointer]
+            - generic [ref=e353]:
+              - generic [ref=e354] [cursor=pointer]:
+                - img "4 BHK with Family Lounge floor plan" [ref=e356]
+                - generic [ref=e357]: 4 BHK
+                - generic [ref=e359]: Inspect Blueprint
+              - generic [ref=e364]:
+                - generic [ref=e365]:
+                  - generic [ref=e366]:
+                    - heading "4 BHK with Family Lounge" [level=3] [ref=e367]
+                    - generic [ref=e368]: ₹15 Cr
+                  - generic [ref=e369]:
+                    - generic [ref=e370]: 4,214 sq.ft
+                    - generic [ref=e371]: •
+                    - generic [ref=e372]: ~3,118 sq.ft Carpet
+                - generic [ref=e373]:
+                  - button "Select Unit" [ref=e374] [cursor=pointer]
+                  - button "View dimensions" [ref=e375] [cursor=pointer]
+          - generic [ref=e382]:
+            - generic [ref=e383]:
+              - generic [ref=e384]: Living & Dining Salon
+              - generic [ref=e385]: 30.8' × 20.3'
+            - generic [ref=e386]:
+              - generic [ref=e387]: Master Bedroom Suite
+              - generic [ref=e388]: 22.4' × 18.9'
+          - button "Inspect High-Res Blueprint & Room Matrix" [ref=e389] [cursor=pointer]
+        - generic [ref=e401]:
+          - generic [ref=e402]:
+            - generic [ref=e403]: RERA Registered & Audited
+            - button "UPRERA/PRJ/1827" [ref=e408]
+          - generic [ref=e413]:
+            - generic [ref=e414]: 100% Freehold Title
+            - generic [ref=e419]: Nil Encumbrance
+            - generic [ref=e424]: Authority Approved
+            - generic [ref=e429]: Bank Pre-Approved
+          - button "View 4-Point Legal Due Diligence" [ref=e434] [cursor=pointer]
+        - generic [ref=e444]:
+          - generic [ref=e445]:
+            - generic [ref=e446]: Transit & Connectivity
+            - generic [ref=e451]: Sector Sector 105, Noida Expressway, Noida
+          - generic [ref=e452]:
+            - generic [ref=e453]:
+              - generic [ref=e454]: 4 mins
+              - generic [ref=e464]:
+                - heading "Aqua / Blue Line Interchange" [level=4] [ref=e465]
+                - generic [ref=e466]: 1.8 km
+            - generic [ref=e467]:
+              - generic [ref=e468]: 3 mins
+              - generic [ref=e478]:
+                - heading "Noida-Greater Noida & FNG" [level=4] [ref=e479]
+                - generic [ref=e480]: 1.5 km
+            - generic [ref=e481]:
+              - generic [ref=e482]: 35 mins
+              - generic [ref=e490]:
+                - heading "Noida International Airport (Jewar)" [level=4] [ref=e491]
+                - generic [ref=e492]: 35 km
+            - generic [ref=e493]:
+              - generic [ref=e494]: 8 mins
+              - generic [ref=e504]:
+                - heading "Jaypee & Fortis Hospital" [level=4] [ref=e505]
+                - generic [ref=e506]: 4.0 km
+          - generic [ref=e507]:
+            - link "Get Directions" [ref=e508] [cursor=pointer]:
+              - /url: https://www.google.com/maps/search/?api=1&query=Estate%20105%20%E2%80%93%20LiveWell%20Residences%20Sector%20Sector%20105%2C%20Noida%20Expressway%20Noida
+            - button "Details" [ref=e516] [cursor=pointer]
+        - generic [ref=e520]:
+          - heading "Price Insights" [level=2] [ref=e521]
+          - generic [ref=e522]: +18% YoY Growth
+        - generic [ref=e526]:
+          - generic [ref=e531]:
+            - heading "EMI Calculator" [level=3] [ref=e532]
+            - paragraph [ref=e533]: ESTIMATE YOUR MONTHLY PAYMENTS
+          - generic [ref=e534]:
+            - generic [ref=e535]:
+              - generic [ref=e536]:
+                - generic [ref=e537]:
+                  - generic [ref=e538]:
+                    - generic [ref=e539]: Loan Amount
+                    - generic [ref=e540]: 80% of property value
+                  - generic [ref=e541]: ₹800.0 L
+                - slider [ref=e542] [cursor=pointer]: "80000000"
+              - generic [ref=e543]:
+                - generic [ref=e544]:
+                  - generic [ref=e545]: Interest Rate (p.a.)
+                  - generic [ref=e547]: 8.5%
+                - slider [ref=e548] [cursor=pointer]: "8.5"
+              - generic [ref=e549]:
+                - generic [ref=e550]:
+                  - generic [ref=e551]: Loan Tenure (Years)
+                  - generic [ref=e553]: 20 Yrs
+                - slider [ref=e554] [cursor=pointer]: "20"
+            - generic [ref=e556]:
+              - generic [ref=e557]: Monthly EMI
+              - generic [ref=e558]:
+                - generic [ref=e559]: ₹0
+                - generic [ref=e560]: /mo
+              - generic [ref=e561]:
+                - generic [ref=e562]:
+                  - generic [ref=e563]: Principal Loan
+                  - generic [ref=e564]: ₹800.00 L
+                - generic [ref=e565]:
+                  - generic [ref=e566]: Down Payment
+                  - generic [ref=e567]: ₹200.00 L
+                - generic [ref=e568]:
+                  - generic [ref=e569]: Total Interest
+                  - generic [ref=e570]: ₹-800.00 L
+          - generic [ref=e571]:
+            - generic [ref=e576]:
+              - heading "Need financing for this property?" [level=4] [ref=e577]
+              - paragraph [ref=e578]: We partner with leading banks to provide exclusive low-interest home loans for our clients.
+            - button "Check Eligibility" [ref=e579]
+      - generic [ref=e583]:
+        - generic [ref=e584]:
+          - generic [ref=e585]: Total Price
+          - generic [ref=e586]: ₹10 Cr
+        - generic [ref=e587]:
+          - link "Chat on WhatsApp" [ref=e588] [cursor=pointer]:
+            - /url: https://wa.me/918586828107?text=Namaste%20TGV%20Estates%2C%20I%20am%20interested%20in%20Estate%20105%20%E2%80%93%20LiveWell%20Residences%20%5B4%20BHK%20(3%2C754%20sq.ft)%5D%20priced%20at%20%E2%82%B910%20Cr%20in%20Sector%20Sector%20105%2C%20Noida%20Expressway%2C%20Noida.%20Please%20share%20verified%20floor%20plans.
+          - button "Request Plans & Tour" [ref=e591]
+  - contentinfo [ref=e592]:
+    - generic: TGV ESTATES
+    - generic [ref=e594]:
+      - generic [ref=e595]:
+        - generic [ref=e596]: DIRECT VERIFIED PROPERTIES
+        - generic [ref=e597]: ✦
+        - generic [ref=e598]: RADICAL FEE TRANSPARENCY
+        - generic [ref=e599]: ✦
+        - generic [ref=e600]: AUTHENTIC REGISTRY AUDIT
+        - generic [ref=e601]: ✦
+        - generic [ref=e602]: DELHI NCR SPECIALIST
+        - generic [ref=e603]: ✦
+        - generic [ref=e604]: UNLISTED OWNER ALLOCATIONS
+        - generic [ref=e605]: ✦
+        - generic [ref=e606]: CONFIDENTIAL PRIVATE ADVISORY
+        - generic [ref=e607]: ✦
+      - generic [ref=e608]:
+        - generic [ref=e609]: DIRECT VERIFIED PROPERTIES
+        - generic [ref=e610]: ✦
+        - generic [ref=e611]: RADICAL FEE TRANSPARENCY
+        - generic [ref=e612]: ✦
+        - generic [ref=e613]: AUTHENTIC REGISTRY AUDIT
+        - generic [ref=e614]: ✦
+        - generic [ref=e615]: DELHI NCR SPECIALIST
+        - generic [ref=e616]: ✦
+        - generic [ref=e617]: UNLISTED OWNER ALLOCATIONS
+        - generic [ref=e618]: ✦
+        - generic [ref=e619]: CONFIDENTIAL PRIVATE ADVISORY
+        - generic [ref=e620]: ✦
+    - generic [ref=e621]:
+      - generic [ref=e622]:
+        - heading "Ready to begin?" [level=2] [ref=e623]
+        - generic [ref=e624]:
+          - link "WhatsApp Private Desk" [ref=e625] [cursor=pointer]:
+            - /url: https://wa.me/918586828107?text=Hello%20TGV%20Estates%2C%20I%20would%20like%20to%20inquire%20about%20verified%20properties
+          - link "Direct Principal Line" [ref=e630] [cursor=pointer]:
+            - /url: tel:+918586828107
+          - link "Explore 47+ Live Properties" [ref=e637] [cursor=pointer]:
+            - /url: /search
+      - generic [ref=e645]:
+        - generic [ref=e646]:
+          - link [ref=e647] [cursor=pointer]:
+            - /url: /
+            - img "TGV Estates" [ref=e648]
+          - paragraph [ref=e649]: Direct developer properties & private real estate advisory across prime micro-markets of Delhi NCR.
+          - generic [ref=e650]:
+            - link "+91 85868 28107" [ref=e651] [cursor=pointer]:
+              - /url: tel:+918586828107
+            - link "contact@tgvestates.com" [ref=e657] [cursor=pointer]:
+              - /url: mailto:contact@tgvestates.com
+          - generic [ref=e662]:
+            - generic [ref=e663]: Sector 62, Noida, NCR
+            - generic [ref=e668]: 47+ Live Properties
+        - generic [ref=e671]:
+          - heading "Curated Portfolios" [level=4] [ref=e677]
+          - list [ref=e678]:
+            - listitem [ref=e679]:
+              - link "Luxury Residential" [ref=e680] [cursor=pointer]:
+                - /url: /search?purpose=buy
+            - listitem [ref=e682]:
+              - link "High-Yield Leased" [ref=e683] [cursor=pointer]:
+                - /url: /search?purpose=rent
+            - listitem [ref=e685]:
+              - link "Commercial Floors" [ref=e686] [cursor=pointer]:
+                - /url: /search?type=commercial
+            - listitem [ref=e688]:
+              - link "Golf Residences" [ref=e689] [cursor=pointer]:
+                - /url: /search?q=Golf
+            - listitem [ref=e691]:
+              - link "Direct Allocations" [ref=e692] [cursor=pointer]:
+                - /url: /search
+            - listitem [ref=e694]:
+              - link "List Your Property" [ref=e695] [cursor=pointer]:
+                - /url: /list-property
+        - generic [ref=e697]:
+          - heading "NCR Micro-Markets" [level=4] [ref=e702]
+          - list [ref=e703]:
+            - listitem [ref=e704]:
+              - link "Sector 150 Noida" [ref=e705] [cursor=pointer]:
+                - /url: /search?q=Sector+150
+            - listitem [ref=e707]:
+              - link "Golf Course Rd" [ref=e708] [cursor=pointer]:
+                - /url: /search?q=Golf+Course+Road
+            - listitem [ref=e710]:
+              - link "Greater Kailash" [ref=e711] [cursor=pointer]:
+                - /url: /search?q=Greater+Kailash
+            - listitem [ref=e713]:
+              - link "Cyber City Extn" [ref=e714] [cursor=pointer]:
+                - /url: /search?q=Cyber
+            - listitem [ref=e716]:
+              - link "Dwarka Expressway" [ref=e717] [cursor=pointer]:
+                - /url: /search?q=Dwarka
+            - listitem [ref=e719]:
+              - link "Indirapuram" [ref=e720] [cursor=pointer]:
+                - /url: /search?q=Indirapuram
+        - generic [ref=e723]:
+          - heading "Advisory Guarantees" [level=4] [ref=e728]
+          - generic [ref=e729]:
+            - generic [ref=e734]:
+              - text: Direct Properties Only
+              - paragraph [ref=e735]: Primary developer & owner allocations.
+            - generic [ref=e740]:
+              - text: Single-Point Advisory
+              - paragraph [ref=e741]: No multi-tier broker chains.
+            - generic [ref=e746]:
+              - text: Registry Title Audit
+              - paragraph [ref=e747]: Legal verification prior to offer.
+      - generic [ref=e748]:
+        - paragraph [ref=e749]: © 2026 TGV Estates. A division of Tejasvi Global Ventures. All rights reserved.
+        - generic [ref=e750]:
+          - link "Privacy Policy" [ref=e751] [cursor=pointer]:
+            - /url: /privacy
+          - link "Terms of Service" [ref=e752] [cursor=pointer]:
+            - /url: /terms
+          - link "Our Advisory Process" [ref=e753] [cursor=pointer]:
+            - /url: /about
+          - button "Top" [ref=e754] [cursor=pointer]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e763] [cursor=pointer]
