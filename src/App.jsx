@@ -21,6 +21,7 @@ import { usePropertyStore } from './store/propertyStore';
 import { useLeadStore } from './store/leadStore';
 import { useBuilderStore } from './store/builderStore';
 import { LayoutDashboard, Users, Building2, CalendarDays, PhoneCall, Handshake } from 'lucide-react';
+import { PwaUpdatePrompt } from './components/PwaUpdatePrompt';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -91,6 +92,9 @@ const AppLayout = () => {
           <NavItem to="/app/telephony" icon={PhoneCall} label="Calls" />
         </div>
       </nav>
+
+      {/* PWA update / offline prompt */}
+      <PwaUpdatePrompt />
     </div>
   );
 };

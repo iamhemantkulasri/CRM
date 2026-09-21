@@ -36,7 +36,16 @@ const PRESET_IMAGES = [
   { label: "Retail / SCO Hub", url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop" }
 ];
 
-// Popular Luxury Amenities tags
+// Room tags for gallery photos (stored parallel to images[] -> image_tags)
+const PHOTO_TAGS = ['Exterior', 'Living Room', 'Bedroom', 'Kitchen', 'Bathroom', 'Balcony', 'Floor Plan', 'Amenity', 'Other'];
+const DEFAULT_PHOTO_TAG = 'Other';
+
+// Keep image_tags aligned 1:1 with images (pad with default, drop extras/inline blobs)
+function alignImageTags(images, tags) {
+  const clean = sanitizeImageList(images);
+  const list = Array.isArray(tags) ? tags : [];
+  return clean.map((_, i) => (typeof list[i] === 'string' && PHOTO_TAGS.includes(list[i]) ? list[i] : DEFAULT_PHOTO_TAG));
+}
 const POPULAR_AMENITIES = [
   "Swimming Pool", "Club House", "100% Power Backup", "24/7 Gated Security",
   "Gymnasium", "Private Lift", "EV Charging Station", "Kids Play Area",
@@ -44,22 +53,70 @@ const POPULAR_AMENITIES = [
   "CCTV Surveillance", "Rooftop Sky Lounge", "Freehold Legal Title"
 ];
 
-const TABS = [
-  { id: 'overview', label: '1. Overview & Pricing', icon: Building2 },
-  { id: 'media', label: '2. Media & Assets', icon: ImageIcon },
-  { id: 'variants', label: '3. Variants & Floor Plans', icon: Layers },
-  { id: 'transit', label: '4. Transit & Commute', icon: Navigation },
-  { id: 'legal', label: '5. Legal Diligence & Badges', icon: ShieldCheck }
+const STEPS = [
+  { id: 'basics', label: '1. Basics', icon: Building2 },
+  { id: 'details', label: '2. Price & Location', icon: Sliders },
+  { id: 'media', label: '3. Media & Photos', icon: ImageIcon },
+  { id: 'review', label: '4. Publish Property', icon: CheckCircle2 },
 ];
+
+// Asset group -> sub-types, derived from the single taxonomy source of truth.
+// Button 1 picks the group, Button 2 lists that group's sub-types.
+const ASSET_GROUPS = [...new Set(ASSET_CATEGORIES.map((c) => c.group))];
+const SUB_TYPES_FOR_GROUP = (group) => ASSET_CATEGORIES.filter((c) => c.group === group);
+const GROUP_FOR_TYPE = (typeId) => ASSET_CATEGORIES.find((c) => c.id === typeId)?.group || ASSET_GROUPS[0];
+
+// Area units (portal-style): stored canonically in sq.ft, entered in any unit
+const AREA_UNITS = [
+  { id: 'sqft', label: 'Sq.Ft', toSqft: 1 },
+  { id: 'sqyd', label: 'Sq.Yd', toSqft: 9 },
+  { id: 'sqm', label: 'Sq.M', toSqft: 10.7639 },
+  { id: 'acre', label: 'Acre', toSqft: 43560 },
+];
+const UNIT_LABEL = (id) => AREA_UNITS.find((u) => u.id === id)?.label || 'Sq.Ft';
+const toSqft = (val, unit) => {
+  const n = Number(val);
+  if (!val || isNaN(n)) return '';
+  const f = AREA_UNITS.find((u) => u.id === unit)?.toSqft || 1;
+  return Math.round(n * f * 100) / 100;
+};
+const fromSqft = (sqft, unit) => {
+  const n = Number(sqft);
+  if (!sqft || isNaN(n)) return '';
+  const f = AREA_UNITS.find((u) => u.id === unit)?.toSqft || 1;
+  const v = n / f;
+  return Math.round(v * 100) / 100;
+};
+const DEFAULT_UNIT_FOR_ARCH = (arch) => (arch === 'plot' ? 'sqyd' : 'sqft');
+
+// Facing: 8-direction chips (portal-style); plots keep extra options
+const FACING_DIRECTIONS = [
+  'North Facing', 'North-East Facing', 'East Facing', 'South-East Facing',
+  'South Facing', 'South-West Facing', 'West Facing', 'North-West Facing',
+];
+const PLOT_FACING_EXTRA = ['Park Facing', 'Corner Plot (Two Side Open)', 'Wide Road Facing (60ft+)'];
+const shortFacing = (f) => (typeof f === 'string' ? f.replace(' Facing', '') : f);
+
+// Additional rooms toggle into amenities (no schema change)
+const ADDITIONAL_ROOMS = ['Pooja Room', 'Store Room', 'Servant Room', 'Study Room'];
 
 export function PropertyModal({ isOpen, onClose, editingProperty }) {
   const { addProperty, updateProperty } = usePropertyStore();
   const { builders } = useBuilderStore();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeStep, setActiveStep] = useState('basics');
+  // Advanced (optional) collapsible lives inside the Review step (single unified section)
+  const [showAdvanced, setShowAdvanced] = useState(false);
   // Cloud upload progress flags (Supabase Storage, not base64)
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
   const [uploadingPlanKey, setUploadingPlanKey] = useState(null);
   const [isUploadingBrochure, setIsUploadingBrochure] = useState(false);
+  // Category-driven field helpers (portal-style dynamic form)
+  const [areaUnit, setAreaUnit] = useState('sqft');
+  const [possessionCat, setPossessionCat] = useState('ready'); // 'ready' | 'uc'
+  const [possessionAge, setPossessionAge] = useState('');
+  const [possessionBy, setPossessionBy] = useState('');
+  const [parkCovered, setParkCovered] = useState(2);
+  const [parkOpen, setParkOpen] = useState(0);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -97,6 +154,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     video_url: '',
     virtual_tour_url: '',
     floor_plan_url: '',
+    cabins: '',
+    pantry: false,
+    image_tags: [],
     rera_portal_url: '',
     legal_status_tag: 'Freehold Immediate Registry',
     legal_remarks: '30-year search report completed; Nil-encumbrance certificate verified by legal counsel.',
@@ -152,8 +212,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
 
   useEffect(() => {
     if (isOpen) {
-      setActiveTab('overview');
+      setActiveStep('basics');
       setValidationError(null);
+      setShowAdvanced(false);
     }
 
     if (editingProperty) {
@@ -248,6 +309,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
         video_url: editingProperty.video_url || '',
         virtual_tour_url: editingProperty.virtual_tour_url || '',
         floor_plan_url: editingProperty.floor_plan_url || '',
+        cabins: editingProperty.cabins !== undefined && editingProperty.cabins !== null ? editingProperty.cabins : '',
+        pantry: Boolean(editingProperty.pantry),
+        image_tags: Array.isArray(editingProperty.image_tags) ? editingProperty.image_tags.filter(t => typeof t === 'string') : [],
         rera_portal_url: editingProperty.rera_portal_url || '',
         legal_status_tag: editingProperty.legal_status_tag || 'Freehold Immediate Registry',
         legal_remarks: editingProperty.legal_remarks || '',
@@ -271,6 +335,25 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
         custom_dimensions: Array.isArray(editingProperty.custom_dimensions) ? editingProperty.custom_dimensions : [],
         custom_commute_points: Array.isArray(editingProperty.custom_commute_points) ? editingProperty.custom_commute_points : []
       });
+
+      // Init category-driven helpers from loaded values
+      const editArch = getAssetArchetype(propType, editingProperty.name || editingProperty.title || '');
+      setAreaUnit(editArch === 'plot' ? 'sqyd' : 'sqft');
+      const editPossRaw = `${editingProperty.possession_timeline || ''} ${editingProperty.possessionDate || editingProperty.possession_status || ''}`;
+      if (/under construction/i.test(editPossRaw)) {
+        setPossessionCat('uc');
+        setPossessionBy(editingProperty.possession_timeline && !/under construction/i.test(editingProperty.possession_timeline) ? editingProperty.possession_timeline : '');
+        setPossessionAge('');
+      } else {
+        setPossessionCat('ready');
+        const ageM = editPossRaw.match(/(\d+)\s*(yr|year)/i);
+        setPossessionAge(ageM ? ageM[1] : '');
+        setPossessionBy('');
+      }
+      const covM = `${editingProperty.parking || ''}`.match(/(\d+)\s*covered/i);
+      const opnM = `${editingProperty.parking || ''}`.match(/(\d+)\s*open/i);
+      setParkCovered(covM ? Number(covM[1]) : 0);
+      setParkOpen(opnM ? Number(opnM[1]) : 0);
     } else {
       setFormData({
         name: '',
@@ -307,6 +390,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
         video_url: '',
         virtual_tour_url: '',
         floor_plan_url: '',
+        cabins: '',
+        pantry: false,
+        image_tags: [],
         rera_portal_url: '',
         legal_status_tag: 'Freehold Immediate Registry',
         legal_remarks: '30-year search report completed; Nil-encumbrance certificate verified by legal counsel.',
@@ -316,8 +402,22 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
         key_highlights: getDefaultHighlights('residential'),
         rera_blocks: getDefaultReraBlocks()
       });
+      // Reset category-driven helpers for a fresh listing
+      setAreaUnit('sqft');
+      setPossessionCat('ready');
+      setPossessionAge('');
+      setPossessionBy('');
+      setParkCovered(2);
+      setParkOpen(0);
     }
   }, [editingProperty, isOpen]);
+
+  // Keep area unit aligned when the archetype changes (plot -> Sq.Yd)
+  const currentArch = getAssetArchetype(formData.type, '');
+  useEffect(() => {
+    setAreaUnit(currentArch === 'plot' ? 'sqyd' : 'sqft');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentArch]);
 
   const handleTypeChange = (newType) => {
     const cat = ASSET_CATEGORIES.find(c => c.id === newType);
@@ -395,13 +495,20 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
       if (uploadedUrls.length > 0) {
         setFormData((prev) => {
           const currentImages = sanitizeImageList(prev.images);
+          const added = [];
           uploadedUrls.forEach((url) => {
-            if (!currentImages.includes(url)) currentImages.push(url);
+            if (!currentImages.includes(url)) {
+              currentImages.push(url);
+              added.push(url);
+            }
           });
+          const currentTags = alignImageTags(prev.images, prev.image_tags);
+          added.forEach(() => currentTags.push(DEFAULT_PHOTO_TAG));
           return {
             ...prev,
             imageUrl: prev.imageUrl || currentImages[0] || uploadedUrls[0],
             images: currentImages,
+            image_tags: currentTags,
           };
         });
       }
@@ -417,13 +524,29 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     if (!url || !url.trim()) return;
     const trimmed = url.trim();
     setFormData(prev => {
-      const current = Array.isArray(prev.images) ? [...prev.images] : [];
-      if (!current.includes(trimmed)) current.push(trimmed);
+      const current = sanitizeImageList(prev.images);
+      let added = false;
+      if (!current.includes(trimmed)) {
+        current.push(trimmed);
+        added = true;
+      }
+      const currentTags = alignImageTags(prev.images, prev.image_tags);
+      if (added) currentTags.push(DEFAULT_PHOTO_TAG);
       return {
         ...prev,
         imageUrl: prev.imageUrl || trimmed,
-        images: current
+        images: current,
+        image_tags: currentTags
       };
+    });
+  };
+
+  const handlePhotoTagChange = (index, tag) => {
+    if (!PHOTO_TAGS.includes(tag)) return;
+    setFormData(prev => {
+      const tags = alignImageTags(prev.images, prev.image_tags);
+      tags[index] = tag;
+      return { ...prev, image_tags: tags };
     });
   };
 
@@ -448,11 +571,16 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
   const handleRemoveImage = (index) => {
     const removed = (formData.images || [])[index];
     setFormData(prev => {
-      const updated = (prev.images || []).filter((_, i) => i !== index);
+      const clean = sanitizeImageList(prev.images);
+      const tags = alignImageTags(prev.images, prev.image_tags);
+      const rmIdx = clean.indexOf(removed);
+      const updated = rmIdx >= 0 ? clean.filter((_, i) => i !== rmIdx) : clean;
+      const updatedTags = rmIdx >= 0 ? tags.filter((_, i) => i !== rmIdx) : tags;
       return {
         ...prev,
         images: updated,
-        imageUrl: updated[0] || ''
+        imageUrl: updated[0] || '',
+        image_tags: updatedTags
       };
     });
     // Best-effort cleanup of the Storage object (external URLs untouched)
@@ -463,15 +591,35 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
 
   const handleSetCoverImage = (index) => {
     setFormData(prev => {
-      const imgs = [...(prev.images || [])];
-      const selected = imgs.splice(index, 1)[0];
+      const imgs = sanitizeImageList(prev.images);
+      const tags = alignImageTags(prev.images, prev.image_tags);
+      const safeIdx = Math.max(0, Math.min(index, imgs.length - 1));
+      const selected = imgs.splice(safeIdx, 1)[0];
+      const selectedTag = tags.splice(safeIdx, 1)[0] || DEFAULT_PHOTO_TAG;
       imgs.unshift(selected);
+      tags.unshift(selectedTag);
       return {
         ...prev,
         images: imgs,
-        imageUrl: selected
+        imageUrl: selected,
+        image_tags: tags
       };
     });
+  };
+
+  const composeParking = (covered, open) => {
+    const parts = [];
+    if (Number(covered) > 0) parts.push(`${covered} Covered`);
+    if (Number(open) > 0) parts.push(`${open} Open`);
+    return parts.length > 0 ? `${parts.join(', ')} Parking` : '';
+  };
+
+  const handleParkingChange = (covered, open) => {
+    const c = Math.max(0, Number(covered) || 0);
+    const o = Math.max(0, Number(open) || 0);
+    setParkCovered(c);
+    setParkOpen(o);
+    setFormData((prev) => ({ ...prev, parking: composeParking(c, o) }));
   };
 
   const toggleAmenity = (amenity) => {
@@ -722,27 +870,27 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     e.preventDefault();
     setValidationError(null);
 
-    // JavaScript validation so inactive tabs never lock submission silently
+    // JavaScript validation so inactive steps never lock submission silently
     if (!formData.name || !formData.name.trim()) {
-      setActiveTab('overview');
+      setActiveStep('basics');
       setValidationError('Property / Project Title is required.');
       return;
     }
 
     if (!formData.priceLakhs || Number(formData.priceLakhs) <= 0) {
-      setActiveTab('overview');
+      setActiveStep('details');
       setValidationError('Please enter a valid price in ₹ Lakhs.');
       return;
     }
 
     if (!formData.areaSqFt || Number(formData.areaSqFt) <= 0) {
-      setActiveTab('overview');
+      setActiveStep('details');
       setValidationError('Please enter a valid Super / Plot Area in Sq.Ft.');
       return;
     }
 
     if (!formData.locality || !formData.locality.trim()) {
-      setActiveTab('overview');
+      setActiveStep('details');
       setValidationError('Sector / Locality is required.');
       return;
     }
@@ -757,12 +905,20 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     // Defensive: never persist inline blobs — Storage URLs / remote URLs only
     const cleanImages = sanitizeImageList(rawImages);
     if (cleanImages.length === 0) cleanImages.push(PRESET_IMAGES[0].url);
+    const cleanTags = alignImageTags(cleanImages, formData.image_tags);
 
     const payload = {
       ...formData,
       city: effectiveCity,
       images: cleanImages,
       imageUrl: cleanImages[0] || formData.imageUrl || PRESET_IMAGES[0].url,
+      image_tags: cleanTags,
+      area_unit: areaUnit,
+      // Possession composed from the Ready / Under-Construction branch (no schema change)
+      possessionDate: possessionCat === 'uc' ? 'Under Construction' : 'Ready to Move',
+      possession_timeline: possessionCat === 'uc'
+        ? (possessionBy.trim() ? `Possession by ${possessionBy.trim()}` : 'Under Construction')
+        : (possessionAge ? `Ready to Move (${possessionAge} yrs old)` : 'Ready to Move'),
       // Defensive: floor plans must be URLs, never inline blobs
       floor_plan_url: sanitizeImageUrl(formData.floor_plan_url),
       variants: Array.isArray(formData.variants)
@@ -807,6 +963,10 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     ? formData.amenities.split(',').map(s => s.trim()).filter(Boolean)
     : (formData.amenities || []);
 
+  // Gallery render lists (sanitized + tag-aligned 1:1)
+  const galleryImages = sanitizeImageList(formData.images);
+  const galleryTags = alignImageTags(formData.images, formData.image_tags);
+
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
@@ -827,11 +987,11 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
               <Dialog.Title className="text-h2" style={{ margin: 0, fontSize: 18, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span>{editingProperty ? 'Edit Property & Website Listing' : 'Add Property to Website & CRM Inventory'}</span>
                 <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 6, background: 'rgba(37, 99, 235, 0.1)', color: 'var(--color-primary)', fontWeight: 600 }}>
-                  5-Tab Listing Engine
+                  Guided Listing Wizard
                 </span>
               </Dialog.Title>
               <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--color-muted-fg)' }}>
-                Full parity with TGV Estates admin: multi-size variants, granular RERA toggles & transit landmarks
+                4 easy steps — only the essentials up front, everything else optional at the end
               </p>
             </div>
             <Dialog.Close asChild>
@@ -859,20 +1019,55 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
               </div>
             )}
 
-            <div className="segmented-tab-nav">
-              {TABS.map(tab => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
+            {/* Wizard Step Progress (click any step to jump to it) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              {STEPS.map((step, sIdx) => {
+                const Icon = step.icon;
+                const stepIdx = STEPS.findIndex(s => s.id === activeStep);
+                const isActive = activeStep === step.id;
+                const isDone = stepIdx > sIdx;
                 return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`segmented-tab-btn ${isActive ? 'active' : ''}`}
-                  >
-                    <Icon size={14} style={{ color: isActive ? 'var(--color-primary)' : 'inherit' }} />
-                    <span>{tab.label}</span>
-                  </button>
+                  <React.Fragment key={step.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStep(step.id)}
+                      title={`Go to ${step.label}`}
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        padding: '9px 12px',
+                        borderRadius: 10,
+                        border: isActive ? '1.5px solid var(--color-primary)' : '1px solid var(--color-border)',
+                        background: isActive ? 'rgba(37, 99, 235, 0.07)' : isDone ? 'rgba(16, 185, 129, 0.07)' : 'var(--color-card)',
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <span style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 12,
+                        fontWeight: 800,
+                        flexShrink: 0,
+                        background: isDone ? '#10b981' : isActive ? 'var(--color-primary)' : 'var(--color-muted)',
+                        color: (isDone || isActive) ? '#fff' : 'var(--color-muted-fg)'
+                      }}>
+                        {isDone ? <Check size={13} /> : <Icon size={13} />}
+                      </span>
+                      <span style={{ fontSize: 12, fontWeight: isActive ? 700 : 600, color: 'var(--color-fg)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {step.label}
+                      </span>
+                    </button>
+                    {sIdx < STEPS.length - 1 && (
+                      <span style={{ width: 12, height: 2, borderRadius: 2, background: stepIdx > sIdx ? '#10b981' : 'var(--color-border)', flexShrink: 0 }} />
+                    )}
+                  </React.Fragment>
                 );
               })}
             </div>
@@ -882,9 +1077,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
           <form onSubmit={handleSubmit} className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 10 }}>
             
             {/* ========================================================
-                TAB 1: OVERVIEW & PRICING
+                STEP 1: BASICS (title, builder, category, configuration)
                 ======================================================== */}
-            {activeTab === 'overview' && (
+            {activeStep === 'basics' && (
               <>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 12 }}>
@@ -956,44 +1151,50 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 12 }}>
-                  <div className="form-group">
-                    <label className="form-label">Asset Category / Taxonomy *</label>
-                    <select
-                      className="form-select"
-                      value={formData.type}
-                      onChange={e => handleTypeChange(e.target.value)}
-                    >
-                      <optgroup label="Residential Properties">
-                        <option value="residential">Apartment / High-Rise</option>
-                        <option value="villa">Luxury Villa / Bungalow</option>
-                        <option value="penthouse">Penthouse / Sky Villa</option>
-                        <option value="builder_floor">Independent Builder Floor</option>
-                        <option value="studio">Studio / Serviced Apartment</option>
-                      </optgroup>
-                      <optgroup label="Commercial & Mixed-Use">
-                        <option value="commercial">Commercial Office / IT Park</option>
-                        <option value="retail">High-Street Retail / Showroom</option>
-                        <option value="mixed_use">Mixed-Use (Commercial + Residential)</option>
-                        <option value="live_work">Live-Work Unit / SOHO</option>
-                        <option value="sco">SCO Plot (Shop-Cum-Office)</option>
-                        <option value="coworking">Co-Working & Managed Office</option>
-                      </optgroup>
-                      <optgroup label="Plots & Land">
-                        <option value="plot">Residential Plot / Land</option>
-                        <option value="land">General Land Parcel</option>
-                        <option value="mixed_use_land">Mixed-Use Land (MLU Plot)</option>
-                        <option value="commercial_land">Commercial & Institutional Land</option>
-                        <option value="farmhouse_land">Farmhouse Land</option>
-                        <option value="agricultural">Agricultural / Farm Land</option>
-                      </optgroup>
-                      <optgroup label="Luxury Estates & Industrial">
-                        <option value="farmhouse">Luxury Farmhouse & Estate</option>
-                        <option value="warehouse">Industrial & Warehousing</option>
-                      </optgroup>
-                    </select>
+                {/* Two-Button Category Picker: Button 1 = group, Button 2 = sub-type */}
+                <div className="form-group">
+                  <label className="form-label">Asset Category *</label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+                    {ASSET_GROUPS.map((group) => {
+                      const isSelected = GROUP_FOR_TYPE(formData.type) === group;
+                      return (
+                        <button
+                          key={group}
+                          type="button"
+                          onClick={() => {
+                            if (!isSelected) {
+                              const first = SUB_TYPES_FOR_GROUP(group)[0];
+                              if (first) handleTypeChange(first.id);
+                            }
+                          }}
+                          className={`config-pill-chip ${isSelected ? 'active' : ''}`}
+                        >
+                          {group}
+                        </button>
+                      );
+                    })}
                   </div>
+                  <label className="form-label" style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>
+                    {GROUP_FOR_TYPE(formData.type)} Type *
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {SUB_TYPES_FOR_GROUP(GROUP_FOR_TYPE(formData.type)).map((sub) => {
+                      const isSelected = formData.type === sub.id;
+                      return (
+                        <button
+                          key={sub.id}
+                          type="button"
+                          onClick={() => { if (!isSelected) handleTypeChange(sub.id); }}
+                          className={`config-pill-chip ${isSelected ? 'active' : ''}`}
+                        >
+                          {sub.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Transaction Purpose</label>
                     <select
@@ -1064,6 +1265,14 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                     />
                   </div>
                 </div>
+              </>
+            )}
+
+            {/* ========================================================
+                STEP 2: PRICE, SPECS & LOCATION
+                ======================================================== */}
+            {activeStep === 'details' && (
+              <>
 
                 {/* Archetype-Specific Pricing & Spec Inputs */}
                 {(() => {
@@ -1072,103 +1281,154 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                   // 1. Plot & Land Archetype
                   if (arch === 'plot') {
                     return (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: 12 }}>
-                          <div className="form-group">
-                            <label className="form-label">
-                              Price (₹ Lakhs) * {formData.priceLakhs ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(= ₹{(formData.priceLakhs / 100).toFixed(2)} Cr)</span> : null}
-                            </label>
-                            <input
-                              type="number"
-                              step="any"
-                              className="form-input"
-                              value={formData.priceLakhs}
-                              onChange={e => setFormData({ ...formData, priceLakhs: e.target.value })}
-                              placeholder="e.g. 350 (= 3.50 Cr)"
-                            />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                        {/* Price & Area */}
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                            Price & Area
                           </div>
-                          <div className="form-group">
-                            <label className="form-label">
-                              Plot Area (Sq.Ft) * {formData.areaSqFt ? <span style={{ color: 'var(--color-muted-fg)' }}>(~{Math.round(formData.areaSqFt / 9)} sq.yd)</span> : null}
-                            </label>
-                            <input
-                              type="number"
-                              className="form-input"
-                              value={formData.areaSqFt}
-                              onChange={e => setFormData({ ...formData, areaSqFt: e.target.value })}
-                              placeholder="e.g. 2700 (= 300 Sq.Yd)"
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label className="form-label">Facing / Orientation</label>
-                            <select
-                              className="form-select"
-                              value={formData.facing}
-                              onChange={e => setFormData({ ...formData, facing: e.target.value })}
-                            >
-                              <option value="North-East Facing">North-East Facing</option>
-                              <option value="East Facing">East Facing</option>
-                              <option value="North Facing">North Facing</option>
-                              <option value="Park Facing">Park Facing</option>
-                              <option value="Corner Plot (Two Side Open)">Corner Plot (Two Side Open)</option>
-                              <option value="Wide Road Facing (60ft+)">Wide Road Facing (60ft+)</option>
-                            </select>
-                          </div>
-                          <div className="form-group">
-                            <label className="form-label">Land Title / Possession</label>
-                            <select
-                              className="form-select"
-                              value={formData.legal_status_tag || 'Freehold Immediate Registry'}
-                              onChange={e => setFormData({ ...formData, legal_status_tag: e.target.value })}
-                            >
-                              <option value="Freehold Immediate Registry">Freehold (Immediate Registry)</option>
-                              <option value="Authority Allotted">Authority Allotted (Leasehold)</option>
-                              <option value="Gated Township Plot">Gated Township (Ready to Build)</option>
-                              <option value="Clear Title Agricultural">Clear Title Farm Land</option>
-                            </select>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">
+                                Price (₹ Lakhs) * {formData.priceLakhs ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(= ₹{(formData.priceLakhs / 100).toFixed(2)} Cr)</span> : null}
+                              </label>
+                              <input
+                                type="number"
+                                step="any"
+                                min="0"
+                                className="form-input"
+                                value={formData.priceLakhs}
+                                onChange={e => setFormData({ ...formData, priceLakhs: e.target.value })}
+                                placeholder="e.g. 350 (= 3.50 Cr)"
+                              />
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">
+                                Plot Area ({UNIT_LABEL(areaUnit)}) * {formData.areaSqFt && areaUnit !== 'sqft' ? <span style={{ color: 'var(--color-muted-fg)' }}>(= {Number(formData.areaSqFt).toLocaleString()} sq.ft)</span> : null}
+                              </label>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <input
+                                  type="number"
+                                  step="any"
+                                  min="0"
+                                  className="form-input"
+                                  style={{ flex: 1 }}
+                                  value={fromSqft(formData.areaSqFt, areaUnit)}
+                                  onChange={e => setFormData({ ...formData, areaSqFt: toSqft(e.target.value, areaUnit) })}
+                                  placeholder={areaUnit === 'sqyd' ? 'e.g. 300' : areaUnit === 'acre' ? 'e.g. 1.5' : 'e.g. 2700'}
+                                />
+                                <select
+                                  className="form-select"
+                                  style={{ width: 92, flexShrink: 0 }}
+                                  value={areaUnit}
+                                  onChange={e => setAreaUnit(e.target.value)}
+                                  title="Area unit"
+                                >
+                                  {AREA_UNITS.map(u => (
+                                    <option key={u.id} value={u.id}>{u.label}</option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
-                        {/* Plot Engineering Specs */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1fr 1fr', gap: 12 }}>
-                          <div className="form-group">
-                            <label className="form-label">Approach Road (ft)</label>
-                            <input
-                              type="number"
-                              className="form-input"
-                              value={formData.road_width_ft !== undefined ? formData.road_width_ft : ''}
-                              onChange={e => setFormData({ ...formData, road_width_ft: e.target.value })}
-                              placeholder="e.g. 60 or 24"
-                            />
+                        {/* Facing — full width */}
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                            Facing / Orientation
                           </div>
-                          <div className="form-group">
-                            <label className="form-label">Dimensions (L × B)</label>
-                            <input
-                              className="form-input"
-                              value={formData.dimensions_ft || ''}
-                              onChange={e => setFormData({ ...formData, dimensions_ft: e.target.value })}
-                              placeholder="e.g. 30 × 60 ft"
-                            />
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                            {[...FACING_DIRECTIONS, ...PLOT_FACING_EXTRA].map((opt) => {
+                              const isSelected = formData.facing === opt;
+                              return (
+                                <button
+                                  key={opt}
+                                  type="button"
+                                  onClick={() => setFormData({ ...formData, facing: opt })}
+                                  className={`config-pill-chip ${isSelected ? 'active' : ''}`}
+                                  title={opt}
+                                >
+                                  {shortFacing(opt)}
+                                </button>
+                              );
+                            })}
                           </div>
-                          <div className="form-group">
-                            <label className="form-label">Permissible FAR / FSI</label>
-                            <input
-                              className="form-input"
-                              value={formData.far_fsi || ''}
-                              onChange={e => setFormData({ ...formData, far_fsi: e.target.value })}
-                              placeholder="e.g. 2.64"
-                            />
+                          {formData.facing && ![...FACING_DIRECTIONS, ...PLOT_FACING_EXTRA].includes(formData.facing) && (
+                            <div style={{ fontSize: 11, color: 'var(--color-muted-fg)', marginTop: 4 }}>
+                              Saved: {formData.facing} — pick a direction to change
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Title & Engineering */}
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                            Title & Engineering
                           </div>
-                          <div className="form-group">
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Land Title / Possession</label>
+                              <select
+                                className="form-select"
+                                value={formData.legal_status_tag || 'Freehold Immediate Registry'}
+                                onChange={e => setFormData({ ...formData, legal_status_tag: e.target.value })}
+                              >
+                                <option value="Freehold Immediate Registry">Freehold (Immediate Registry)</option>
+                                <option value="Authority Allotted">Authority Allotted (Leasehold)</option>
+                                <option value="Gated Township Plot">Gated Township (Ready to Build)</option>
+                                <option value="Clear Title Agricultural">Clear Title Farm Land</option>
+                              </select>
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Approach Road (ft)</label>
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={formData.road_width_ft !== undefined ? formData.road_width_ft : ''}
+                                onChange={e => setFormData({ ...formData, road_width_ft: e.target.value })}
+                                placeholder="e.g. 60 or 24"
+                              />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Dimensions (L × B)</label>
+                              <input
+                                className="form-input"
+                                value={formData.dimensions_ft || ''}
+                                onChange={e => setFormData({ ...formData, dimensions_ft: e.target.value })}
+                                placeholder="e.g. 30 × 60 ft"
+                              />
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Permissible FAR / FSI</label>
+                              <input
+                                className="form-input"
+                                value={formData.far_fsi || ''}
+                                onChange={e => setFormData({ ...formData, far_fsi: e.target.value })}
+                                placeholder="e.g. 2.64"
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group" style={{ margin: 0 }}>
                             <label className="form-label">Gated / Boundary Wall</label>
-                            <select
-                              className="form-select"
-                              value={formData.boundary_wall ? 'yes' : 'no'}
-                              onChange={e => setFormData({ ...formData, boundary_wall: e.target.value === 'yes' })}
-                            >
-                              <option value="yes">Gated / Boundary Wall Built</option>
-                              <option value="no">Open Perimeter / Raw Land</option>
-                            </select>
+                            <div style={{ display: 'flex', gap: 6 }}>
+                              {[
+                                { id: true, label: 'Walled / Gated' },
+                                { id: false, label: 'Open Perimeter' },
+                              ].map((o) => (
+                                <button
+                                  key={String(o.id)}
+                                  type="button"
+                                  onClick={() => setFormData({ ...formData, boundary_wall: o.id })}
+                                  className={`config-pill-chip ${Boolean(formData.boundary_wall) === o.id ? 'active' : ''}`}
+                                >
+                                  {o.label}
+                                </button>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1178,88 +1438,179 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                   // 2. Commercial / Industrial Archetype
                   if (arch === 'commercial' || arch === 'industrial') {
                     return (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: 12 }}>
-                          <div className="form-group">
-                            <label className="form-label">
-                              Price (₹ Lakhs) * {formData.priceLakhs ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(= ₹{(formData.priceLakhs / 100).toFixed(2)} Cr)</span> : null}
-                            </label>
-                            <input
-                              type="number"
-                              step="any"
-                              className="form-input"
-                              value={formData.priceLakhs}
-                              onChange={e => setFormData({ ...formData, priceLakhs: e.target.value })}
-                              placeholder="e.g. 850 (= 8.50 Cr)"
-                            />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                        {/* Price & Area */}
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                            Price & Area
                           </div>
-                          <div className="form-group">
-                            <label className="form-label">Super Area (Sq.Ft) *</label>
-                            <input
-                              type="number"
-                              className="form-input"
-                              value={formData.areaSqFt}
-                              onChange={e => setFormData({ ...formData, areaSqFt: e.target.value })}
-                              placeholder="e.g. 5000"
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label className="form-label">Washrooms (Count)</label>
-                            <input
-                              type="number"
-                              className="form-input"
-                              value={formData.bathrooms || ''}
-                              onChange={e => setFormData({ ...formData, bathrooms: Number(e.target.value) })}
-                              placeholder="e.g. 2"
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label className="form-label">Fit-out Condition</label>
-                            <select
-                              className="form-select"
-                              value={formData.furnishing_status || 'semi-furnished'}
-                              onChange={e => setFormData({ ...formData, furnishing_status: e.target.value })}
-                            >
-                              <option value="unfurnished">Bare Shell (Raw Space)</option>
-                              <option value="semi-furnished">Warm Shell (HVAC + Flooring)</option>
-                              <option value="furnished">Fully Furnished / Plug & Play</option>
-                            </select>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">
+                                Price (₹ Lakhs) * {formData.priceLakhs ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(= ₹{(formData.priceLakhs / 100).toFixed(2)} Cr)</span> : null}
+                              </label>
+                              <input
+                                type="number"
+                                step="any"
+                                min="0"
+                                className="form-input"
+                                value={formData.priceLakhs}
+                                onChange={e => setFormData({ ...formData, priceLakhs: e.target.value })}
+                                placeholder="e.g. 850 (= 8.50 Cr)"
+                              />
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Super Area ({UNIT_LABEL(areaUnit)}) *</label>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <input
+                                  type="number"
+                                  step="any"
+                                  min="0"
+                                  className="form-input"
+                                  style={{ flex: 1 }}
+                                  value={fromSqft(formData.areaSqFt, areaUnit)}
+                                  onChange={e => setFormData({ ...formData, areaSqFt: toSqft(e.target.value, areaUnit) })}
+                                  placeholder="e.g. 5000"
+                                />
+                                <select
+                                  className="form-select"
+                                  style={{ width: 92, flexShrink: 0 }}
+                                  value={areaUnit}
+                                  onChange={e => setAreaUnit(e.target.value)}
+                                  title="Area unit"
+                                >
+                                  {AREA_UNITS.map(u => (
+                                    <option key={u.id} value={u.id}>{u.label}</option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
-                        {/* Commercial Specs: Frontage, Occupancy, Power */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1.2fr', gap: 12 }}>
-                          <div className="form-group">
-                            <label className="form-label">Frontage Width (ft)</label>
-                            <input
-                              type="number"
-                              className="form-input"
-                              value={formData.frontage_ft !== undefined ? formData.frontage_ft : ''}
-                              onChange={e => setFormData({ ...formData, frontage_ft: e.target.value })}
-                              placeholder="e.g. 35 ft main road"
-                            />
+                        {/* Space & Condition */}
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                            Space & Condition
                           </div>
-                          <div className="form-group">
-                            <label className="form-label">Occupancy / Tenancy Status</label>
-                            <select
-                              className="form-select"
-                              value={formData.occupancy_status || 'Vacant'}
-                              onChange={e => setFormData({ ...formData, occupancy_status: e.target.value })}
-                            >
-                              <option value="Vacant">Vacant (Immediate Self-Use)</option>
-                              <option value="Pre-Leased">Pre-Leased (High Rental Yield)</option>
-                              <option value="Under-Construction">Under Construction (Delivery Soon)</option>
-                            </select>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Washrooms</label>
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={formData.bathrooms || ''}
+                                onChange={e => setFormData({ ...formData, bathrooms: Number(e.target.value) })}
+                                placeholder="e.g. 2"
+                              />
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Fit-out Condition</label>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                {[
+                                  { id: 'unfurnished', label: 'Bare Shell' },
+                                  { id: 'semi-furnished', label: 'Warm Shell' },
+                                  { id: 'furnished', label: 'Plug & Play' },
+                                ].map((o) => (
+                                  <button
+                                    key={o.id}
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, furnishing_status: o.id })}
+                                    className={`config-pill-chip ${(formData.furnishing_status || 'semi-furnished') === o.id ? 'active' : ''}`}
+                                    title={o.id === 'unfurnished' ? 'Bare Shell (Raw Space)' : o.id === 'semi-furnished' ? 'Warm Shell (HVAC + Flooring)' : 'Fully Furnished / Plug & Play'}
+                                  >
+                                    {o.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                          <div className="form-group">
-                            <label className="form-label">Power Load Sanctioned (KVA)</label>
-                            <input
-                              type="number"
-                              className="form-input"
-                              value={formData.power_load_kva !== undefined ? formData.power_load_kva : ''}
-                              onChange={e => setFormData({ ...formData, power_load_kva: e.target.value })}
-                              placeholder="e.g. 50 KVA with dual source"
-                            />
+                        </div>
+
+                        {/* Building Specs */}
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                            Building Specs
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Floor No.</label>
+                              <input
+                                type="number"
+                                className="form-input"
+                                value={formData.floor_number !== undefined ? formData.floor_number : ''}
+                                onChange={e => setFormData({ ...formData, floor_number: e.target.value })}
+                                placeholder="e.g. 7"
+                              />
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Frontage Width (ft)</label>
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={formData.frontage_ft !== undefined ? formData.frontage_ft : ''}
+                                onChange={e => setFormData({ ...formData, frontage_ft: e.target.value })}
+                                placeholder="e.g. 35 ft main road"
+                              />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Occupancy / Tenancy</label>
+                              <select
+                                className="form-select"
+                                value={formData.occupancy_status || 'Vacant'}
+                                onChange={e => setFormData({ ...formData, occupancy_status: e.target.value })}
+                              >
+                                <option value="Vacant">Vacant (Immediate Self-Use)</option>
+                                <option value="Pre-Leased">Pre-Leased (High Rental Yield)</option>
+                                <option value="Under-Construction">Under Construction (Delivery Soon)</option>
+                              </select>
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Power Load (KVA)</label>
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={formData.power_load_kva !== undefined ? formData.power_load_kva : ''}
+                                onChange={e => setFormData({ ...formData, power_load_kva: e.target.value })}
+                                placeholder="e.g. 50 KVA dual source"
+                              />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 12 }}>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Cabins (Count)</label>
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={formData.cabins !== undefined ? formData.cabins : ''}
+                                onChange={e => setFormData({ ...formData, cabins: e.target.value })}
+                                placeholder="e.g. 4"
+                              />
+                            </div>
+                            <div className="form-group" style={{ margin: 0 }}>
+                              <label className="form-label">Pantry</label>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                {[
+                                  { id: true, label: 'Pantry Available' },
+                                  { id: false, label: 'No Pantry' },
+                                ].map((o) => (
+                                  <button
+                                    key={String(o.id)}
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, pantry: o.id })}
+                                    className={`config-pill-chip ${Boolean(formData.pantry) === o.id ? 'active' : ''}`}
+                                  >
+                                    {o.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1270,183 +1621,328 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                   const carpetEstimate = formData.areaSqFt ? Math.round(Number(formData.areaSqFt) * 0.74) : null;
 
                   return (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: 12 }}>
-                        <div className="form-group">
-                          <label className="form-label">
-                            Base Price (₹ Lakhs) * {formData.priceLakhs ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(= ₹{(formData.priceLakhs / 100).toFixed(2)} Cr)</span> : null}
-                          </label>
-                          <input
-                            type="number"
-                            step="any"
-                            className="form-input"
-                            value={formData.priceLakhs}
-                            onChange={e => {
-                              const val = e.target.value;
-                              setFormData(prev => {
-                                const nextVars = prev.variants.length > 0 ? [
-                                  { ...prev.variants[0], price_lakhs: Number(val) },
-                                  ...prev.variants.slice(1)
-                                ] : [];
-                                return { ...prev, priceLakhs: val, variants: nextVars };
-                              });
-                            }}
-                            placeholder="e.g. 450 (= ₹4.50 Cr)"
-                          />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                      {/* Price & Space */}
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                          Price & Space
                         </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">
+                              Base Price (₹ Lakhs) * {formData.priceLakhs ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(= ₹{(formData.priceLakhs / 100).toFixed(2)} Cr)</span> : null}
+                            </label>
+                            <input
+                              type="number"
+                              step="any"
+                              min="0"
+                              className="form-input"
+                              value={formData.priceLakhs}
+                              onChange={e => {
+                                const val = e.target.value;
+                                setFormData(prev => {
+                                  const nextVars = prev.variants.length > 0 ? [
+                                    { ...prev.variants[0], price_lakhs: Number(val) },
+                                    ...prev.variants.slice(1)
+                                  ] : [];
+                                  return { ...prev, priceLakhs: val, variants: nextVars };
+                                });
+                              }}
+                              placeholder="e.g. 450 (= ₹4.50 Cr)"
+                            />
+                          </div>
 
-                        <div className="form-group">
-                          <label className="form-label">Super Area (Sq.Ft) *</label>
-                          <input
-                            type="number"
-                            className="form-input"
-                            value={formData.areaSqFt}
-                            onChange={e => {
-                              const val = e.target.value;
-                              setFormData(prev => {
-                                const nextVars = prev.variants.length > 0 ? [
-                                  { ...prev.variants[0], sqft: Number(val) },
-                                  ...prev.variants.slice(1)
-                                ] : [];
-                                return { ...prev, areaSqFt: val, variants: nextVars };
-                              });
-                            }}
-                            placeholder="e.g. 3850"
-                          />
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Super Area ({UNIT_LABEL(areaUnit)}) *</label>
+                            <div style={{ display: 'flex', gap: 6 }}>
+                              <input
+                                type="number"
+                                step="any"
+                                min="0"
+                                className="form-input"
+                                style={{ flex: 1 }}
+                                value={fromSqft(formData.areaSqFt, areaUnit)}
+                                onChange={e => {
+                                  const sqft = toSqft(e.target.value, areaUnit);
+                                  setFormData(prev => {
+                                    const nextVars = prev.variants.length > 0 ? [
+                                      { ...prev.variants[0], sqft: Number(sqft) },
+                                      ...prev.variants.slice(1)
+                                    ] : [];
+                                    return { ...prev, areaSqFt: sqft, variants: nextVars };
+                                  });
+                                }}
+                                placeholder="e.g. 3850"
+                              />
+                              <select
+                                className="form-select"
+                                style={{ width: 92, flexShrink: 0 }}
+                                value={areaUnit}
+                                onChange={e => setAreaUnit(e.target.value)}
+                                title="Area unit"
+                              >
+                                {AREA_UNITS.map(u => (
+                                  <option key={u.id} value={u.id}>{u.label}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
                         </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">
+                              Bedrooms (BHK)
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              className="form-input"
+                              value={formData.bedrooms !== undefined ? formData.bedrooms : 3}
+                              onChange={e => {
+                                const val = Number(e.target.value);
+                                setFormData(prev => {
+                                  const nextVars = prev.variants.length > 0 ? [
+                                    { ...prev.variants[0], bedrooms: val },
+                                    ...prev.variants.slice(1)
+                                  ] : [];
+                                  return { ...prev, bedrooms: val, variants: nextVars };
+                                });
+                              }}
+                            />
+                          </div>
 
-                        <div className="form-group">
-                          <label className="form-label">
-                            Bedrooms (BHK)
-                          </label>
-                          <input
-                            type="number"
-                            min="0"
-                            className="form-input"
-                            value={formData.bedrooms !== undefined ? formData.bedrooms : 3}
-                            onChange={e => {
-                              const val = Number(e.target.value);
-                              setFormData(prev => {
-                                const nextVars = prev.variants.length > 0 ? [
-                                  { ...prev.variants[0], bedrooms: val },
-                                  ...prev.variants.slice(1)
-                                ] : [];
-                                return { ...prev, bedrooms: val, variants: nextVars };
-                              });
-                            }}
-                          />
-                        </div>
-
-                        <div className="form-group">
-                          <label className="form-label">Bathrooms</label>
-                          <input
-                            type="number"
-                            min="0"
-                            className="form-input"
-                            value={formData.bathrooms !== undefined ? formData.bathrooms : 3}
-                            onChange={e => {
-                              const val = Number(e.target.value);
-                              setFormData(prev => {
-                                const nextVars = prev.variants.length > 0 ? [
-                                  { ...prev.variants[0], bathrooms: val },
-                                  ...prev.variants.slice(1)
-                                ] : [];
-                                return { ...prev, bathrooms: val, variants: nextVars };
-                              });
-                            }}
-                          />
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Bathrooms</label>
+                            <input
+                              type="number"
+                              min="0"
+                              className="form-input"
+                              value={formData.bathrooms !== undefined ? formData.bathrooms : 3}
+                              onChange={e => {
+                                const val = Number(e.target.value);
+                                setFormData(prev => {
+                                  const nextVars = prev.variants.length > 0 ? [
+                                    { ...prev.variants[0], bathrooms: val },
+                                    ...prev.variants.slice(1)
+                                  ] : [];
+                                  return { ...prev, bathrooms: val, variants: nextVars };
+                                });
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: 12 }}>
-                        <div className="form-group">
-                          <label className="form-label">
-                            Carpet Area (Sq.Ft) {carpetEstimate ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(~74% ≈ {carpetEstimate})</span> : null}
-                          </label>
-                          <input
-                            type="number"
-                            className="form-input"
-                            value={formData.carpet_sqft}
-                            onChange={e => setFormData({ ...formData, carpet_sqft: e.target.value })}
-                            placeholder={carpetEstimate ? `e.g. ${carpetEstimate}` : 'e.g. 2950'}
-                          />
+                      {/* Area Detail */}
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                          Area Detail & Possession
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">
+                              Carpet Area (Sq.Ft) {carpetEstimate ? <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>(~74% ≈ {carpetEstimate})</span> : null}
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              className="form-input"
+                              value={formData.carpet_sqft}
+                              onChange={e => setFormData({ ...formData, carpet_sqft: e.target.value })}
+                              placeholder={carpetEstimate ? `e.g. ${carpetEstimate}` : 'e.g. 2950'}
+                            />
+                          </div>
+
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Possession</label>
+                            <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
+                              {[
+                                { id: 'ready', label: 'Ready to Move' },
+                                { id: 'uc', label: 'Under Construction' },
+                              ].map((o) => (
+                                <button
+                                  key={o.id}
+                                  type="button"
+                                  onClick={() => setPossessionCat(o.id)}
+                                  className={`config-pill-chip ${possessionCat === o.id ? 'active' : ''}`}
+                                >
+                                  {o.label}
+                                </button>
+                              ))}
+                            </div>
+                            {possessionCat === 'ready' ? (
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={possessionAge}
+                                onChange={e => setPossessionAge(e.target.value)}
+                                placeholder="Age in years (e.g. 5, optional)"
+                              />
+                            ) : (
+                              <input
+                                className="form-input"
+                                value={possessionBy}
+                                onChange={e => setPossessionBy(e.target.value)}
+                                placeholder="Possession by (e.g. Dec 2027)"
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Facing — full width */}
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                          Facing & Furnishing
+                        </div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                            {FACING_DIRECTIONS.map((opt) => {
+                              const isSelected = formData.facing === opt;
+                              return (
+                                <button
+                                  key={opt}
+                                  type="button"
+                                  onClick={() => setFormData({ ...formData, facing: opt })}
+                                  className={`config-pill-chip ${isSelected ? 'active' : ''}`}
+                                  title={opt}
+                                >
+                                  {shortFacing(opt)}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {formData.facing && !FACING_DIRECTIONS.includes(formData.facing) && (
+                            <div style={{ fontSize: 11, color: 'var(--color-muted-fg)', marginTop: 4 }}>
+                              Saved: {formData.facing} — pick a direction to change
+                            </div>
+                          )}
                         </div>
 
-                        <div className="form-group">
-                          <label className="form-label">Possession Status / Timeline</label>
-                          <input
-                            className="form-input"
-                            value={formData.possession_timeline || ''}
-                            onChange={e => setFormData({ ...formData, possession_timeline: e.target.value, possessionDate: e.target.value })}
-                            placeholder="e.g. Ready to Move / Dec 2026"
-                          />
-                        </div>
-
-                        <div className="form-group">
-                          <label className="form-label">Facing / Orientation</label>
-                          <input
-                            className="form-input"
-                            value={formData.facing}
-                            onChange={e => setFormData({ ...formData, facing: e.target.value })}
-                            placeholder="e.g. North-East Facing"
-                          />
-                        </div>
-
-                        <div className="form-group">
+                        <div className="form-group" style={{ margin: 0 }}>
                           <label className="form-label">Furnishing Status</label>
-                          <select
-                            className="form-select"
-                            value={formData.furnishing_status || 'semi-furnished'}
-                            onChange={e => setFormData({ ...formData, furnishing_status: e.target.value })}
-                          >
-                            <option value="furnished">Designer Furnished</option>
-                            <option value="semi-furnished">Semi-Furnished (Modular + ACs)</option>
-                            <option value="unfurnished">Bare-shell / Unfurnished</option>
-                          </select>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                            {[
+                              { id: 'furnished', label: 'Furnished', title: 'Designer Furnished' },
+                              { id: 'semi-furnished', label: 'Semi-Furnished', title: 'Semi-Furnished (Modular + ACs)' },
+                              { id: 'unfurnished', label: 'Unfurnished', title: 'Bare-shell / Unfurnished' },
+                            ].map((o) => (
+                              <button
+                                key={o.id}
+                                type="button"
+                                onClick={() => setFormData({ ...formData, furnishing_status: o.id })}
+                                className={`config-pill-chip ${(formData.furnishing_status || 'semi-furnished') === o.id ? 'active' : ''}`}
+                                title={o.title}
+                              >
+                                {o.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                      {/* Floor & Charges */}
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                          Floor & Charges
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Floor Number</label>
+                            <input
+                              type="number"
+                              className="form-input"
+                              value={formData.floor_number !== undefined ? formData.floor_number : ''}
+                              onChange={e => setFormData({ ...formData, floor_number: e.target.value })}
+                              placeholder="e.g. 14"
+                            />
+                          </div>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Total Floors in Tower</label>
+                            <input
+                              type="number"
+                              min="0"
+                              className="form-input"
+                              value={formData.total_floors !== undefined ? formData.total_floors : ''}
+                              onChange={e => setFormData({ ...formData, total_floors: e.target.value })}
+                              placeholder="e.g. 32"
+                            />
+                          </div>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Balconies</label>
+                            <input
+                              type="number"
+                              min="0"
+                              className="form-input"
+                              value={formData.balconies !== undefined ? formData.balconies : ''}
+                              onChange={e => setFormData({ ...formData, balconies: e.target.value })}
+                              placeholder="e.g. 3"
+                            />
+                          </div>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Maintenance Charges</label>
+                            <input
+                              className="form-input"
+                              value={formData.maintenance_charges || ''}
+                              onChange={e => setFormData({ ...formData, maintenance_charges: e.target.value })}
+                              placeholder="e.g. ₹5 / sq.ft or ₹12,000 / mo"
+                            />
+                          </div>
                         </div>
                       </div>
 
-                      {/* Floor Specs & Maintenance */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1.2fr', gap: 12 }}>
-                        <div className="form-group">
-                          <label className="form-label">Floor Number</label>
-                          <input
-                            type="number"
-                            className="form-input"
-                            value={formData.floor_number !== undefined ? formData.floor_number : ''}
-                            onChange={e => setFormData({ ...formData, floor_number: e.target.value })}
-                            placeholder="e.g. 14"
-                          />
+                      {/* Rooms & Parking */}
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                          Rooms & Parking
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 12 }}>
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label className="form-label">Additional Rooms</label>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                            {ADDITIONAL_ROOMS.map((room) => {
+                              const list = typeof formData.amenities === 'string'
+                                ? formData.amenities.split(',').map(s => s.trim()).filter(Boolean)
+                                : (formData.amenities || []);
+                              const isSelected = list.includes(room);
+                              return (
+                                <button
+                                  key={room}
+                                  type="button"
+                                  onClick={() => toggleAmenity(room)}
+                                  className={`config-pill-chip ${isSelected ? 'active' : ''}`}
+                                >
+                                  {room}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                         <div className="form-group">
-                          <label className="form-label">Total Floors in Tower</label>
-                          <input
-                            type="number"
-                            className="form-input"
-                            value={formData.total_floors !== undefined ? formData.total_floors : ''}
-                            onChange={e => setFormData({ ...formData, total_floors: e.target.value })}
-                            placeholder="e.g. 32"
-                          />
+                          <label className="form-label">Parking {formData.parking ? <span style={{ color: 'var(--color-muted-fg)' }}>({formData.parking})</span> : null}</label>
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1 }}>
+                              <span style={{ fontSize: 11, color: 'var(--color-muted-fg)', whiteSpace: 'nowrap' }}>Covered</span>
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={parkCovered}
+                                onChange={e => handleParkingChange(e.target.value, parkOpen)}
+                              />
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1 }}>
+                              <span style={{ fontSize: 11, color: 'var(--color-muted-fg)', whiteSpace: 'nowrap' }}>Open</span>
+                              <input
+                                type="number"
+                                min="0"
+                                className="form-input"
+                                value={parkOpen}
+                                onChange={e => handleParkingChange(parkCovered, e.target.value)}
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <label className="form-label">Balconies Count</label>
-                          <input
-                            type="number"
-                            className="form-input"
-                            value={formData.balconies !== undefined ? formData.balconies : ''}
-                            onChange={e => setFormData({ ...formData, balconies: e.target.value })}
-                            placeholder="e.g. 3"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Maintenance Charges</label>
-                          <input
-                            className="form-input"
-                            value={formData.maintenance_charges || ''}
-                            onChange={e => setFormData({ ...formData, maintenance_charges: e.target.value })}
-                            placeholder="e.g. ₹5 / sq.ft or ₹12,000 / mo"
-                          />
-                        </div>
+                      </div>
                       </div>
 
                       {/* Integrated Multi-Size Configurations (TGV Admin Parity) */}
@@ -1598,9 +2094,14 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                 })()}
 
                 {/* City & Sector with Grouped Regions + Custom City Input (TGV Admin Parity) */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 12 }}>
-                  <div className="form-group">
-                    <label className="form-label">City / Market *</label>
+                {/* Location */}
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                    Location
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 12 }}>
+                    <div className="form-group" style={{ margin: 0 }}>
+                      <label className="form-label">City / Market *</label>
                     <select
                       className="form-select"
                       value={formData.city}
@@ -1626,7 +2127,7 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                       />
                     )}
                   </div>
-                  <div className="form-group">
+                  <div className="form-group" style={{ margin: 0 }}>
                     <label className="form-label">Sector / Locality *</label>
                     <input
                       className="form-input"
@@ -1636,9 +2137,14 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                     />
                   </div>
                 </div>
+                </div>
 
-                {/* Tier & Visibility Strategy Bar (Bidirectionally Synchronized) */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, background: 'var(--color-bg-secondary, #F1F5FD)', padding: 12, borderRadius: 10, border: '1px solid var(--color-border)' }}>
+                {/* Listing & Visibility */}
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-muted-fg)', marginBottom: 8 }}>
+                    Listing & Visibility
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, background: 'var(--color-bg-secondary, #F1F5FD)', padding: 12, borderRadius: 10, border: '1px solid var(--color-border)' }}>
                   <div className="form-group" style={{ margin: 0 }}>
                     <label className="form-label" style={{ fontWeight: 600, fontSize: 11 }}>Listing Tier</label>
                     <select
@@ -1689,6 +2195,7 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                     </label>
                   </div>
                 </div>
+                </div>
 
                 <div className="form-group">
                   <label className="form-label">Editorial Description / Narrative</label>
@@ -1704,9 +2211,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
             )}
 
             {/* ========================================================
-                TAB 2: MEDIA & ASSETS
+                STEP 3: PHOTOS & MEDIA
                 ======================================================== */}
-            {activeTab === 'media' && (
+            {activeStep === 'media' && (
               <>
                 {/* 1-Click Preset Gallery Chips */}
                 <div style={{ background: 'var(--color-bg-secondary, #F1F5FD)', padding: 12, borderRadius: 10, border: '1px solid var(--color-border)' }}>
@@ -1731,7 +2238,7 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                 {/* Upload & Direct URL Add */}
                 <div className="form-group">
                   <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>Listing Photo Gallery ({formData.images?.length || 0} photo{formData.images?.length !== 1 ? 's' : ''})</span>
+                    <span>Listing Photo Gallery ({galleryImages.length} photo{galleryImages.length !== 1 ? 's' : ''})</span>
                     <span style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>First photo acts as the primary Cover</span>
                   </label>
 
@@ -1773,9 +2280,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                   </div>
 
                   {/* Thumbnail gallery */}
-                  {formData.images && formData.images.length > 0 && (
+                  {galleryImages.length > 0 && (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(105px, 1fr))', gap: 8, marginTop: 10 }}>
-                      {formData.images.map((img, idx) => (
+                      {galleryImages.map((img, idx) => (
                         <div 
                           key={idx} 
                           style={{ 
@@ -1788,6 +2295,19 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                           }}
                         >
                           <img src={img} alt={`Photo ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+
+                          {/* Room tag */}
+                          <select
+                            value={galleryTags[idx] || DEFAULT_PHOTO_TAG}
+                            onChange={(e) => handlePhotoTagChange(idx, e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            title="Photo room tag"
+                            style={{ position: 'absolute', bottom: 2, left: 2, right: 2, width: 'calc(100% - 4px)', fontSize: 9, fontWeight: 700, padding: '1px 2px', borderRadius: 4, border: 'none', background: 'rgba(0,0,0,0.65)', color: '#fff', cursor: 'pointer' }}
+                          >
+                            {PHOTO_TAGS.map((t) => (
+                              <option key={t} value={t}>{t}</option>
+                            ))}
+                          </select>
                           
                           {idx === 0 ? (
                             <span style={{ position: 'absolute', top: 3, left: 3, background: 'var(--color-primary)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4 }}>
@@ -1930,9 +2450,149 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
             )}
 
             {/* ========================================================
-                TAB 3: VARIANTS & FLOOR PLANS
+                STEP 4: REVIEW & PUBLISH
                 ======================================================== */}
-            {activeTab === 'variants' && (
+            {activeStep === 'review' && (
+              <>
+                {/* Readiness Checklist (same 6 required fields as validation) */}
+                {(() => {
+                  const checks = [
+                    { ok: Boolean(formData.name && formData.name.trim()), label: 'Title', step: 'basics' },
+                    { ok: Boolean(formData.type), label: 'Category', step: 'basics' },
+                    { ok: Boolean(formData.priceLakhs && Number(formData.priceLakhs) > 0), label: 'Price', step: 'details' },
+                    { ok: Boolean(formData.areaSqFt && Number(formData.areaSqFt) > 0), label: 'Area', step: 'details' },
+                    { ok: Boolean(formData.city && (formData.city !== 'custom' || (formData.custom_city && formData.custom_city.trim()))), label: 'City', step: 'details' },
+                    { ok: Boolean(formData.locality && formData.locality.trim()), label: 'Locality', step: 'details' },
+                  ];
+                  const missing = checks.filter(c => !c.ok);
+                  const catInfo = ASSET_CATEGORIES.find(c => c.id === formData.type);
+                  const coverImg = (Array.isArray(formData.images) && formData.images[0]) || formData.imageUrl || '';
+                  return (
+                    <>
+                      <div style={{
+                        padding: '12px 14px',
+                        borderRadius: 12,
+                        border: missing.length === 0 ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(245, 158, 11, 0.45)',
+                        background: missing.length === 0 ? 'rgba(16, 185, 129, 0.06)' : 'rgba(245, 158, 11, 0.07)',
+                        display: 'flex', flexDirection: 'column', gap: 8
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-fg)' }}>
+                            {missing.length === 0 ? '✅ Ready to publish' : `⚠️ ${missing.length} required item${missing.length !== 1 ? 's' : ''} missing`}
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                          {checks.map((c) => (
+                            <button
+                              key={c.label}
+                              type="button"
+                              onClick={() => { if (!c.ok) setActiveStep(c.step); }}
+                              title={c.ok ? `${c.label} — done` : `${c.label} — click to fix`}
+                              style={{
+                                fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20,
+                                border: '1px solid',
+                                borderColor: c.ok ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.5)',
+                                background: c.ok ? 'rgba(16, 185, 129, 0.12)' : '#fff',
+                                color: c.ok ? '#059669' : '#b45309',
+                                cursor: c.ok ? 'default' : 'pointer'
+                              }}
+                            >
+                              {c.ok ? '✓' : '○'} {c.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Summary Cards */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+                        <div style={{ border: '1px solid var(--color-border)', borderRadius: 12, padding: 12, background: 'var(--color-card)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                            <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-muted-fg)' }}>Basics</span>
+                            <button type="button" onClick={() => setActiveStep('basics')} style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>Edit</button>
+                          </div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-fg)' }}>{formData.name || '—'}</div>
+                          <div style={{ fontSize: 11, color: 'var(--color-muted-fg)', marginTop: 2 }}>
+                            {catInfo ? `${catInfo.group} • ${catInfo.name}` : '—'}
+                          </div>
+                          <div style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>
+                            {formData.configuration || ''} • {formData.purpose === 'rent' ? 'For Lease' : 'For Sale'}
+                          </div>
+                        </div>
+
+                        <div style={{ border: '1px solid var(--color-border)', borderRadius: 12, padding: 12, background: 'var(--color-card)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                            <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-muted-fg)' }}>Price & Location</span>
+                            <button type="button" onClick={() => setActiveStep('details')} style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>Edit</button>
+                          </div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-fg)' }}>
+                            {formData.priceLakhs ? `₹${Number(formData.priceLakhs).toLocaleString()} L` : '—'}
+                            {formData.priceLakhs ? <span style={{ fontWeight: 600, color: 'var(--color-primary)' }}> (₹{(Number(formData.priceLakhs) / 100).toFixed(2)} Cr)</span> : null}
+                          </div>
+                          <div style={{ fontSize: 11, color: 'var(--color-muted-fg)', marginTop: 2 }}>
+                            {formData.areaSqFt ? `${Number(formData.areaSqFt).toLocaleString()} sq.ft` : '—'}
+                            {formData.locality ? ` • ${formData.locality}` : ''}
+                          </div>
+                          <div style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>
+                            {formData.city === 'custom' ? (formData.custom_city || 'Custom city') : (formData.city || '')}
+                            {formData.tier === 'normal' ? ' • Off-Market' : ' • Luxury'}
+                            {formData.is_featured ? ' • ⭐ Pinned' : ''}
+                          </div>
+                        </div>
+
+                        <div style={{ border: '1px solid var(--color-border)', borderRadius: 12, padding: 12, background: 'var(--color-card)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                            <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-muted-fg)' }}>Media</span>
+                            <button type="button" onClick={() => setActiveStep('media')} style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>Edit</button>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            {coverImg ? (
+                              <img src={coverImg} alt="Cover" style={{ width: 44, height: 34, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--color-border)' }} />
+                            ) : (
+                              <span style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>No photos yet</span>
+                            )}
+                            <div style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>
+                              <div>{(formData.images || []).length} photo{(formData.images || []).length !== 1 ? 's' : ''}</div>
+                              <div>{formData.brochure_url ? '📄 Brochure ✓' : '📄 No brochure'}</div>
+                              <div>{(formData.variants || []).length} variant{(formData.variants || []).length !== 1 ? 's' : ''}{formData.floor_plan_url ? ' • plan ✓' : ''}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Advanced (optional) — one unified section */}
+                      <button
+                        type="button"
+                        onClick={() => setShowAdvanced(prev => !prev)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                          padding: '12px 14px', borderRadius: 12, textAlign: 'left',
+                          border: showAdvanced ? '1.5px solid var(--color-primary)' : '1px dashed var(--color-border)',
+                          background: showAdvanced ? 'rgba(37, 99, 235, 0.06)' : 'var(--color-bg-secondary, #F1F5FD)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <span style={{ fontSize: 14, fontWeight: 800, color: showAdvanced ? 'var(--color-primary)' : 'var(--color-muted-fg)' }}>
+                          {showAdvanced ? '▾' : '▸'}
+                        </span>
+                        <span style={{ flex: 1 }}>
+                          <span style={{ display: 'block', fontSize: 13, fontWeight: 800, color: 'var(--color-fg)' }}>
+                            Advanced <span style={{ fontWeight: 500, color: 'var(--color-muted-fg)' }}>(optional)</span>
+                          </span>
+                          <span style={{ display: 'block', fontSize: 11, color: 'var(--color-muted-fg)', marginTop: 1 }}>
+                            Floor plans & variants • Transit & commute • Legal, RERA & highlights — skipped sections stay off the website
+                          </span>
+                        </span>
+                      </button>
+                    </>
+                  );
+                })()}
+              </>
+            )}
+
+            {/* ========================================================
+                ADVANCED (unified, inside Review): VARIANTS & FLOOR PLANS
+                ======================================================== */}
+            {activeStep === 'review' && showAdvanced && (
               <>
                 {/* Tactile Switch Banner */}
                 <div 
@@ -2432,9 +3092,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
           )}
 
             {/* ========================================================
-                TAB 4: TRANSIT & COMMUTE
+                ADVANCED (unified, inside Review): TRANSIT & COMMUTE
                 ======================================================== */}
-            {activeTab === 'transit' && (
+            {activeStep === 'review' && showAdvanced && (
               <>
                 {/* Tactile Switch Banner */}
                 <div 
@@ -2661,9 +3321,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
             )}
 
             {/* ========================================================
-                TAB 5: LEGAL DILIGENCE & BADGES
+                ADVANCED (unified, inside Review): LEGAL & RERA
                 ======================================================== */}
-            {activeTab === 'legal' && (
+            {activeStep === 'review' && showAdvanced && (
               <>
                 {/* Tactile Switch Banner */}
                 <div 
@@ -3182,44 +3842,44 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
               </>
             )}
 
-            {/* Footer Navigation */}
+            {/* Footer Navigation: Cancel left; Previous + Continue/Publish right. */}
             <div className="modal-footer" style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--color-border)', paddingTop: 12 }}>
               <div style={{ display: 'flex', gap: 8 }}>
-                {activeTab !== 'overview' && (
+                <button type="button" className="btn btn-ghost" onClick={onClose} style={{ fontSize: 13 }}>Cancel</button>
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {activeStep !== 'basics' && (
                   <button
                     type="button"
                     className="btn btn-ghost"
                     style={{ fontSize: 13 }}
                     onClick={() => {
-                      const tabIds = TABS.map(t => t.id);
-                      const idx = tabIds.indexOf(activeTab);
-                      if (idx > 0) setActiveTab(tabIds[idx - 1]);
+                      const stepIds = STEPS.map(s => s.id);
+                      const idx = stepIds.indexOf(activeStep);
+                      if (idx > 0) setActiveStep(stepIds[idx - 1]);
                     }}
                   >
                     ← Previous
                   </button>
                 )}
-                {activeTab !== 'legal' && (
+                {activeStep !== 'review' ? (
                   <button
                     type="button"
-                    className="btn btn-secondary"
-                    style={{ fontSize: 13 }}
+                    className="btn btn-primary"
+                    style={{ fontSize: 13, fontWeight: 600 }}
                     onClick={() => {
-                      const tabIds = TABS.map(t => t.id);
-                      const idx = tabIds.indexOf(activeTab);
-                      if (idx < tabIds.length - 1) setActiveTab(tabIds[idx + 1]);
+                      const stepIds = STEPS.map(s => s.id);
+                      const idx = stepIds.indexOf(activeStep);
+                      if (idx < stepIds.length - 1) setActiveStep(stepIds[idx + 1]);
                     }}
                   >
-                    Next Tab →
+                    Continue →
+                  </button>
+                ) : (
+                  <button type="submit" className="btn btn-primary" disabled={isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure} style={{ fontSize: 13, fontWeight: 600, opacity: (isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure) ? 0.6 : 1 }}>
+                    {(isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure) ? 'Uploading files…' : (editingProperty ? 'Save & Sync Listing' : 'Publish Property to Website & CRM')}
                   </button>
                 )}
-              </div>
-
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button type="button" className="btn btn-ghost" onClick={onClose} style={{ fontSize: 13 }}>Cancel</button>
-                <button type="submit" className="btn btn-primary" disabled={isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure} style={{ fontSize: 13, fontWeight: 600, opacity: (isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure) ? 0.6 : 1 }}>
-                  {(isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure) ? 'Uploading files…' : (editingProperty ? 'Save & Sync Listing' : 'Publish Property to Website & CRM')}
-                </button>
               </div>
             </div>
           </form>

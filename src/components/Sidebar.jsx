@@ -13,6 +13,7 @@ import { usePropertyStore } from '../store/propertyStore';
 import { useTaskStore } from '../store/taskStore';
 import { useBuilderStore } from '../store/builderStore';
 import './Sidebar.css';
+import { InstallAppButton } from './InstallAppButton';
 
 export function Sidebar() {
   const { 
@@ -203,6 +204,9 @@ export function Sidebar() {
 
         {/* Live Metrics Summary */}
         <div className="sidebar-section" style={{ marginTop: 'auto', paddingTop: 20 }}>
+          <div style={{ marginBottom: 10 }}>
+            <InstallAppButton />
+          </div>
           <div className="sidebar-stats-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
               <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--color-muted-fg)' }}>

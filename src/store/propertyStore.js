@@ -3,6 +3,26 @@ import { persist } from 'zustand/middleware';
 import { supabase } from '../api/supabase';
 import { sanitizeImageList, sanitizeImageUrl } from '../utils/storageUpload';
 
+// Detail columns added by supabase/migrations/20260921000000_listing_detail_fields.sql.
+// Kept in one list so saves can retry without them when the migration
+// hasn't been applied to the live project yet (PGRST204 fallback).
+const NEW_DETAIL_KEYS = ['area_unit', 'cabins', 'pantry', 'image_tags'];
+const VALID_AREA_UNITS = ['sqft', 'sqyd', 'sqm', 'acre'];
+
+function isMissingColumnError(err) {
+  return Boolean(
+    err &&
+    err.code === 'PGRST204' &&
+    NEW_DETAIL_KEYS.some((k) => `${err.message || ''}`.includes(k))
+  );
+}
+
+function stripNewDetailKeys(payload) {
+  const next = { ...payload };
+  NEW_DETAIL_KEYS.forEach((k) => delete next[k]);
+  return next;
+}
+
 // Helper to normalize Supabase property schema to CRM internal schema
 export function normalizeCrmProperty(raw) {
   let images = [];
@@ -66,6 +86,10 @@ export function normalizeCrmProperty(raw) {
     video_url: raw.video_url || '',
     virtual_tour_url: raw.virtual_tour_url || '',
     floor_plan_url: raw.floor_plan_url || '',
+    area_unit: VALID_AREA_UNITS.includes(raw.area_unit) ? raw.area_unit : 'sqft',
+    cabins: raw.cabins !== undefined && raw.cabins !== null && raw.cabins !== '' ? Number(raw.cabins) : '',
+    pantry: Boolean(raw.pantry),
+    image_tags: Array.isArray(raw.image_tags) ? raw.image_tags.filter(t => typeof t === 'string') : [],
     rera_portal_url: raw.rera_portal_url || '',
     legal_status_tag: raw.legal_status_tag || 'Clear Title',
     legal_remarks: raw.legal_remarks || '',
@@ -242,6 +266,10 @@ export const usePropertyStore = create(
             video_url: normalized.video_url || null,
             virtual_tour_url: normalized.virtual_tour_url || null,
             floor_plan_url: sanitizeImageUrl(normalized.floor_plan_url) || null,
+            area_unit: VALID_AREA_UNITS.includes(normalized.area_unit) ? normalized.area_unit : 'sqft',
+            cabins: normalized.cabins !== '' && normalized.cabins !== undefined && normalized.cabins !== null && !isNaN(normalized.cabins) ? Number(normalized.cabins) : null,
+            pantry: Boolean(normalized.pantry),
+            image_tags: Array.isArray(normalized.image_tags) ? normalized.image_tags.filter(t => typeof t === 'string') : [],
             rera_portal_url: normalized.rera_portal_url || null,
             legal_status_tag: normalized.legal_status_tag || null,
             legal_remarks: normalized.legal_remarks || null,
@@ -269,8 +297,13 @@ export const usePropertyStore = create(
           };
 
           const { error } = await supabase.from('properties').insert(insertPayload);
-          if (error) {
-            console.error('Supabase properties insert error:', error);
+          let insertError = error;
+          if (isMissingColumnError(insertError)) {
+            console.warn('Detail columns (area_unit/cabins/pantry/image_tags) not migrated yet — retrying without them. Run supabase/migrations/20260921000000_listing_detail_fields.sql in the Supabase dashboard.');
+            ({ error: insertError } = await supabase.from('properties').insert(stripNewDetailKeys(insertPayload)));
+          }
+          if (insertError) {
+            console.error('Supabase properties insert error:', insertError);
           }
         } catch (err) {
           console.error('Failed to sync added property to Supabase:', err);
@@ -321,6 +354,10 @@ export const usePropertyStore = create(
           if (updates.video_url !== undefined) updatePayload.video_url = updates.video_url;
           if (updates.virtual_tour_url !== undefined) updatePayload.virtual_tour_url = updates.virtual_tour_url;
           if (updates.floor_plan_url !== undefined) updatePayload.floor_plan_url = sanitizeImageUrl(updates.floor_plan_url) || null;
+          if (updates.area_unit !== undefined && VALID_AREA_UNITS.includes(updates.area_unit)) updatePayload.area_unit = updates.area_unit;
+          if (updates.cabins !== undefined) updatePayload.cabins = updates.cabins !== '' && updates.cabins !== null && !isNaN(updates.cabins) ? Number(updates.cabins) : null;
+          if (updates.pantry !== undefined) updatePayload.pantry = Boolean(updates.pantry);
+          if (updates.image_tags !== undefined) updatePayload.image_tags = Array.isArray(updates.image_tags) ? updates.image_tags.filter(t => typeof t === 'string') : [];
           if (updates.rera_portal_url !== undefined) updatePayload.rera_portal_url = updates.rera_portal_url;
           if (updates.legal_status_tag !== undefined) updatePayload.legal_status_tag = updates.legal_status_tag;
           if (updates.legal_remarks !== undefined) updatePayload.legal_remarks = updates.legal_remarks;
@@ -364,8 +401,13 @@ export const usePropertyStore = create(
 
           if (Object.keys(updatePayload).length > 0) {
             const { error } = await supabase.from('properties').update(updatePayload).eq('id', id);
-            if (error) {
-              console.error('Supabase properties update error:', error);
+            let updateError = error;
+            if (isMissingColumnError(updateError)) {
+              console.warn('Detail columns (area_unit/cabins/pantry/image_tags) not migrated yet — retrying without them. Run supabase/migrations/20260921000000_listing_detail_fields.sql in the Supabase dashboard.');
+              ({ error: updateError } = await supabase.from('properties').update(stripNewDetailKeys(updatePayload)).eq('id', id));
+            }
+            if (updateError) {
+              console.error('Supabase properties update error:', updateError);
             }
           }
         } catch (err) {
