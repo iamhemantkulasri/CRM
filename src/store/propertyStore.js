@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { supabase } from '../api/supabase';
+import { sanitizeImageList, sanitizeImageUrl } from '../utils/storageUpload';
 
 // Helper to normalize Supabase property schema to CRM internal schema
 export function normalizeCrmProperty(raw) {
@@ -232,14 +233,15 @@ export const usePropertyStore = create(
             configuration: normalized.configuration || normalized.bhk || null,
             rera_number: normalized.reraNumber || null,
             description: normalized.description || null,
-            images: Array.isArray(normalized.images) ? normalized.images : (normalized.imageUrl ? [normalized.imageUrl] : []),
+            // Never persist inline blobs — Storage / remote URLs only
+            images: sanitizeImageList(Array.isArray(normalized.images) ? normalized.images : (normalized.imageUrl ? [normalized.imageUrl] : [])),
             amenities: Array.isArray(normalized.amenities) ? normalized.amenities : (typeof normalized.amenities === 'string' ? normalized.amenities.split(',').map(s => s.trim()).filter(Boolean) : []),
             tier: normalized.tier || 'luxury',
             visibility: normalized.visibility || 'public',
             brochure_url: normalized.brochure_url || null,
             video_url: normalized.video_url || null,
             virtual_tour_url: normalized.virtual_tour_url || null,
-            floor_plan_url: normalized.floor_plan_url || null,
+            floor_plan_url: sanitizeImageUrl(normalized.floor_plan_url) || null,
             rera_portal_url: normalized.rera_portal_url || null,
             legal_status_tag: normalized.legal_status_tag || null,
             legal_remarks: normalized.legal_remarks || null,
@@ -259,7 +261,7 @@ export const usePropertyStore = create(
             frontage_ft: normalized.frontage_ft !== '' && normalized.frontage_ft !== undefined && normalized.frontage_ft !== null && !isNaN(normalized.frontage_ft) ? Number(normalized.frontage_ft) : null,
             occupancy_status: normalized.occupancy_status || null,
             power_load_kva: normalized.power_load_kva !== '' && normalized.power_load_kva !== undefined && normalized.power_load_kva !== null && !isNaN(normalized.power_load_kva) ? Number(normalized.power_load_kva) : null,
-            variants: Array.isArray(normalized.variants) ? normalized.variants : [],
+            variants: Array.isArray(normalized.variants) ? normalized.variants.map((v) => ({ ...v, floor_plan_url: sanitizeImageUrl(v.floor_plan_url) })) : [],
             custom_dimensions: Array.isArray(normalized.custom_dimensions) ? normalized.custom_dimensions : [],
             custom_commute_points: Array.isArray(normalized.custom_commute_points) ? normalized.custom_commute_points : [],
             key_highlights: Array.isArray(normalized.key_highlights) ? normalized.key_highlights : [],
@@ -301,7 +303,7 @@ export const usePropertyStore = create(
           if (updates.show_transit !== undefined) updatePayload.show_transit = (updates.show_transit === false || updates.show_transit === 'false') ? false : true;
           if (updates.status !== undefined) updatePayload.status = updates.status;
           if (updates.description !== undefined) updatePayload.description = updates.description;
-          if (updates.images !== undefined) updatePayload.images = Array.isArray(updates.images) ? updates.images : [];
+          if (updates.images !== undefined) updatePayload.images = sanitizeImageList(Array.isArray(updates.images) ? updates.images : []);
           if (updates.amenities !== undefined) {
             updatePayload.amenities = Array.isArray(updates.amenities) ? updates.amenities : (typeof updates.amenities === 'string' ? updates.amenities.split(',').map(s => s.trim()).filter(Boolean) : []);
           }
@@ -310,14 +312,15 @@ export const usePropertyStore = create(
           if (updates.reraNumber !== undefined) updatePayload.rera_number = updates.reraNumber;
           if (updates.is_featured !== undefined) updatePayload.is_featured = Boolean(updates.is_featured);
           if (updates.builder_id !== undefined) updatePayload.builder_id = updates.builder_id;
-          if (updates.builder !== undefined) updatePayload.builder = updates.builder;
+          // NOTE: `properties` has no `builder` text column (builder name resolves
+          // via builder_id -> builders_sellers). Sending it caused PGRST204 400s.
           if (updates.type !== undefined) updatePayload.property_type = updates.type;
           if (updates.configuration !== undefined) updatePayload.configuration = updates.configuration;
           if (updates.bhk !== undefined && updates.configuration === undefined) updatePayload.configuration = updates.bhk;
           if (updates.brochure_url !== undefined) updatePayload.brochure_url = updates.brochure_url;
           if (updates.video_url !== undefined) updatePayload.video_url = updates.video_url;
           if (updates.virtual_tour_url !== undefined) updatePayload.virtual_tour_url = updates.virtual_tour_url;
-          if (updates.floor_plan_url !== undefined) updatePayload.floor_plan_url = updates.floor_plan_url;
+          if (updates.floor_plan_url !== undefined) updatePayload.floor_plan_url = sanitizeImageUrl(updates.floor_plan_url) || null;
           if (updates.rera_portal_url !== undefined) updatePayload.rera_portal_url = updates.rera_portal_url;
           if (updates.legal_status_tag !== undefined) updatePayload.legal_status_tag = updates.legal_status_tag;
           if (updates.legal_remarks !== undefined) updatePayload.legal_remarks = updates.legal_remarks;
@@ -349,7 +352,7 @@ export const usePropertyStore = create(
           if (updates.power_load_kva !== undefined) {
             updatePayload.power_load_kva = updates.power_load_kva !== '' && updates.power_load_kva !== null && !isNaN(updates.power_load_kva) ? Number(updates.power_load_kva) : null;
           }
-          if (updates.variants !== undefined) updatePayload.variants = Array.isArray(updates.variants) ? updates.variants : [];
+          if (updates.variants !== undefined) updatePayload.variants = Array.isArray(updates.variants) ? updates.variants.map((v) => ({ ...v, floor_plan_url: sanitizeImageUrl(v.floor_plan_url) })) : [];
           if (updates.custom_dimensions !== undefined) updatePayload.custom_dimensions = Array.isArray(updates.custom_dimensions) ? updates.custom_dimensions : [];
           if (updates.custom_commute_points !== undefined) updatePayload.custom_commute_points = Array.isArray(updates.custom_commute_points) ? updates.custom_commute_points : [];
           if (updates.key_highlights !== undefined) {

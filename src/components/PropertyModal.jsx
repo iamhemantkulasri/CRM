@@ -8,6 +8,15 @@ import {
 import { usePropertyStore } from '../store/propertyStore';
 import { useBuilderStore } from '../store/builderStore';
 import { PROPERTY_STATUSES } from '../utils/constants';
+import {
+  compressAndUploadImage,
+  deletePropertyImage,
+  isStorageUrl,
+  sanitizeImageList,
+  sanitizeImageUrl,
+  uploadBrochurePdf,
+  FLOOR_PLANS_FOLDER,
+} from '../utils/storageUpload';
 import { 
   ASSET_CATEGORIES, 
   CONFIGURATIONS_BY_CATEGORY, 
@@ -47,6 +56,10 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
   const { addProperty, updateProperty } = usePropertyStore();
   const { builders } = useBuilderStore();
   const [activeTab, setActiveTab] = useState('overview');
+  // Cloud upload progress flags (Supabase Storage, not base64)
+  const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
+  const [uploadingPlanKey, setUploadingPlanKey] = useState(null);
+  const [isUploadingBrochure, setIsUploadingBrochure] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -350,33 +363,54 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     });
   };
 
-  const handleImageUpload = (e) => {
+  // Gallery upload: compress + push to Supabase Storage (`property-images`
+  // bucket), then store only the public CDN URL. No base64 in state/DB.
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files || []);
-    if (!files.length) return;
+    // Reset input so the same file can be picked again
+    e.target.value = '';
+    if (!files.length || isUploadingPhotos) return;
 
-    files.forEach(file => {
+    const validFiles = files.filter((file) => {
       if (file.size > 5 * 1024 * 1024) {
         alert(`File ${file.name} exceeds 5MB.`);
-        return;
+        return false;
       }
+      return true;
+    });
+    if (!validFiles.length) return;
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target.result;
-        setFormData(prev => {
-          const currentImages = Array.isArray(prev.images) ? [...prev.images] : [];
-          if (!currentImages.includes(base64)) {
-            currentImages.push(base64);
-          }
+    setIsUploadingPhotos(true);
+    try {
+      const results = await Promise.allSettled(
+        validFiles.map((file) => compressAndUploadImage(file))
+      );
+      const uploadedUrls = [];
+      const failedNames = [];
+      results.forEach((res, i) => {
+        if (res.status === 'fulfilled') uploadedUrls.push(res.value);
+        else failedNames.push(validFiles[i].name);
+      });
+
+      if (uploadedUrls.length > 0) {
+        setFormData((prev) => {
+          const currentImages = sanitizeImageList(prev.images);
+          uploadedUrls.forEach((url) => {
+            if (!currentImages.includes(url)) currentImages.push(url);
+          });
           return {
             ...prev,
-            imageUrl: prev.imageUrl || base64,
-            images: currentImages
+            imageUrl: prev.imageUrl || currentImages[0] || uploadedUrls[0],
+            images: currentImages,
           };
         });
-      };
-      reader.readAsDataURL(file);
-    });
+      }
+      if (failedNames.length > 0) {
+        alert(`Failed to upload ${failedNames.length} photo(s): ${failedNames.join(', ')}`);
+      }
+    } finally {
+      setIsUploadingPhotos(false);
+    }
   };
 
   const handleAddImageUrl = (url) => {
@@ -393,7 +427,26 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     });
   };
 
+  // Brochure upload: PDF -> `property-brochures` bucket, store public URL.
+  const handleBrochureUpload = async (e) => {
+    const file = e.target.files?.[0];
+    // Reset input so the same file can be picked again
+    e.target.value = '';
+    if (!file || isUploadingBrochure) return;
+
+    setIsUploadingBrochure(true);
+    try {
+      const publicUrl = await uploadBrochurePdf(file, editingProperty?.id || formData.id);
+      setFormData((prev) => ({ ...prev, brochure_url: publicUrl }));
+    } catch (err) {
+      alert(`Failed to upload brochure: ${err.message || 'Storage upload failed'}`);
+    } finally {
+      setIsUploadingBrochure(false);
+    }
+  };
+
   const handleRemoveImage = (index) => {
+    const removed = (formData.images || [])[index];
     setFormData(prev => {
       const updated = (prev.images || []).filter((_, i) => i !== index);
       return {
@@ -402,6 +455,10 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
         imageUrl: updated[0] || ''
       };
     });
+    // Best-effort cleanup of the Storage object (external URLs untouched)
+    if (isStorageUrl(removed)) {
+      deletePropertyImage(removed);
+    }
   };
 
   const handleSetCoverImage = (index) => {
@@ -467,31 +524,39 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
     });
   };
 
-  const handleVariantPlanUpload = (idx, file) => {
-    if (!file) return;
+  const handleVariantPlanUpload = async (idx, file) => {
+    if (!file || uploadingPlanKey) return;
     if (file.size > 5 * 1024 * 1024) {
       alert(`File ${file.name} is larger than 5MB.`);
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const base64 = e.target.result;
-      updateVariant(idx, 'floor_plan_url', base64);
-    };
-    reader.readAsDataURL(file);
+    const planKey = `variant-${idx}`;
+    setUploadingPlanKey(planKey);
+    try {
+      const publicUrl = await compressAndUploadImage(file, FLOOR_PLANS_FOLDER);
+      updateVariant(idx, 'floor_plan_url', publicUrl);
+    } catch (err) {
+      alert(`Failed to upload floor plan: ${err.message || 'Storage upload failed'}`);
+    } finally {
+      setUploadingPlanKey(null);
+    }
   };
 
-  const handleNewVariantPlanUpload = (file) => {
-    if (!file) return;
+  const handleNewVariantPlanUpload = async (file) => {
+    if (!file || uploadingPlanKey) return;
     if (file.size > 5 * 1024 * 1024) {
       alert(`File ${file.name} is larger than 5MB.`);
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setNewVariantInput(prev => ({ ...prev, floor_plan_url: e.target.result }));
-    };
-    reader.readAsDataURL(file);
+    setUploadingPlanKey('new-variant');
+    try {
+      const publicUrl = await compressAndUploadImage(file, FLOOR_PLANS_FOLDER);
+      setNewVariantInput(prev => ({ ...prev, floor_plan_url: publicUrl }));
+    } catch (err) {
+      alert(`Failed to upload floor plan: ${err.message || 'Storage upload failed'}`);
+    } finally {
+      setUploadingPlanKey(null);
+    }
   };
 
   const removeVariant = (idx) => {
@@ -686,15 +751,23 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
       ? (formData.custom_city?.trim() || 'Delhi NCR')
       : (formData.city || 'Gurgaon');
 
-    const cleanImages = Array.isArray(formData.images) && formData.images.length > 0
+    const rawImages = Array.isArray(formData.images) && formData.images.length > 0
       ? formData.images
       : (formData.imageUrl ? [formData.imageUrl] : [PRESET_IMAGES[0].url]);
+    // Defensive: never persist inline blobs — Storage URLs / remote URLs only
+    const cleanImages = sanitizeImageList(rawImages);
+    if (cleanImages.length === 0) cleanImages.push(PRESET_IMAGES[0].url);
 
     const payload = {
       ...formData,
       city: effectiveCity,
       images: cleanImages,
       imageUrl: cleanImages[0] || formData.imageUrl || PRESET_IMAGES[0].url,
+      // Defensive: floor plans must be URLs, never inline blobs
+      floor_plan_url: sanitizeImageUrl(formData.floor_plan_url),
+      variants: Array.isArray(formData.variants)
+        ? formData.variants.map((v) => ({ ...v, floor_plan_url: sanitizeImageUrl(v.floor_plan_url) }))
+        : formData.variants,
       bhk: formData.configuration,
       bedrooms: Number(formData.bedrooms) || (parseInt(formData.configuration) || 0),
       bathrooms: Number(formData.bathrooms) || ((Number(formData.bedrooms) || 1) > 1 ? (Number(formData.bedrooms) || 2) - 1 : 1),
@@ -1663,10 +1736,10 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                   </label>
 
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <label className="btn btn-secondary" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, height: 34, fontSize: 12, padding: '0 12px' }}>
+                    <label className="btn btn-secondary" style={{ cursor: isUploadingPhotos ? 'wait' : 'pointer', opacity: isUploadingPhotos ? 0.6 : 1, display: 'inline-flex', alignItems: 'center', gap: 6, height: 34, fontSize: 12, padding: '0 12px' }}>
                       <Upload size={14} />
-                      <span>Upload Files</span>
-                      <input type="file" accept="image/*" multiple onChange={handleImageUpload} style={{ display: 'none' }} />
+                      <span>{isUploadingPhotos ? 'Uploading…' : 'Upload Files'}</span>
+                      <input type="file" accept="image/*" multiple onChange={handleImageUpload} disabled={isUploadingPhotos} style={{ display: 'none' }} />
                     </label>
 
                     <input
@@ -1749,13 +1822,42 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Brochure PDF Download URL</label>
-                    <input
-                      type="url"
-                      className="form-input"
-                      value={formData.brochure_url}
-                      onChange={e => setFormData({ ...formData, brochure_url: e.target.value })}
-                      placeholder="https://.../brochure.pdf"
-                    />
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <input
+                        type="url"
+                        className="form-input"
+                        style={{ flex: 1 }}
+                        value={formData.brochure_url}
+                        onChange={e => setFormData({ ...formData, brochure_url: e.target.value })}
+                        placeholder="https://.../brochure.pdf (or upload below)"
+                      />
+                      <label className="btn btn-secondary" style={{ cursor: isUploadingBrochure ? 'wait' : 'pointer', opacity: isUploadingBrochure ? 0.6 : 1, height: 34, fontSize: 12, padding: '0 12px', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                        <Upload size={14} />
+                        <span>{isUploadingBrochure ? 'Uploading…' : 'Upload PDF'}</span>
+                        <input
+                          type="file"
+                          accept="application/pdf,.pdf"
+                          style={{ display: 'none' }}
+                          disabled={isUploadingBrochure}
+                          onChange={handleBrochureUpload}
+                        />
+                      </label>
+                    </div>
+                    {formData.brochure_url && (
+                      <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <a href={formData.brochure_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: 'var(--color-primary)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                          <ExternalLink size={12} />
+                          <span>Preview brochure</span>
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, brochure_url: '' }))}
+                          style={{ background: 'none', border: 'none', color: 'var(--color-muted-fg)', fontSize: 11, cursor: 'pointer' }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
                   </div>
                   <div className="form-group">
                     <label className="form-label">Video Walkthrough (YouTube / Drive)</label>
@@ -2025,9 +2127,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
 
                                 {/* Right: Actions */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                  <label className="btn btn-secondary" style={{ cursor: 'pointer', height: 28, fontSize: 11, padding: '0 8px', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                  <label className="btn btn-secondary" style={{ cursor: uploadingPlanKey ? 'wait' : 'pointer', opacity: uploadingPlanKey && uploadingPlanKey !== `variant-${idx}` ? 0.6 : 1, height: 28, fontSize: 11, padding: '0 8px', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                                     <Upload size={12} />
-                                    <span>{v.floor_plan_url ? 'Change Plan' : 'Upload Plan'}</span>
+                                    <span>{uploadingPlanKey === `variant-${idx}` ? 'Uploading…' : (v.floor_plan_url ? 'Change Plan' : 'Upload Plan')}</span>
                                     <input 
                                       type="file" 
                                       accept="image/*" 
@@ -2144,9 +2246,9 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
                           onChange={e => setNewVariantInput({ ...newVariantInput, floor_plan_url: e.target.value })}
                         />
 
-                        <label className="btn btn-secondary" style={{ cursor: 'pointer', height: 32, fontSize: 11, padding: '0 10px', display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
+                        <label className="btn btn-secondary" style={{ cursor: uploadingPlanKey ? 'wait' : 'pointer', opacity: uploadingPlanKey && uploadingPlanKey !== 'new-variant' ? 0.6 : 1, height: 32, fontSize: 11, padding: '0 10px', display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
                           <Upload size={12} />
-                          <span>Upload Plan</span>
+                          <span>{uploadingPlanKey === 'new-variant' ? 'Uploading…' : 'Upload Plan'}</span>
                           <input
                             type="file"
                             accept="image/*"
@@ -3115,8 +3217,8 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
 
               <div style={{ display: 'flex', gap: 8 }}>
                 <button type="button" className="btn btn-ghost" onClick={onClose} style={{ fontSize: 13 }}>Cancel</button>
-                <button type="submit" className="btn btn-primary" style={{ fontSize: 13, fontWeight: 600 }}>
-                  {editingProperty ? 'Save & Sync Listing' : 'Publish Property to Website & CRM'}
+                <button type="submit" className="btn btn-primary" disabled={isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure} style={{ fontSize: 13, fontWeight: 600, opacity: (isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure) ? 0.6 : 1 }}>
+                  {(isUploadingPhotos || uploadingPlanKey !== null || isUploadingBrochure) ? 'Uploading files…' : (editingProperty ? 'Save & Sync Listing' : 'Publish Property to Website & CRM')}
                 </button>
               </div>
             </div>
