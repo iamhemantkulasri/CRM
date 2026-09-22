@@ -18,6 +18,7 @@ import { SiteVisitModal } from './SiteVisitModal';
 import { EmiCalculatorModal } from './EmiCalculatorModal';
 import { usePropertyStore } from '../store/propertyStore';
 import { formatINR, formatRelativeDate } from '../utils/formatters';
+import { addDaysISO, FOLLOW_UP_PRESETS, formatFollowUp, toDateTimeLocalValue } from '../utils/followUp';
 import { WhatsAppButton } from './WhatsAppButton';
 import { findMatchingProperties } from '../utils/matchingEngine';
 import { printSingleProperty } from '../utils/propertyPdf';
@@ -90,6 +91,20 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
         onClose();
       }
     }
+  };
+
+  const handleSetFollowUp = (isoOrNull, label) => {
+    updateLead(lead.id, { nextFollowUp: isoOrNull });
+    try {
+      useActivityStore.getState().logActivity(
+        lead.id,
+        currentUser?.id,
+        'FOLLOW_UP_SET',
+        isoOrNull
+          ? `Follow-up scheduled${label ? ` (${label})` : ''}: ${formatFollowUp(isoOrNull)}`
+          : 'Follow-up cleared'
+      );
+    } catch {}
   };
 
   return (
@@ -218,6 +233,49 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
 
           {/* Body */}
           <div className="drawer-body custom-scrollbar">
+            {/* Next Follow-up scheduler */}
+            <div className="drawer-card" style={{ marginBottom: 16, borderLeft: lead.nextFollowUp ? '3px solid var(--color-primary)' : '3px solid #fca5a5' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <div className="drawer-card-label" style={{ margin: 0 }}>Next Follow-up</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: lead.nextFollowUp ? 'var(--color-primary)' : 'var(--color-muted-fg)' }}>
+                  {formatFollowUp(lead.nextFollowUp)}
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+                {FOLLOW_UP_PRESETS.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className="btn btn-outline btn-sm"
+                    style={{ height: 28, fontSize: 11, padding: '0 10px' }}
+                    onClick={() => handleSetFollowUp(addDaysISO(p.days), p.label)}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+                {lead.nextFollowUp && (
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    style={{ height: 28, fontSize: 11, padding: '0 10px', color: 'var(--color-danger, #ef4444)' }}
+                    onClick={() => handleSetFollowUp(null)}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <input
+                type="datetime-local"
+                className="form-input"
+                style={{ height: 32, fontSize: 12 }}
+                value={toDateTimeLocalValue(lead.nextFollowUp)}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  handleSetFollowUp(v ? new Date(v).toISOString() : null, v ? 'custom' : undefined);
+                }}
+              />
+            </div>
+
             {/* Note & Context Banner if available */}
             {Array.isArray(lead.notes) && lead.notes.length > 0 && (
               <div style={{

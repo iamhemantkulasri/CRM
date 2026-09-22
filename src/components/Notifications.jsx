@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Bell, Clock, Phone, X, Calendar } from 'lucide-react';
 import { useLeadStore } from '../store/leadStore';
 import { useReminderStore } from '../store/reminderStore';
+import { addDaysISO } from '../utils/followUp';
 
 /**
  * Notifications Component (Phase 6 deliverable: src/components/Notifications.jsx)
@@ -25,11 +26,10 @@ export function Notifications({ isOpen, onClose }) {
     return () => document.removeEventListener('mousedown', handler);
   }, [isOpen, onClose]);
 
-  const handlePostpone = (lead) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(10, 0, 0, 0);
-    updateLead(lead.id, { nextFollowUp: tomorrow.toISOString() });
+  const handlePostpone = (lead, days = 1) => {
+    const d = new Date(addDaysISO(days));
+    d.setHours(10, 0, 0, 0);
+    updateLead(lead.id, { nextFollowUp: d.toISOString() });
   };
 
   const handleCall = (lead) => {
@@ -103,10 +103,26 @@ export function Notifications({ isOpen, onClose }) {
                 <button
                   className="btn btn-sm btn-ghost"
                   title="Postpone by 1 day"
-                  onClick={() => handlePostpone(lead)}
+                  onClick={() => handlePostpone(lead, 1)}
                   style={{ color: 'var(--color-muted-fg)', padding: '4px 6px', fontSize: 11 }}
                 >
                   +1d
+                </button>
+                <button
+                  className="btn btn-sm btn-ghost"
+                  title="Postpone by 3 days"
+                  onClick={() => handlePostpone(lead, 3)}
+                  style={{ color: 'var(--color-muted-fg)', padding: '4px 6px', fontSize: 11 }}
+                >
+                  +3d
+                </button>
+                <button
+                  className="btn btn-sm btn-ghost"
+                  title="Postpone to next week"
+                  onClick={() => handlePostpone(lead, 7)}
+                  style={{ color: 'var(--color-muted-fg)', padding: '4px 6px', fontSize: 11 }}
+                >
+                  +7d
                 </button>
               </div>
             </div>

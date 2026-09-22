@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/authStore';
 import { useEmployeeStore } from '../store/employeeStore';
 import { useActivityStore } from '../store/activityStore';
 import { SOURCES, PRIORITIES } from '../utils/constants';
+import { addDaysISO, FOLLOW_UP_PRESETS, toDateTimeLocalValue } from '../utils/followUp';
 
 export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
   const { addLead, updateLead } = useLeadStore();
@@ -24,6 +25,7 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
     priority: 'warm',
     assignedTo: currentUser?.id || '',
     note: '',
+    nextFollowUp: '',
     requirements: {
       propertyType: 'apartment',
       bhk: '',
@@ -56,6 +58,7 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
         priority: leadToEdit.priority || 'warm',
         assignedTo: leadToEdit.assignedTo || '',
         note: firstNoteText,
+        nextFollowUp: leadToEdit.nextFollowUp || '',
         requirements: {
           propertyType: leadToEdit.requirements?.propertyType || 'apartment',
           bhk: leadToEdit.requirements?.bhk || '',
@@ -68,7 +71,9 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
     } else {
       setFormData({
         ...initialFormState,
-        assignedTo: currentUser?.id || ''
+        assignedTo: currentUser?.id || '',
+        // New leads enter the follow-up system with tomorrow pre-selected
+        nextFollowUp: addDaysISO(1)
       });
     }
   }, [leadToEdit, isOpen, currentUser]);
@@ -132,6 +137,7 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
           source: formData.source,
           priority: formData.priority,
           assignedTo: formData.assignedTo || null,
+          nextFollowUp: formData.nextFollowUp || null,
           requirements: constructedRequirements,
           notes: updatedNotes
         });
@@ -159,6 +165,7 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
           priority: formData.priority,
           assignedTo: formData.assignedTo || null,
           stage: 'new',
+          nextFollowUp: formData.nextFollowUp || null,
           requirements: constructedRequirements,
           notes: initialNotes
         };
@@ -271,6 +278,51 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
                     onChange={handleChange} 
                     className="form-input" 
                     placeholder="e.g. client@email.com" 
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group" style={{ width: '100%' }}>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>First Follow-up</span>
+                    <span style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>Feeds reminders & overdue alerts</span>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+                    {FOLLOW_UP_PRESETS.map((p) => {
+                      const iso = addDaysISO(p.days);
+                      const isSelected = formData.nextFollowUp && Math.abs(new Date(formData.nextFollowUp).getTime() - new Date(iso).getTime()) < 12 * 60 * 60 * 1000;
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, nextFollowUp: iso }))}
+                          className={`config-pill-chip ${isSelected ? 'active' : ''}`}
+                        >
+                          {p.label}
+                        </button>
+                      );
+                    })}
+                    {formData.nextFollowUp && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, nextFollowUp: '' }))}
+                        className="config-pill-chip"
+                        title="No follow-up"
+                      >
+                        None
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    type="datetime-local"
+                    name="nextFollowUp"
+                    value={toDateTimeLocalValue(formData.nextFollowUp)}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setFormData(prev => ({ ...prev, nextFollowUp: v ? new Date(v).toISOString() : '' }));
+                    }}
+                    className="form-input"
                   />
                 </div>
               </div>
