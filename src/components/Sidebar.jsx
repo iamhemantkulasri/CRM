@@ -14,6 +14,7 @@ import { useTaskStore } from '../store/taskStore';
 import { useBuilderStore } from '../store/builderStore';
 import './Sidebar.css';
 import { InstallAppButton } from './InstallAppButton';
+import { AgentBadge } from './AgentBadge';
 
 export function Sidebar() {
   const { 
@@ -21,13 +22,17 @@ export function Sidebar() {
     sidebarCollapsed, toggleSidebarCollapse, 
     leadFilter, setLeadFilter 
   } = useUiStore();
-  const { currentUser } = useAuthStore();
+  const { currentUser, logout } = useAuthStore();
   const { leads, getLeads, getLeadsByAgent, getUnassignedLeads } = useLeadStore();
   const { getOverdueLeads } = useReminderStore();
   const { properties } = usePropertyStore();
   const { tasks } = useTaskStore();
   const { builders } = useBuilderStore();
   const buildersCount = (builders || []).length;
+
+  const handleNavClick = () => {
+    if (sidebarOpen) toggleSidebar();
+  };
 
   const allLeads = getLeads();
   const myLeadsCount = currentUser ? getLeadsByAgent(currentUser.id).length : 0;
@@ -48,8 +53,8 @@ export function Sidebar() {
       )}
       
       <aside className={`app-sidebar ${sidebarOpen ? 'mobile-open' : ''} ${sidebarCollapsed ? 'collapsed' : ''}`}>
-        {/* Collapse Toggle Header (Desktop) */}
-        <div className="sidebar-collapse-header">
+        {/* Collapse Toggle Header (Desktop Only) */}
+        <div className="sidebar-collapse-header desktop-only">
           <div className="collapse-text" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ fontWeight: 700, fontSize: 13, letterSpacing: 0.5, textTransform: 'uppercase', color: 'var(--color-muted-fg)' }}>
               Workspace
@@ -68,11 +73,11 @@ export function Sidebar() {
         {/* Mobile Header with Close Button */}
         <div className="sidebar-header mobile-only">
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div className="logo-icon" style={{ width: 24, height: 24, fontSize: 13 }}>P</div>
-            <span style={{ fontWeight: 700, fontSize: 16 }}>PropDesk</span>
+            <div className="logo-icon" style={{ width: 28, height: 28, fontSize: 14 }}>T</div>
+            <span style={{ fontWeight: 700, fontSize: 16 }}>TGV Estates</span>
           </div>
-          <button className="btn btn-icon btn-ghost btn-sm" onClick={toggleSidebar}>
-            <X size={18} />
+          <button className="btn btn-icon btn-ghost btn-sm" onClick={toggleSidebar} aria-label="Close navigation">
+            <X size={20} />
           </button>
         </div>
 
@@ -80,18 +85,18 @@ export function Sidebar() {
         <div className="sidebar-section">
           <h3 className="sidebar-title">Navigation</h3>
           <nav className="sidebar-nav">
-            <NavLink to="/app/dashboard" className="sidebar-nav-item" title="Dashboard">
+            <NavLink to="/app/dashboard" className="sidebar-nav-item" title="Dashboard" onClick={handleNavClick}>
               <LayoutDashboard size={18} />
               <span>Dashboard</span>
             </NavLink>
-            <NavLink to="/app/leads" className="sidebar-nav-item" title="Leads">
+            <NavLink to="/app/leads" className="sidebar-nav-item" title="Leads" onClick={handleNavClick}>
               <Users size={18} />
               <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span>Leads</span>
                 <span className="sidebar-badge">{allLeads.length}</span>
               </div>
             </NavLink>
-            <NavLink to="/app/tasks" className="sidebar-nav-item" title="Tasks">
+            <NavLink to="/app/tasks" className="sidebar-nav-item" title="Tasks" onClick={handleNavClick}>
               <CheckSquare size={18} />
               <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span>Tasks</span>
@@ -102,14 +107,14 @@ export function Sidebar() {
                 )}
               </div>
             </NavLink>
-            <NavLink to="/app/properties" className="sidebar-nav-item" title="Properties">
+            <NavLink to="/app/properties" className="sidebar-nav-item" title="Properties" onClick={handleNavClick}>
               <Building2 size={18} />
               <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span>Properties</span>
                 <span className="sidebar-badge">{properties.length}</span>
               </div>
             </NavLink>
-            <NavLink to="/app/builders" className="sidebar-nav-item" title="Builders & Sellers">
+            <NavLink to="/app/builders" className="sidebar-nav-item" title="Builders & Sellers" onClick={handleNavClick}>
               <Handshake size={18} />
               <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span>Builders & Sellers</span>
@@ -118,31 +123,32 @@ export function Sidebar() {
                 </span>
               </div>
             </NavLink>
-            <NavLink to="/app/calendar" className="sidebar-nav-item" title="Site Visits">
+            <NavLink to="/app/calendar" className="sidebar-nav-item" title="Site Visits" onClick={handleNavClick}>
               <CalendarDays size={18} />
               <span>Site Visits</span>
             </NavLink>
-            <NavLink to="/app/telephony" className="sidebar-nav-item" title="Calls & Telephony">
+            <NavLink to="/app/telephony" className="sidebar-nav-item" title="Calls & Telephony" onClick={handleNavClick}>
               <PhoneCall size={18} />
               <span>Calls & Telephony</span>
             </NavLink>
-            <NavLink to="/app/deals" className="sidebar-nav-item" title="Deals & Commission">
+            <NavLink to="/app/deals" className="sidebar-nav-item" title="Deals & Commission" onClick={handleNavClick}>
               <IndianRupee size={18} />
               <span>Deals & Commission</span>
             </NavLink>
           </nav>
         </div>
 
+
         {/* Admin Navigation */}
         {currentUser?.role === 'admin' && (
           <div className="sidebar-section" style={{ marginTop: 16 }}>
             <h3 className="sidebar-title">Management</h3>
             <nav className="sidebar-nav">
-              <NavLink to="/app/team" className="sidebar-nav-item" title="Team & Agents">
+              <NavLink to="/app/team" className="sidebar-nav-item" title="Team & Agents" onClick={handleNavClick}>
                 <Shield size={18} />
                 <span>Team & Agents</span>
               </NavLink>
-              <NavLink to="/app/settings" className="sidebar-nav-item" title="Settings">
+              <NavLink to="/app/settings" className="sidebar-nav-item" title="Settings" onClick={handleNavClick}>
                 <Settings size={18} />
                 <span>Settings</span>
               </NavLink>
@@ -156,7 +162,7 @@ export function Sidebar() {
           <div className="sidebar-filters">
             <button 
               className={`filter-btn ${leadFilter === 'my' ? 'active' : ''}`}
-              onClick={() => setLeadFilter('my')}
+              onClick={() => { setLeadFilter('my'); handleNavClick(); }}
             >
               <span className="filter-dot" style={{ backgroundColor: 'var(--color-primary)' }}></span>
               <span style={{ flex: 1, textAlign: 'left' }}>My Leads</span>
@@ -165,7 +171,7 @@ export function Sidebar() {
 
             <button 
               className={`filter-btn ${leadFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setLeadFilter('all')}
+              onClick={() => { setLeadFilter('all'); handleNavClick(); }}
             >
               <span className="filter-dot" style={{ backgroundColor: '#94a3b8' }}></span>
               <span style={{ flex: 1, textAlign: 'left' }}>All Leads</span>
@@ -174,7 +180,7 @@ export function Sidebar() {
 
             <button 
               className={`filter-btn ${leadFilter === 'unassigned' ? 'active' : ''}`}
-              onClick={() => setLeadFilter('unassigned')}
+              onClick={() => { setLeadFilter('unassigned'); handleNavClick(); }}
             >
               <span className="filter-dot" style={{ backgroundColor: '#f59e0b' }}></span>
               <span style={{ flex: 1, textAlign: 'left' }}>Unassigned</span>
@@ -183,7 +189,7 @@ export function Sidebar() {
 
             <button 
               className={`filter-btn ${leadFilter === 'overdue' ? 'active' : ''}`}
-              onClick={() => setLeadFilter('overdue')}
+              onClick={() => { setLeadFilter('overdue'); handleNavClick(); }}
               style={overdueCount > 0 ? { color: '#ef4444' } : {}}
             >
               <span className="filter-dot" style={{ backgroundColor: '#ef4444' }}></span>
@@ -233,8 +239,30 @@ export function Sidebar() {
               </div>
             </div>
           </div>
+
+          {/* Mobile Profile & Signout Bar */}
+          {currentUser && (
+            <div className="mobile-only" style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <AgentBadge employee={currentUser} size="sm" />
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-fg)' }}>{currentUser.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>{currentUser.role === 'admin' ? 'Admin' : 'Sales Agent'}</div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                className="btn btn-ghost btn-sm" 
+                onClick={logout} 
+                style={{ color: 'var(--color-destructive)', fontSize: 12, fontWeight: 600 }}
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
         </div>
       </aside>
+
     </>
   );
 }

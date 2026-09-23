@@ -223,7 +223,7 @@ export function Properties() {
           <h1 className="page-title">Property Inventory</h1>
           <p className="page-subtitle">Instant client enquiry search, multi-criteria filtering, and PDF generation</p>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="properties-header-actions" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           {/* Secret Digital Dossier / Web Catalog button */}
           <button
             type="button"
@@ -276,7 +276,7 @@ export function Properties() {
       </div>
 
       {/* Tier Switcher Segmented Control (Fixed Dimension Non-Collapsing Double-Bezel) */}
-      <div style={{
+      <div className="tier-switcher-container no-scrollbar" style={{
         margin: '0 0 20px 0',
         padding: '5px',
         background: 'rgba(241, 245, 253, 0.95)',
@@ -415,9 +415,9 @@ export function Properties() {
       </div>
 
       {/* Client Call Quick Search & Multi-Filters */}
-      <div className="card" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div className="card properties-filter-card" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* Top search & dropdown row */}
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="properties-filter-row" style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           {/* Locality & Keyword Search */}
           <div style={{ position: 'relative', flex: '1 1 260px' }}>
             <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted-fg)' }} />
@@ -556,7 +556,7 @@ export function Properties() {
         </div>
 
         {/* Category Group Pills */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+        <div className="properties-pills-row no-scrollbar" style={{ display: 'flex', alignItems: 'center', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
           {[{ id: 'all', label: '🏠 All Assets' }, { id: 'Residential', label: '🏢 Residential' }, { id: 'Plots & Land', label: '🌿 Plot & Land' }, { id: 'Commercial', label: '🏪 Commercial' }].map(g => (
             <button
               key={g.id}
@@ -798,9 +798,9 @@ export function Properties() {
         </div>
       ) : (
         /* CARD GRID VIEW */
-        <div style={{
+        <div className="properties-card-grid" style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
           gap: 'var(--space-5)',
           paddingBottom: 60
         }}>

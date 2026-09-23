@@ -12,19 +12,20 @@ export function CalendarMonthView({ currentDate, visits, getProperty }) {
   const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   return (
-    <div className="calendar-grid-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 500, padding: '0 16px 16px' }}>
-      
-      {/* Weekday Headers */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid var(--color-border)', marginBottom: 8, paddingBottom: 8 }}>
-        {weekDays.map(day => (
-          <div key={day} style={{ textAlign: 'center', fontSize: 13, fontWeight: 600, color: 'var(--color-muted-fg)' }}>
-            {day}
-          </div>
-        ))}
-      </div>
+    <div className="calendar-month-scroll-wrapper no-scrollbar" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+      <div className="calendar-grid-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 500, minWidth: 620, padding: '0 16px 16px' }}>
+        
+        {/* Weekday Headers */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid var(--color-border)', marginBottom: 8, paddingBottom: 8 }}>
+          {weekDays.map(day => (
+            <div key={day} style={{ textAlign: 'center', fontSize: 13, fontWeight: 600, color: 'var(--color-muted-fg)' }}>
+              {day}
+            </div>
+          ))}
+        </div>
 
-      {/* Days Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gridAutoRows: 'minmax(100px, 1fr)', gap: 8, flex: 1 }}>
+        {/* Days Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gridAutoRows: 'minmax(100px, 1fr)', gap: 8, flex: 1 }}>
         {calendarDays.map(day => {
           const isCurrentMonth = isSameMonth(day, monthStart);
           const dayVisits = visits.filter(v => isSameDay(new Date(v.scheduledDate), day));
@@ -78,5 +79,6 @@ export function CalendarMonthView({ currentDate, visits, getProperty }) {
         })}
       </div>
     </div>
-  );
+  </div>
+);
 }

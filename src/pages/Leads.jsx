@@ -89,16 +89,16 @@ export function Leads() {
   ];
 
   return (
-    <div className="page">
-      <div className="page-header">
-        <div>
+    <div className="page leads-page">
+      <div className="page-header leads-header">
+        <div className="leads-title-wrap">
           <h1 className="page-title">Leads</h1>
           <p className="page-subtitle">Manage your sales pipeline</p>
         </div>
         
-        <div className="page-actions">
+        <div className="page-actions leads-actions">
           {/* Search Bar */}
-          <div className="search-bar">
+          <div className="search-bar leads-search">
             <Search size={16} className="search-icon" />
             <input 
               type="text" 
@@ -109,22 +109,26 @@ export function Leads() {
             />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="leads-actions-row">
             {/* View Toggle */}
-            <div style={{ display: 'flex', background: 'var(--color-muted)', padding: '4px', borderRadius: 'var(--border-radius-md)' }}>
+            <div className="leads-view-toggle">
               <button 
-                className={`btn btn-sm ${leadViewMode === 'kanban' ? 'btn-ghost' : 'btn-ghost'}`}
-                style={leadViewMode === 'kanban' ? { background: 'var(--color-card)', boxShadow: 'var(--shadow-sm)' } : {}}
+                className="btn btn-sm leads-toggle-btn"
+                data-active={leadViewMode === 'kanban'}
                 onClick={() => setLeadViewMode('kanban')}
                 title="Kanban View"
+                aria-label="Kanban view"
+                aria-pressed={leadViewMode === 'kanban'}
               >
                 <LayoutGrid size={16} />
               </button>
               <button 
-                className={`btn btn-sm ${leadViewMode === 'table' ? 'btn-ghost' : 'btn-ghost'}`}
-                style={leadViewMode === 'table' ? { background: 'var(--color-card)', boxShadow: 'var(--shadow-sm)' } : {}}
+                className="btn btn-sm leads-toggle-btn"
+                data-active={leadViewMode === 'table'}
                 onClick={() => setLeadViewMode('table')}
                 title="Table View"
+                aria-label="Table view"
+                aria-pressed={leadViewMode === 'table'}
               >
                 <List size={16} />
               </button>
@@ -132,31 +136,29 @@ export function Leads() {
 
             {/* Import Leads Button */}
             <button
-              className="btn btn-outline"
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', paddingLeft: '8px', paddingRight: '12px' }}
+              className="btn btn-outline leads-import-btn"
               onClick={() => setIsImportModalOpen(true)}
               title="Import leads from CSV or portal"
             >
-              <Upload size={16} /> Import
+              <Upload size={16} /> <span className="leads-btn-label">Import</span>
             </button>
             
             <button 
-              className="btn btn-primary"
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', paddingLeft: '8px', paddingRight: '12px' }}
+              className="btn btn-primary leads-add-btn"
               onClick={() => {
                 setLeadToEdit(null);
                 setIsAddModalOpen(true);
               }}
             >
-              <Plus size={18} /> Add Lead
+              <Plus size={18} /> <span className="leads-btn-label">Add Lead</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Filter Tabs & Stage Selector Dropdown */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '0 0 12px 0', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+      <div className="leads-filter-row">
+        <div className="leads-filter-tabs">
           {filterTabs.map(tab => (
             <button
               key={tab.id}
@@ -170,13 +172,12 @@ export function Leads() {
         </div>
 
         {/* Stage Filter Dropdown */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label style={{ fontSize: 12, color: 'var(--color-muted-fg)', fontWeight: 500 }}>Stage:</label>
+        <div className="leads-stage-filter">
+          <label>Stage:</label>
           <select
             value={stageFilter}
             onChange={(e) => setStageFilter(e.target.value)}
-            className="form-input"
-            style={{ height: 32, fontSize: 12, padding: '2px 8px', borderRadius: 6, minWidth: 150 }}
+            className="form-input leads-stage-select"
           >
             <option value="all">All Stages ({allLeads.length})</option>
             <option value="site_visits">Site Visits Scheduled/Done</option>
@@ -203,7 +204,7 @@ export function Leads() {
         </div>
       </div>
       
-      <div className="flex-1 overflow-hidden">
+      <div className="leads-content">
         {leadViewMode === 'kanban' ? (
           <KanbanBoard 
             leads={displayedLeads} 
@@ -212,7 +213,7 @@ export function Leads() {
             onDeleteLead={handleDeleteLead}
           />
         ) : (
-          <div className="h-full overflow-y-auto custom-scrollbar p-1">
+          <div className="leads-table-scroll custom-scrollbar">
             <TableView 
               leads={displayedLeads} 
               onLeadClick={handleLeadClick} 

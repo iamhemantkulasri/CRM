@@ -51,49 +51,49 @@ export function Dashboard() {
       {/* Agent Daily Command Center */}
       <AgentCockpit />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 24, padding: '0 4px' }}>
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20 }}>
-          <div style={{ background: 'var(--color-primary)', color: '#fff', padding: 12, borderRadius: 'var(--border-radius-md)' }}>
-            <Users size={24} />
+      <div className="dashboard-stats-grid">
+        <div className="card dashboard-stat-card">
+          <div className="dashboard-stat-icon" style={{ background: 'var(--color-primary)', color: '#fff' }}>
+            <Users size={22} />
           </div>
           <div>
-            <div style={{ fontSize: 13, color: 'var(--color-muted-fg)', fontWeight: 500 }}>Total Leads</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>{totalLeads}</div>
+            <div className="dashboard-stat-label">Total Leads</div>
+            <div className="dashboard-stat-value">{totalLeads}</div>
           </div>
         </div>
 
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20 }}>
-          <div style={{ background: 'var(--color-warning)', color: '#000', padding: 12, borderRadius: 'var(--border-radius-md)' }}>
-            <Calendar size={24} />
+        <div className="card dashboard-stat-card">
+          <div className="dashboard-stat-icon" style={{ background: 'var(--color-warning)', color: '#000' }}>
+            <Calendar size={22} />
           </div>
           <div>
-            <div style={{ fontSize: 13, color: 'var(--color-muted-fg)', fontWeight: 500 }}>Visits Today</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>{todayVisits}</div>
+            <div className="dashboard-stat-label">Visits Today</div>
+            <div className="dashboard-stat-value">{todayVisits}</div>
           </div>
         </div>
 
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20 }}>
-          <div style={{ background: 'var(--color-success)', color: '#fff', padding: 12, borderRadius: 'var(--border-radius-md)' }}>
-            <IndianRupee size={24} />
+        <div className="card dashboard-stat-card">
+          <div className="dashboard-stat-icon" style={{ background: 'var(--color-success)', color: '#fff' }}>
+            <IndianRupee size={22} />
           </div>
           <div>
-            <div style={{ fontSize: 13, color: 'var(--color-muted-fg)', fontWeight: 500 }}>Deals Won</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>{dealsClosed} <span style={{ fontSize: 14, color: 'var(--color-success)' }}>(₹{totalDealValue}L)</span></div>
+            <div className="dashboard-stat-label">Deals Won</div>
+            <div className="dashboard-stat-value">{dealsClosed} <span style={{ fontSize: 13, color: 'var(--color-success)', fontWeight: 600 }}>(₹{totalDealValue}L)</span></div>
           </div>
         </div>
 
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20 }}>
-          <div style={{ background: 'var(--color-destructive)', color: '#fff', padding: 12, borderRadius: 'var(--border-radius-md)' }}>
-            <PhoneMissed size={24} />
+        <div className="card dashboard-stat-card">
+          <div className="dashboard-stat-icon" style={{ background: 'var(--color-destructive)', color: '#fff' }}>
+            <PhoneMissed size={22} />
           </div>
           <div>
-            <div style={{ fontSize: 13, color: 'var(--color-muted-fg)', fontWeight: 500 }}>Missed Calls</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>{missedCalls}</div>
+            <div className="dashboard-stat-label">Missed Calls</div>
+            <div className="dashboard-stat-value">{missedCalls}</div>
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16, padding: '0 4px 16px' }}>
+      <div className="dashboard-charts-grid">
         <div className="card">
           <h3 className="section-title">Leads by Stage</h3>
           <div style={{ height: 300 }}>

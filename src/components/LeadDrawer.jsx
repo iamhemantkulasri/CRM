@@ -112,6 +112,9 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
       <Dialog.Portal>
         <Dialog.Overlay className="drawer-backdrop" />
         <Dialog.Content className="drawer-content outline-none">
+          <div className="mobile-sheet-handle-bar">
+            <div className="mobile-sheet-handle" />
+          </div>
           
           {/* Header */}
           <div className="drawer-header glass-surface">
@@ -124,12 +127,12 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
                   {lead.phone}
                   <button 
                     className="btn-icon" 
-                    style={{ padding: 4 }} 
+                    style={{ padding: 6, minWidth: 28, minHeight: 28 }} 
                     aria-label="Copy phone"
                     onClick={() => navigator.clipboard?.writeText(lead.phone)}
                     title="Copy phone number"
                   >
-                    <Copy size={12} />
+                    <Copy size={13} />
                   </button>
                 </div>
               </div>
@@ -137,7 +140,7 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <button 
                   className="btn btn-outline btn-sm" 
-                  style={{ height: 30, padding: '0 8px', fontSize: 12, gap: 4 }}
+                  style={{ height: 32, padding: '0 10px', fontSize: 12, gap: 4 }}
                   onClick={() => onEditLead && onEditLead(lead)}
                   title="Edit lead details"
                 >
@@ -145,15 +148,19 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
                 </button>
                 <button 
                   className="btn btn-ghost btn-sm" 
-                  style={{ height: 30, padding: '0 8px', fontSize: 12, color: 'var(--color-danger, #ef4444)', gap: 4 }}
+                  style={{ height: 32, padding: '0 10px', fontSize: 12, color: 'var(--color-danger, #ef4444)', gap: 4 }}
                   onClick={handleDeleteSelf}
                   title="Delete lead"
                 >
-                  <Trash2 size={13} /> Delete
+                  <Trash2 size={13} />
                 </button>
                 <Dialog.Close asChild>
-                  <button className="btn btn-ghost btn-icon" aria-label="Close">
-                    <X size={20} />
+                  <button
+                    className="btn btn-ghost btn-icon"
+                    aria-label="Close"
+                    style={{ width: 36, height: 36, borderRadius: '50%', padding: 0 }}
+                  >
+                    <X size={18} />
                   </button>
                 </Dialog.Close>
               </div>

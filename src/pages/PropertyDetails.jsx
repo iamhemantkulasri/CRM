@@ -141,7 +141,7 @@ export function PropertyDetails() {
   return (
     <div className="page" style={{ paddingBottom: 'var(--space-12)' }}>
       {/* Top action bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)', flexWrap: 'wrap', gap: 12 }}>
+      <div className="property-details-top-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)', flexWrap: 'wrap', gap: 12 }}>
         <Link
           to="/app/properties"
           className="btn btn-ghost"
@@ -151,7 +151,7 @@ export function PropertyDetails() {
           <span>Back to Inventory</span>
         </Link>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <div className="property-details-actions no-scrollbar" style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           {shareFeedback && (
             <span style={{ fontSize: 13, color: 'var(--color-success)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4 }}>
               <Check size={14} /> {shareFeedback}
@@ -236,8 +236,8 @@ export function PropertyDetails() {
       </div>
 
       {/* Hero card / Showcase banner */}
-      <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 'var(--space-6)' }}>
-        <div style={{ position: 'relative', height: 320, width: '100%', backgroundColor: 'var(--color-muted)' }}>
+      <div className="card property-details-hero-card" style={{ padding: 0, overflow: 'hidden', marginBottom: 'var(--space-6)', flexShrink: 0 }}>
+        <div style={{ position: 'relative', height: 320, minHeight: 280, width: '100%', backgroundColor: 'var(--color-muted)', flexShrink: 0 }}>
           <img
             src={property.imageUrl || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&auto=format&fit=crop&q=80'}
             alt={property.name}
@@ -278,7 +278,7 @@ export function PropertyDetails() {
           </div>
 
           {/* Property Name & Highlights over banner */}
-          <div style={{ position: 'absolute', bottom: 20, left: 24, right: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
+          <div className="property-hero-overlay" style={{ position: 'absolute', bottom: 20, left: 24, right: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
             <div>
               <h1 style={{ fontSize: 28, fontWeight: 700, color: '#FFFFFF', margin: 0, letterSpacing: '-0.5px' }}>
                 {property.name}

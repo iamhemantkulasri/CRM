@@ -25,7 +25,8 @@ export function TableView({ leads, onLeadClick, onEditLead, onDeleteLead }) {
   };
 
   return (
-    <div className="table-container">
+    <>
+    <div className="table-container leads-table-desktop">
       <table className="data-table">
         <thead>
           <tr>
@@ -181,5 +182,83 @@ export function TableView({ leads, onLeadClick, onEditLead, onDeleteLead }) {
         </tbody>
       </table>
     </div>
+
+    {/* Mobile card list — same data, thumb-friendly layout */}
+    <div className="leads-mobile-cards">
+      {leads.length === 0 ? (
+        <div className="leads-mobile-empty">No leads found matching criteria.</div>
+      ) : (
+        leads.map(lead => {
+          const priority = PRIORITIES.find(p => p.id === lead.priority);
+          const source = SOURCES.find(s => s.id === lead.source);
+          const agent = getEmployee(lead.assignedTo);
+          return (
+            <article
+              key={lead.id}
+              className="lead-mobile-card"
+              onClick={() => onLeadClick(lead)}
+            >
+              <span className="lead-mobile-bar" style={{ backgroundColor: `var(--stage-${lead.stage})` }} />
+              <div className="lead-mobile-top">
+                <div className="lead-mobile-id">
+                  <div className="lead-mobile-name">{lead.name}</div>
+                  <div className="lead-mobile-phone">{lead.phone}</div>
+                  <div className="lead-mobile-source">
+                    <span style={{ color: source?.color }}>{source?.icon}</span> {source?.label || lead.source}
+                  </div>
+                </div>
+                <span className="badge" style={{ backgroundColor: priority?.bgColor, color: priority?.fgColor, border: 'none' }}>
+                  {priority?.emoji} {priority?.label}
+                </span>
+              </div>
+              <div className="lead-mobile-mid">
+                <span>{lead.requirements?.bhk || 'Any BHK'}</span>
+                <span className="lead-mobile-budget">
+                  {lead.requirements?.budgetMinLakhs ? formatBudgetRange(lead.requirements.budgetMinLakhs, lead.requirements.budgetMaxLakhs) : 'Budget TBD'}
+                </span>
+              </div>
+              <div className="lead-mobile-row" onClick={(e) => e.stopPropagation()}>
+                <select
+                  value={lead.stage}
+                  onChange={(e) => handleStageChange(e, lead.id)}
+                  className="lead-mobile-select"
+                  style={{ background: `var(--stage-${lead.stage})` }}
+                  aria-label="Change stage"
+                >
+                  {STAGES.map(s => (
+                    <option key={s.id} value={s.id}>{s.label}</option>
+                  ))}
+                </select>
+                <select
+                  value={lead.assignedTo || ''}
+                  onChange={(e) => handleAssignAgent(e, lead.id)}
+                  className="form-input lead-mobile-select lead-mobile-agent"
+                  aria-label="Assign agent"
+                >
+                  <option value="">⚠️ Unassigned</option>
+                  {employees.map(emp => (
+                    <option key={emp.id} value={emp.id}>{emp.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="lead-mobile-foot" onClick={(e) => e.stopPropagation()}>
+                <span className="lead-mobile-meta">
+                  {agent ? `👤 ${agent.name}` : 'Unassigned'} · {formatDate(lead.createdAt)}
+                </span>
+                <span className="lead-mobile-actions">
+                  <button type="button" className="btn btn-ghost btn-sm" onClick={() => onEditLead && onEditLead(lead)}>
+                    <Edit2 size={14} /> Edit
+                  </button>
+                  <button type="button" className="btn btn-ghost btn-sm lead-mobile-delete" onClick={() => onDeleteLead && onDeleteLead(lead)}>
+                    <Trash2 size={14} />
+                  </button>
+                </span>
+              </div>
+            </article>
+          );
+        })
+      )}
+    </div>
+    </>
   );
 }

@@ -136,7 +136,8 @@ export function BuildersSellers() {
       </div>
 
       {/* Metric Counters Banner */}
-      <div style={{ 
+      {/* Metric Counters Banner */}
+      <div className="builders-stats-grid" style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
         gap: 12, 
@@ -161,9 +162,9 @@ export function BuildersSellers() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
+      <div className="builders-filter-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
         {/* Category Tabs */}
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <div className="builders-tabs-row no-scrollbar" style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
           {[
             { id: 'all', label: 'All Profiles' },
             { id: 'builder', label: '🏢 Builders' },
@@ -174,6 +175,7 @@ export function BuildersSellers() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`btn btn-sm ${activeTab === tab.id ? 'btn-primary' : 'btn-ghost'}`}
+              style={{ whiteSpace: 'nowrap', flexShrink: 0 }}
             >
               {tab.label}
             </button>
@@ -181,8 +183,8 @@ export function BuildersSellers() {
         </div>
 
         {/* Search & City Filter */}
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flex: 1, justifyContent: 'flex-end', minWidth: 280 }}>
-          <div className="search-bar" style={{ maxWidth: 260, margin: 0 }}>
+        <div className="builders-search-row" style={{ display: 'flex', gap: 8, alignItems: 'center', flex: 1, justifyContent: 'flex-end', minWidth: 260 }}>
+          <div className="search-bar" style={{ maxWidth: 260, margin: 0, flex: 1 }}>
             <Search size={16} className="search-icon" />
             <input 
               type="text" 
@@ -197,7 +199,7 @@ export function BuildersSellers() {
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
             className="form-select"
-            style={{ height: 34, fontSize: 12, width: 140 }}
+            style={{ height: 34, fontSize: 12, width: 130 }}
           >
             <option value="all">All Cities</option>
             <option value="Delhi NCR">Delhi NCR</option>

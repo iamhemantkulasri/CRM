@@ -31,30 +31,30 @@ export function Calendar() {
           <p className="page-subtitle">Schedule and track property tours</p>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="calendar-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           {viewMode === 'month' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--color-card)', padding: '4px 8px', borderRadius: 'var(--border-radius-md)', border: '1px solid var(--color-border)' }}>
-              <button className="btn-icon" onClick={handlePrevMonth}><ChevronLeft size={18} /></button>
-              <div style={{ fontWeight: 600, minWidth: 120, textAlign: 'center' }}>{format(currentDate, 'MMMM yyyy')}</div>
-              <button className="btn-icon" onClick={handleNextMonth}><ChevronRight size={18} /></button>
+              <button className="btn-icon" onClick={handlePrevMonth} aria-label="Previous month"><ChevronLeft size={18} /></button>
+              <div style={{ fontWeight: 600, minWidth: 110, textAlign: 'center', fontSize: 13 }}>{format(currentDate, 'MMMM yyyy')}</div>
+              <button className="btn-icon" onClick={handleNextMonth} aria-label="Next month"><ChevronRight size={18} /></button>
               <button className="btn btn-ghost" style={{ padding: '4px 8px', height: 'auto', fontSize: 12 }} onClick={handleToday}>Today</button>
             </div>
           )}
           
-          <div style={{ display: 'flex', background: 'var(--color-muted)', padding: 4, borderRadius: 'var(--border-radius-md)' }}>
+          <div style={{ display: 'flex', background: 'var(--color-muted)', padding: 3, borderRadius: 'var(--border-radius-md)' }}>
             <button 
               className={`btn ${viewMode === 'agenda' ? 'btn-primary' : 'btn-ghost'}`} 
-              style={{ padding: '6px 12px', height: 'auto' }}
+              style={{ padding: '6px 12px', height: 'auto', fontSize: 13 }}
               onClick={() => setViewMode('agenda')}
             >
-              <LayoutList size={16} style={{ marginRight: 6 }} /> Agenda
+              <LayoutList size={15} style={{ marginRight: 6 }} /> Agenda
             </button>
             <button 
               className={`btn ${viewMode === 'month' ? 'btn-primary' : 'btn-ghost'}`} 
-              style={{ padding: '6px 12px', height: 'auto' }}
+              style={{ padding: '6px 12px', height: 'auto', fontSize: 13 }}
               onClick={() => setViewMode('month')}
             >
-              <CalendarIcon size={16} style={{ marginRight: 6 }} /> Month
+              <CalendarIcon size={15} style={{ marginRight: 6 }} /> Month
             </button>
           </div>
         </div>

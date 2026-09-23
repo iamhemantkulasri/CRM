@@ -95,7 +95,7 @@ export function AgentCockpit() {
   };
 
   return (
-    <div style={{
+    <div className="agent-cockpit-card" style={{
       background: 'var(--color-card)',
       border: '1px solid var(--color-border)',
       borderRadius: 16,
@@ -104,7 +104,7 @@ export function AgentCockpit() {
       boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
     }}>
       {/* Cockpit Top Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14, marginBottom: 18 }}>
+      <div className="agent-cockpit-top-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14, marginBottom: 18 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 18, fontWeight: 800 }}>🎯 My Day Today</span>
@@ -125,7 +125,7 @@ export function AgentCockpit() {
         </div>
 
         {/* Daily Completion Meter */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 180 }}>
+        <div className="agent-cockpit-meter" style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 180 }}>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, fontWeight: 600, marginBottom: 4 }}>
               <span>Day Velocity</span>
@@ -147,7 +147,7 @@ export function AgentCockpit() {
       </div>
 
       {/* 3 Action Pillars */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+      <div className="agent-cockpit-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
         
         {/* Pillar 1: Urgent Callbacks */}
         <div style={{ background: 'var(--color-muted)', borderRadius: 12, padding: 14, border: '1px solid var(--color-border)' }}>
@@ -200,25 +200,25 @@ export function AgentCockpit() {
                         <button
                           type="button"
                           className="btn btn-sm btn-ghost"
-                          style={{ color: '#16a34a', padding: '3px 6px', height: 26 }}
+                          style={{ color: '#16a34a', minWidth: 32, minHeight: 32, padding: '4px 6px' }}
                           title="Call immediately"
                           onClick={(e) => handleCall(lead.phone, e)}
                         >
-                          <Phone size={12} />
+                          <Phone size={14} />
                         </button>
                         <button
                           type="button"
                           className="btn btn-sm btn-ghost"
-                          style={{ color: '#2563eb', padding: '3px 6px', height: 26 }}
+                          style={{ color: '#2563eb', minWidth: 32, minHeight: 32, padding: '4px 6px' }}
                           title="WhatsApp chat"
                           onClick={(e) => handleWhatsApp(lead, e)}
                         >
-                          <MessageCircle size={12} />
+                          <MessageCircle size={14} />
                         </button>
                         <button
                           type="button"
                           className="btn btn-sm btn-ghost"
-                          style={{ fontSize: 10, color: 'var(--color-muted-fg)', padding: '3px 6px', height: 26 }}
+                          style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-muted-fg)', minWidth: 32, minHeight: 32, padding: '4px 6px' }}
                           title="Postpone by 1 day"
                           onClick={(e) => handlePostponeLead(lead.id, e)}
                         >
@@ -233,10 +233,11 @@ export function AgentCockpit() {
                           background: isDone ? 'var(--color-success)' : 'transparent',
                           color: isDone ? '#fff' : 'var(--color-muted-fg)',
                           border: `1px solid ${isDone ? 'var(--color-success)' : 'var(--color-border)'}`,
-                          borderRadius: 4,
-                          fontSize: 10,
+                          borderRadius: 6,
+                          fontSize: 11,
                           fontWeight: 600,
-                          padding: '2px 8px',
+                          padding: '4px 10px',
+                          minHeight: 32,
                           cursor: 'pointer'
                         }}
                       >

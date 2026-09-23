@@ -972,7 +972,7 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
       <Dialog.Portal>
         <Dialog.Overlay className="modal-backdrop" />
         <Dialog.Content 
-          className="modal-content" 
+          className="modal-content property-modal-content" 
           style={{ 
             maxWidth: 780, 
             maxHeight: '92vh', 
@@ -981,6 +981,10 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           }}
         >
+          <div className="mobile-sheet-handle-bar">
+            <div className="mobile-sheet-handle" />
+          </div>
+
           {/* Header */}
           <div className="modal-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, borderBottom: '1px solid var(--color-border)' }}>
             <div>
@@ -995,7 +999,13 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
               </p>
             </div>
             <Dialog.Close asChild>
-              <button className="btn btn-ghost btn-icon" aria-label="Close"><X size={18} /></button>
+              <button
+                className="btn btn-ghost btn-icon"
+                aria-label="Close"
+                style={{ width: 36, height: 36, borderRadius: '50%', padding: 0 }}
+              >
+                <X size={18} />
+              </button>
             </Dialog.Close>
           </div>
 
@@ -1020,7 +1030,7 @@ export function PropertyModal({ isOpen, onClose, editingProperty }) {
             )}
 
             {/* Wizard Step Progress (click any step to jump to it) */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <div className="property-wizard-steps no-scrollbar" style={{ display: 'flex', alignItems: 'center', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
               {STEPS.map((step, sIdx) => {
                 const Icon = step.icon;
                 const stepIdx = STEPS.findIndex(s => s.id === activeStep);

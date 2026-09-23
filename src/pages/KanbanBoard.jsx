@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  DndContext, 
-  closestCorners, 
-  KeyboardSensor, 
-  PointerSensor, 
-  useSensor, 
+import {
+  DndContext,
+  closestCorners,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
   useSensors,
   DragOverlay
 } from '@dnd-kit/core';
@@ -26,6 +27,14 @@ export function KanbanBoard({ leads, onLeadClick, onEditLead, onDeleteLead }) {
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 5, // Requires 5px movement before dragging starts
+      },
+    }),
+    // Touch: long-press to drag so vertical scroll still works on mobile.
+    // Drag only starts from the grip handle (listeners are on .drag-handle).
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {

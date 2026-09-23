@@ -5,12 +5,14 @@
  */
 export function formatINR(lakhs) {
   if (lakhs == null || isNaN(lakhs)) return '—';
-  if (lakhs >= 100) {
-    const crores = lakhs / 100;
+  const num = Number(lakhs);
+  if (num >= 100) {
+    const crores = num / 100;
     const formatted = crores % 1 === 0 ? crores.toFixed(0) : crores.toFixed(2).replace(/\.?0+$/, '');
     return `₹${formatted} Cr`;
   }
-  return `₹${lakhs} L`;
+  const formatted = num % 1 === 0 ? num.toFixed(0) : num.toFixed(2).replace(/\.?0+$/, '');
+  return `₹${formatted} L`;
 }
 
 /**

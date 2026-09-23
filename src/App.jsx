@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Login } from './pages/Login';
@@ -34,6 +34,17 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Reset scroll on route change helper
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const mainEl = document.querySelector('.app-main');
+    if (mainEl) mainEl.scrollTop = 0;
+  }, [pathname]);
+  return null;
+};
+
 // Main App Layout Shell
 const AppLayout = () => {
   const { setActiveView, sidebarCollapsed } = useUiStore();
@@ -63,8 +74,10 @@ const AppLayout = () => {
 
   return (
     <div className={`app-shell ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      <ScrollToTop />
       <Header />
       <Sidebar />
+
       <main className="app-main">
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
@@ -101,12 +114,14 @@ const AppLayout = () => {
 
 const NavItem = ({ to, icon: Icon, label }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = location.pathname.includes(to);
   
   return (
     <button 
       className={`bottom-nav-item ${isActive ? 'active' : ''}`}
-      onClick={() => window.location.hash = `#${to}`}
+      onClick={() => navigate(to)}
+      aria-current={isActive ? 'page' : undefined}
     >
       <Icon size={20} />
       <span>{label}</span>

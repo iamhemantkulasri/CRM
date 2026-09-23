@@ -87,8 +87,8 @@ export function Tasks() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+      <div className="tasks-filter-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
+        <div className="tasks-filter-pills no-scrollbar" style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
           {[
             { id: 'all', label: `All (${tasks.length})` },
             { id: 'my', label: 'My Tasks' },
@@ -107,7 +107,9 @@ export function Tasks() {
                 background: filterType === tab.id ? 'var(--color-primary)' : 'transparent',
                 color: filterType === tab.id ? '#fff' : 'var(--color-muted-fg)',
                 cursor: 'pointer',
-                transition: 'all 0.15s'
+                transition: 'all 0.15s',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}
             >
               {tab.label}
@@ -115,7 +117,7 @@ export function Tasks() {
           ))}
         </div>
 
-        <div style={{ minWidth: 240, position: 'relative' }}>
+        <div className="tasks-search-wrap" style={{ position: 'relative', flex: 1, minWidth: 200, maxWidth: 320 }}>
           <Search size={14} style={{ position: 'absolute', left: 10, top: 10, color: 'var(--color-muted-fg)' }} />
           <input
             type="text"
@@ -123,7 +125,7 @@ export function Tasks() {
             placeholder="Search tasks..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ paddingLeft: 30, fontSize: 13, height: 34 }}
+            style={{ paddingLeft: 30, fontSize: 13, height: 34, width: '100%' }}
           />
         </div>
       </div>
@@ -171,11 +173,18 @@ export function Tasks() {
                     cursor: 'pointer',
                     color: isDone ? 'var(--color-success)' : 'var(--color-muted-fg)',
                     display: 'flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 36,
+                    height: 36,
+                    minWidth: 36,
+                    padding: 0,
+                    flexShrink: 0
                   }}
                   title={isDone ? 'Mark Pending' : 'Mark Completed'}
+                  aria-label={isDone ? 'Mark task pending' : 'Mark task completed'}
                 >
-                  {isDone ? <CheckCircle2 size={20} /> : <Circle size={20} />}
+                  {isDone ? <CheckCircle2 size={22} /> : <Circle size={22} />}
                 </button>
 
                 {/* Main Content */}

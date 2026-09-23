@@ -87,9 +87,13 @@ export function EmiCalculatorModal({
       <Dialog.Portal>
         <Dialog.Overlay className="modal-backdrop" />
         <Dialog.Content
-          className="modal-content"
+          className="modal-content emi-modal-content"
           style={{ maxWidth: 540, maxHeight: '90vh', overflowY: 'auto' }}
         >
+          <div className="mobile-sheet-handle-bar">
+            <div className="mobile-sheet-handle" />
+          </div>
+
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: '1px solid var(--color-border)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -106,7 +110,13 @@ export function EmiCalculatorModal({
               </div>
             </div>
             <Dialog.Close asChild>
-              <button className="btn btn-ghost btn-icon" aria-label="Close"><X size={18} /></button>
+              <button
+                className="btn btn-ghost btn-icon"
+                aria-label="Close"
+                style={{ width: 38, height: 38, borderRadius: '50%', padding: 0 }}
+              >
+                <X size={18} />
+              </button>
             </Dialog.Close>
           </div>
 
