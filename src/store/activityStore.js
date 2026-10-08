@@ -13,7 +13,7 @@ const seedActivities = [
   {
     id: 'act_1',
     leadId: 'lead_1',
-    performedBy: 'emp_rohan',
+    performedBy: 'emp_admin',
     action: 'LEAD_CREATED',
     details: 'Lead created via 99acres',
     timestamp: twoDaysAgo.toISOString()
@@ -21,7 +21,7 @@ const seedActivities = [
   {
     id: 'act_2',
     leadId: 'lead_1',
-    performedBy: 'emp_rohan',
+    performedBy: 'emp_admin',
     action: 'STAGE_CHANGED',
     details: 'Changed stage to Visit Scheduled',
     timestamp: yesterday.toISOString()
@@ -29,7 +29,7 @@ const seedActivities = [
   {
     id: 'act_3',
     leadId: 'lead_1',
-    performedBy: 'emp_rohan',
+    performedBy: 'emp_admin',
     action: 'SITE_VISIT_SCHEDULED',
     details: 'Site visit scheduled at Prestige Lake View for tomorrow 11 AM.',
     timestamp: yesterday.toISOString()
@@ -37,7 +37,7 @@ const seedActivities = [
   {
     id: 'act_4',
     leadId: 'lead_4',
-    performedBy: 'emp_amit',
+    performedBy: 'emp_admin',
     action: 'NOTE_ADDED',
     details: 'Client is aggressive on price. Needs a 20L discount.',
     timestamp: yesterday.toISOString()

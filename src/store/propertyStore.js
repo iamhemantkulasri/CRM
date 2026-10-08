@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { supabase } from '../api/supabase';
 import { sanitizeImageList, sanitizeImageUrl } from '../utils/storageUpload';
+import { filterPooled } from './pooledSearch';
 
 // Detail columns added by supabase/migrations/20260921000000_listing_detail_fields.sql.
 // Kept in one list so saves can retry without them when the migration
@@ -53,7 +54,10 @@ export function normalizeCrmProperty(raw) {
     name: raw.title || raw.name || 'Untitled Property',
     title: raw.title || raw.name || 'Untitled Property',
     builder: raw.builder || 'TGV Verified Developer',
-    builder_id: raw.builder_id || null,
+    // Retargeted to builders_sellers: builder_id is the owner FK. Legacy
+    // owner_partner_id is read as a defensive fallback only when builder_id
+    // is null (live rows carry null there anyway).
+    builder_id: raw.builder_id || raw.owner_partner_id || null,
     type: raw.property_type || raw.type || 'residential',
     configuration: raw.configuration || (raw.bedrooms ? `${raw.bedrooms} BHK` : 'Standard'),
     bhk: raw.configuration || (raw.bedrooms ? `${raw.bedrooms} BHK` : 'Standard'),
@@ -149,7 +153,14 @@ export function normalizeCrmProperty(raw) {
       }
       return [];
     })(),
-    created_at: raw.created_at
+    created_at: raw.created_at,
+    // Legacy passthrough (read-only): payloads never send this column.
+    owner_partner_id: raw.owner_partner_id || null,
+    approval_status: raw.approval_status || 'approved',
+    show_on_website: raw.show_on_website ?? false,
+    commission_pct: raw.commission_pct != null ? Number(raw.commission_pct) : null,
+    commission_fixed_lakhs: raw.commission_fixed_lakhs != null ? Number(raw.commission_fixed_lakhs) : null,
+    rejection_reason: raw.rejection_reason || null
   };
 }
 
@@ -188,6 +199,8 @@ export const usePropertyStore = create(
       getProperties: () => {
         return get().properties;
       },
+
+      getPooledProperties: (f) => filterPooled(get().properties, f),
       
       getLuxuryProperties: () => {
         return get().properties.filter(p => p.tier === 'luxury');
@@ -293,7 +306,12 @@ export const usePropertyStore = create(
             custom_dimensions: Array.isArray(normalized.custom_dimensions) ? normalized.custom_dimensions : [],
             custom_commute_points: Array.isArray(normalized.custom_commute_points) ? normalized.custom_commute_points : [],
             key_highlights: Array.isArray(normalized.key_highlights) ? normalized.key_highlights : [],
-            rera_blocks: Array.isArray(normalized.rera_blocks) ? normalized.rera_blocks : []
+            rera_blocks: Array.isArray(normalized.rera_blocks) ? normalized.rera_blocks : [],
+            approval_status: normalized.approval_status || 'approved',
+            show_on_website: normalized.show_on_website ?? false,
+            commission_pct: normalized.commission_pct != null && !isNaN(normalized.commission_pct) ? Number(normalized.commission_pct) : null,
+            commission_fixed_lakhs: normalized.commission_fixed_lakhs != null && !isNaN(normalized.commission_fixed_lakhs) ? Number(normalized.commission_fixed_lakhs) : null,
+            rejection_reason: normalized.rejection_reason || null
           };
 
           const { error } = await supabase.from('properties').insert(insertPayload);
@@ -398,6 +416,11 @@ export const usePropertyStore = create(
           if (updates.rera_blocks !== undefined) {
             updatePayload.rera_blocks = Array.isArray(updates.rera_blocks) ? updates.rera_blocks : [];
           }
+          if (updates.approval_status !== undefined) updatePayload.approval_status = updates.approval_status;
+          if (updates.show_on_website !== undefined) updatePayload.show_on_website = updates.show_on_website;
+          if (updates.commission_pct !== undefined) updatePayload.commission_pct = updates.commission_pct !== '' && updates.commission_pct !== null && !isNaN(updates.commission_pct) ? Number(updates.commission_pct) : null;
+          if (updates.commission_fixed_lakhs !== undefined) updatePayload.commission_fixed_lakhs = updates.commission_fixed_lakhs !== '' && updates.commission_fixed_lakhs !== null && !isNaN(updates.commission_fixed_lakhs) ? Number(updates.commission_fixed_lakhs) : null;
+          if (updates.rejection_reason !== undefined) updatePayload.rejection_reason = updates.rejection_reason;
 
           if (Object.keys(updatePayload).length > 0) {
             const { error } = await supabase.from('properties').update(updatePayload).eq('id', id);

@@ -41,6 +41,7 @@ export function normalizeCrmLead(raw) {
     notes: existingNotes.length > 0 ? existingNotes : websiteNotes,
     nextFollowUp: raw.next_follow_up || raw.nextFollowUp || null,
     propertyId: raw.property_id || raw.propertyId || null,
+    source_partner_id: raw.source_partner_id || null,
     createdAt: raw.created_at || new Date().toISOString(),
     updatedAt: raw.updated_at || raw.created_at || new Date().toISOString()
   };
@@ -138,6 +139,10 @@ export const useLeadStore = create(
       },
 
       addLead: async (leadData) => {
+        // Task 6: partner-stock leads attribute to admin but tag the source partner.
+        if (leadData.source_partner_id) {
+          leadData = { ...leadData, assignedTo: 'emp_admin', stage: 'new' };
+        }
         // Validate or generate valid UUID for Postgres UUID column
         const isUuid = (str) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(str);
         const leadId = (leadData.id && isUuid(leadData.id)) 
@@ -168,7 +173,8 @@ export const useLeadStore = create(
             requirements: newLead.requirements || {},
             notes: Array.isArray(newLead.notes) ? newLead.notes : [],
             next_follow_up: newLead.nextFollowUp || null,
-            property_id: newLead.propertyId || null
+            property_id: newLead.propertyId || null,
+            source_partner_id: newLead.source_partner_id || null
           };
 
           // Include valid UUID if present
@@ -186,6 +192,10 @@ export const useLeadStore = create(
             console.error('Failed to sync lead to Supabase:', error);
           } else if (data) {
             const savedLead = normalizeCrmLead(data);
+            // Preserve local partner tag if server row lacks it (don't overwrite with null)
+            if (!savedLead.source_partner_id && newLead.source_partner_id) {
+              savedLead.source_partner_id = newLead.source_partner_id;
+            }
             set((state) => ({
               leads: state.leads.map(l => l.id === newLead.id ? savedLead : l)
             }));

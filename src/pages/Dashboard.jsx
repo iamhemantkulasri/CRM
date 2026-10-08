@@ -2,6 +2,7 @@ import React from 'react';
 import { useLeadStore } from '../store/leadStore';
 import { useVisitStore } from '../store/visitStore';
 import { useCallStore } from '../store/callStore';
+import { useDealStore } from '../store/dealStore';
 import { Users, Calendar, PhoneMissed, IndianRupee } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { STAGES } from '../utils/constants';
@@ -13,15 +14,16 @@ export function Dashboard() {
   const { leads } = useLeadStore();
   const { visits } = useVisitStore();
   const { calls } = useCallStore();
+  const { deals } = useDealStore();
 
   // Metrics
   const totalLeads = leads.length;
   const todayVisits = visits.filter(v => new Date(v.scheduledDate).toDateString() === new Date().toDateString()).length;
   const missedCalls = calls.filter(c => c.status === 'missed' && new Date(c.timestamp).toDateString() === new Date().toDateString()).length;
   
-  // Dummy Deals Closed for MVP (would come from dealStore)
-  const dealsClosed = leads.filter(l => l.stage === 'won').length;
-  const totalDealValue = leads.filter(l => l.stage === 'won').reduce((acc, curr) => acc + (curr.requirements.budgetMinLakhs || 0), 0);
+  // Real Deals Closed from dealStore
+  const dealsClosed = deals.length;
+  const totalDealValue = deals.reduce((acc, deal) => acc + (deal.brokerageAmount ?? deal.gross_brokerage_lakhs ?? 0), 0);
 
   // Chart Data
   const leadsByStage = STAGES.map(stage => ({
@@ -78,7 +80,7 @@ export function Dashboard() {
           </div>
           <div>
             <div className="dashboard-stat-label">Deals Won</div>
-            <div className="dashboard-stat-value">{dealsClosed} <span style={{ fontSize: 13, color: 'var(--color-success)', fontWeight: 600 }}>(₹{totalDealValue}L)</span></div>
+            <div className="dashboard-stat-value">{dealsClosed} <span style={{ fontSize: 13, color: 'var(--color-success)', fontWeight: 600 }}>(₹{totalDealValue.toFixed(2)}L)</span></div>
           </div>
         </div>
 

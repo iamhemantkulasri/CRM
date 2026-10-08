@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { EmptyState } from '../components/EmptyState';
 import {
@@ -22,6 +22,7 @@ import {
   List
 } from 'lucide-react';
 import { usePropertyStore } from '../store/propertyStore';
+import { usePartnerStore } from '../store/partnerStore';
 import { formatINR, formatArea } from '../utils/formatters';
 import { PropertyModal } from '../components/PropertyModal';
 import { PropertyShareModal } from '../components/PropertyShareModal';
@@ -41,7 +42,8 @@ const BUDGET_OPTIONS = [
 
 export function Properties() {
   const navigate = useNavigate();
-  const { properties } = usePropertyStore();
+  const { properties, getPooledProperties } = usePropertyStore();
+  const { partners, fetchPartners } = usePartnerStore();
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProperty, setEditingProperty] = useState(null);
@@ -56,15 +58,21 @@ export function Properties() {
   const [copiedId, setCopiedId] = useState(null);
   const [selectedPropertyIds, setSelectedPropertyIds] = useState(new Set());
   const [selectedTier, setSelectedTier] = useState('all'); // 'all' | 'luxury' | 'normal' | 'unlisted'
+  const [selectedOwner, setSelectedOwner] = useState('all'); // 'all' | 'tgv' | partner id
   const [selectedGroup, setSelectedGroup] = useState('all'); // 'all' | 'Residential' | 'Plots & Land' | 'Commercial'
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
+
+  // Owner dropdown reads the login-enabled builders_sellers list.
+  useEffect(() => {
+    fetchPartners();
+  }, [fetchPartners]);
 
   const openAdd = () => {
     setEditingProperty(null);
     setIsModalOpen(true);
   };
 
-  const hasActiveFilters = searchQuery !== '' || selectedGroup !== 'all' || selectedType !== 'all' || selectedCity !== 'all' || selectedBudget !== 'all' || selectedConfig !== 'all';
+  const hasActiveFilters = searchQuery !== '' || selectedGroup !== 'all' || selectedType !== 'all' || selectedCity !== 'all' || selectedBudget !== 'all' || selectedConfig !== 'all' || selectedOwner !== 'all';
 
   const resetFilters = () => {
     setSearchQuery('');
@@ -73,11 +81,15 @@ export function Properties() {
     setSelectedCity('all');
     setSelectedBudget('all');
     setSelectedConfig('all');
+    setSelectedOwner('all');
   };
 
-  // Filter properties in real time
+  // Filter properties in real time (pooled search: TGV own + partner stock)
   const filteredProperties = useMemo(() => {
-    return properties.filter(prop => {
+    const pool = typeof getPooledProperties === 'function'
+      ? getPooledProperties({ owner: selectedOwner })
+      : properties;
+    return pool.filter(prop => {
       // Tier filter
       if (selectedTier === 'luxury' && prop.tier !== 'luxury') return false;
       if (selectedTier === 'normal' && prop.tier !== 'normal') return false;
@@ -144,7 +156,7 @@ export function Properties() {
 
       return nameMatch || builderMatch || localityMatch || cityMatch || configMatch || typeMatch;
     });
-  }, [properties, searchQuery, selectedGroup, selectedType, selectedCity, selectedBudget, selectedConfig, selectedTier]);
+  }, [properties, searchQuery, selectedGroup, selectedType, selectedCity, selectedBudget, selectedConfig, selectedTier, selectedOwner, getPooledProperties]);
 
   const handleShareCard = async (e, prop) => {
     e.stopPropagation();
@@ -490,6 +502,21 @@ export function Properties() {
             >
               {BUDGET_OPTIONS.map(b => (
                 <option key={b.id} value={b.id}>{b.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Owner filter (pooled search: TGV own vs partner stock) */}
+          <div style={{ minWidth: 140, flex: '0 1 170px' }}>
+            <select
+              className="form-select"
+              value={selectedOwner}
+              onChange={(e) => setSelectedOwner(e.target.value)}
+            >
+              <option value="all">All Owners</option>
+              <option value="tgv">TGV Own</option>
+              {(partners || []).map(p => (
+                <option key={p.id} value={p.id}>{p.name || p.id}</option>
               ))}
             </select>
           </div>

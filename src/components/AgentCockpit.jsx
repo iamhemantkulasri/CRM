@@ -90,7 +90,7 @@ export function AgentCockpit() {
     e.stopPropagation();
     const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
     const phoneWithCountry = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-    const text = `Hi ${lead.name}, this is ${currentUser?.name || 'your relationship manager'} from PropDesk Realty. Following up on your property search for ${lead.requirements?.bhk || ''} ${lead.requirements?.propertyType || ''}. Are you available for a quick discussion?`;
+    const text = `Hi ${lead.name}, this is ${currentUser?.name || 'your relationship manager'} from TGV Estates. Following up on your property search for ${lead.requirements?.bhk || ''} ${lead.requirements?.propertyType || ''}. Are you available for a quick discussion?`;
     window.open(`https://wa.me/${phoneWithCountry}?text=${encodeURIComponent(text)}`, '_blank');
   };
 

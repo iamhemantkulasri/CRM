@@ -1,0 +1,704 @@
+/* ================================================================
+   TGV Estates CRM — Luxury Property Details Dossier Styling
+   Adheres to: high-end-visual-design, ui-ux-pro-max, ui-styling
+   ================================================================ */
+
+/* ── 1. Page & Layout Containers ── */
+.property-dossier-page {
+  padding-bottom: var(--space-16);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.property-dossier-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .property-dossier-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 2. Double-Bezel (Doppelrand) Architecture ── */
+.dossier-double-bezel {
+  background: rgba(241, 245, 249, 0.6);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 6px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.dossier-double-bezel-inner {
+  background: var(--color-card);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 15px;
+  padding: var(--space-6);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* ── 3. Panoramic Hero Showcase ── */
+.dossier-hero-card {
+  position: relative;
+  height: 380px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+  box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.15);
+  background: #0f172a;
+}
+
+.dossier-hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 800ms var(--ease-out);
+}
+
+.dossier-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.35) 0%,
+    rgba(15, 23, 42, 0.1) 40%,
+    rgba(15, 23, 42, 0.85) 80%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
+  pointer-events: none;
+}
+
+.dossier-hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-6) var(--space-8);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.dossier-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--border-radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.dossier-eyebrow-accent {
+  background: rgba(37, 99, 235, 0.85);
+}
+
+.dossier-eyebrow-emerald {
+  background: rgba(16, 185, 129, 0.85);
+}
+
+.dossier-eyebrow-amber {
+  background: rgba(245, 158, 11, 0.85);
+}
+
+.dossier-eyebrow-glass {
+  background: rgba(15, 23, 42, 0.65);
+}
+
+.dossier-hero-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 8px 0 4px;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.dossier-hero-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dossier-hero-price-box {
+  text-align: right;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(12px);
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dossier-hero-price-quote {
+  font-size: 32px;
+  font-weight: 900;
+  color: #38bdf8;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.dossier-hero-rate {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* ── 4. Executive Highlights Bar ── */
+.dossier-highlights-strip {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.04) 0%, rgba(16, 185, 129, 0.04) 100%);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dossier-highlights-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dossier-highlights-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dossier-highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.dossier-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.dossier-highlight-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.dossier-highlight-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fg);
+  line-height: 1.4;
+}
+
+/* ── 5. Segmented Dossier Tabs (Emil Design Eng) ── */
+.dossier-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-muted);
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space-6);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dossier-tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.dossier-tab-btn {
+  flex: 1 0 auto;
+  min-width: max-content;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted-fg);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1),
+              color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1),
+              transform 120ms ease-out;
+}
+
+.dossier-tab-btn svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  color: currentColor;
+  transition: transform 140ms ease-out;
+}
+
+.dossier-tab-btn:hover {
+  color: var(--color-fg);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.dossier-tab-btn:active {
+  transform: scale(0.97);
+}
+
+.dossier-tab-btn.active {
+  color: var(--color-primary);
+  background: var(--color-card);
+  border-color: rgba(226, 232, 240, 0.9);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.dossier-tab-btn.active svg {
+  color: var(--color-primary);
+}
+
+.dossier-tab-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--color-primary);
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  flex-shrink: 0;
+  line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+}
+
+.dossier-tab-btn.active .dossier-tab-badge {
+  background: rgba(37, 99, 235, 0.14);
+  border-color: rgba(37, 99, 235, 0.22);
+}
+
+/* ── 6. Specifications Metric Tiles ── */
+.dossier-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: var(--space-6);
+}
+
+.dossier-spec-tile {
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast);
+}
+
+.dossier-spec-tile:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.dossier-spec-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted-fg);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.dossier-spec-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-fg);
+  line-height: 1.25;
+}
+
+.dossier-spec-hint {
+  font-size: 11px;
+  color: var(--color-muted-fg);
+  margin-top: 3px;
+}
+
+/* ── 7. Multi-Size Variants & Blueprint Studio ── */
+.variant-selector-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: var(--space-5);
+}
+
+.variant-selector-card {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-card);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.variant-selector-card:hover {
+  border-color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.02);
+}
+
+.variant-selector-card.active {
+  border-color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.06);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.blueprint-preview-box {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0f172a;
+  border: 1px solid var(--color-border);
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.blueprint-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.blueprint-preview-box:hover img {
+  transform: scale(1.02);
+}
+
+.blueprint-enlarge-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── 8. Room Dimensions Table ── */
+.dimensions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.dimensions-table th {
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--color-muted);
+  color: var(--color-muted-fg);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dimensions-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-fg);
+}
+
+.dimensions-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── 9. Institutional 4-Block RERA Diligence ── */
+.rera-diligence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: var(--space-4);
+}
+
+.rera-diligence-block {
+  background: #ffffff;
+  border: 1.5px solid rgba(16, 185, 129, 0.2);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.04);
+}
+
+.rera-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rera-block-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--color-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rera-block-status-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+.rera-block-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-fg);
+}
+
+.rera-block-desc {
+  font-size: 12px;
+  color: var(--color-muted-fg);
+  line-height: 1.5;
+}
+
+/* ── 10. Transit & Commute Matrix ── */
+.commute-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.commute-landmark-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.commute-category-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.commute-landmark-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-fg);
+}
+
+.commute-landmark-metrics {
+  font-size: 12px;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ── 11. Button-in-Button & Island CTA Patterns ── */
+.btn-island-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px 10px 18px;
+  border-radius: var(--border-radius-full);
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transition: all var(--duration-fast) var(--ease-out);
+  text-decoration: none;
+}
+
+.btn-island-primary:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+}
+
+.btn-island-trailing-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.btn-island-primary:hover .btn-island-trailing-icon {
+  transform: translateX(2px) translateY(-1px);
+}
+
+/* ── 12. Media Hub & Gallery Filter ── */
+.gallery-filter-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: var(--space-4);
+}
+
+.gallery-filter-chip {
+  padding: 6px 14px;
+  border-radius: var(--border-radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-muted-fg);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast);
+}
+
+.gallery-filter-chip.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.gallery-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.gallery-photo-item {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: var(--color-muted);
+}
+
+.gallery-photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-fast);
+}
+
+.gallery-photo-item:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-photo-tag {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* ── 13. Lightbox Dialog Styles ── */
+.lightbox-modal-content {
+  max-width: 900px;
+  width: 95vw;
+  max-height: 90vh;
+  background: var(--color-card);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+.lightbox-image-container {
+  flex: 1;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+.lightbox-image-container img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}

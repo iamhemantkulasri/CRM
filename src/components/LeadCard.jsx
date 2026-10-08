@@ -9,7 +9,7 @@ import { SourceBadge } from './SourceBadge';
 import { useEmployeeStore } from '../store/employeeStore';
 import { useReminderStore } from '../store/reminderStore';
 
-export function LeadCard({ lead, onClick, onEdit, onDelete }) {
+export function LeadCard({ lead, onClick, onEdit, onDelete, isOverlay = false }) {
   const { getEmployee } = useEmployeeStore();
   const assignedAgent = getEmployee(lead.assignedTo);
   
@@ -20,12 +20,12 @@ export function LeadCard({ lead, onClick, onEdit, onDelete }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: lead.id, data: lead });
+  } = useSortable({ id: lead.id, data: lead, disabled: isOverlay });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : 1,
+    opacity: isDragging ? 0.35 : 1,
     zIndex: isDragging ? 100 : 'auto',
   };
 
@@ -35,13 +35,18 @@ export function LeadCard({ lead, onClick, onEdit, onDelete }) {
     <div 
       ref={setNodeRef}
       style={style}
-      className={`lead-card ${isDragging ? 'is-dragging' : ''}`}
-      onClick={() => onClick && onClick(lead)}
+      className={`lead-card ${isDragging ? 'is-dragging' : ''} ${isOverlay ? 'is-overlay' : ''}`}
+      onClick={(e) => {
+        if (isDragging || isOverlay) return;
+        onClick && onClick(lead);
+      }}
+      {...(!isOverlay ? attributes : {})}
+      {...(!isOverlay ? listeners : {})}
     >
       {/* Drag Handle & Header */}
       <div className="lead-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div className="lead-card-actions" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div {...attributes} {...listeners} className="drag-handle" onClick={(e) => e.stopPropagation()}>
+          <div className="drag-handle" title="Hold or drag to move lead">
             <GripVertical size={16} />
           </div>
           <PriorityBadge priorityId={lead.priority} className="text-[10px] py-0.5 px-1.5" />
@@ -49,14 +54,23 @@ export function LeadCard({ lead, onClick, onEdit, onDelete }) {
         </div>
 
         {/* Quick Edit & Delete Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 2 }} onClick={(e) => e.stopPropagation()}>
+        <div 
+          style={{ display: 'flex', alignItems: 'center', gap: 2 }} 
+          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
           {onEdit && (
             <button
               type="button"
               className="btn-icon"
               style={{ padding: 4, color: 'var(--color-muted-fg)', background: 'transparent', border: 'none', cursor: 'pointer', borderRadius: 4 }}
               title="Edit lead details"
-              onClick={() => onEdit(lead)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(lead);
+              }}
             >
               <Edit2 size={13} />
             </button>
@@ -67,7 +81,10 @@ export function LeadCard({ lead, onClick, onEdit, onDelete }) {
               className="btn-icon"
               style={{ padding: 4, color: 'var(--color-danger, #ef4444)', background: 'transparent', border: 'none', cursor: 'pointer', borderRadius: 4 }}
               title="Delete lead permanently"
-              onClick={() => onDelete(lead)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(lead);
+              }}
             >
               <Trash2 size={13} />
             </button>

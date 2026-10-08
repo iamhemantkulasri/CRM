@@ -5,6 +5,8 @@ import { AgentBadge } from '../components/AgentBadge';
 import { useEmployeeStore } from '../store/employeeStore';
 import { useLeadStore } from '../store/leadStore';
 import { useAuthStore } from '../store/authStore';
+import { useDealStore } from '../store/dealStore';
+import { useActivityStore } from '../store/activityStore';
 import { Edit2, Trash2, FileText } from 'lucide-react';
 
 export function TableView({ leads, onLeadClick, onEditLead, onDeleteLead }) {
@@ -16,6 +18,35 @@ export function TableView({ leads, onLeadClick, onEditLead, onDeleteLead }) {
     e.stopPropagation();
     const newStage = e.target.value;
     updateLeadStage(leadId, newStage);
+    const stageObj = STAGES.find(s => s.id === newStage);
+    useActivityStore.getState().logActivity(
+      leadId,
+      'STAGE_CHANGED',
+      `Moved to ${stageObj?.label || newStage}`,
+      currentUser?.id || 'system'
+    );
+
+    if (newStage === 'won') {
+      const existingDeals = useDealStore.getState().deals;
+      const alreadyLogged = existingDeals.some(d => d.leadId === leadId);
+      if (!alreadyLogged) {
+        const lead = leads.find(l => l.id === leadId);
+        const budgetVal = lead?.requirements?.budgetMaxLakhs || lead?.requirements?.budgetMinLakhs || 100;
+        useDealStore.getState().addDeal({
+          leadId,
+          agentId: lead?.assignedTo || currentUser?.id || 'emp_admin',
+          totalDealValueLakhs: budgetVal,
+          brokeragePercentage: 2,
+          status: 'pending_invoice'
+        });
+        useActivityStore.getState().logActivity(
+          leadId,
+          'DEAL_CREATED',
+          `Closed deal logged for ₹${budgetVal} Lakhs`,
+          currentUser?.id || 'system'
+        );
+      }
+    }
   };
 
   const handleAssignAgent = (e, leadId) => {

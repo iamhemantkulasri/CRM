@@ -7,6 +7,7 @@ const BUILDER_TYPES = [
   { id: 'builder', label: '🏢 Builder / Developer' },
   { id: 'individual_seller', label: '👤 Individual Seller / Landowner' },
   { id: 'investor', label: '💼 Institutional Investor / Fund' },
+  { id: 'channel_partner', label: '🤝 Channel Partner / Broker' },
   { id: 'landlord', label: '🏠 Landlord (Leasing Portfolio)' },
 ];
 

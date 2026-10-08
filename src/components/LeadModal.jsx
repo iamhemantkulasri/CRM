@@ -5,7 +5,7 @@ import { useLeadStore } from '../store/leadStore';
 import { useAuthStore } from '../store/authStore';
 import { useEmployeeStore } from '../store/employeeStore';
 import { useActivityStore } from '../store/activityStore';
-import { SOURCES, PRIORITIES } from '../utils/constants';
+import { SOURCES, PRIORITIES, STAGES } from '../utils/constants';
 import { addDaysISO, FOLLOW_UP_PRESETS, toDateTimeLocalValue } from '../utils/followUp';
 
 export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
@@ -23,6 +23,7 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
     email: '',
     source: 'instagram',
     priority: 'warm',
+    stage: 'new',
     assignedTo: currentUser?.id || '',
     note: '',
     nextFollowUp: '',
@@ -56,6 +57,7 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
         email: leadToEdit.email || '',
         source: leadToEdit.source || 'instagram',
         priority: leadToEdit.priority || 'warm',
+        stage: leadToEdit.stage || 'new',
         assignedTo: leadToEdit.assignedTo || '',
         note: firstNoteText,
         nextFollowUp: leadToEdit.nextFollowUp || '',
@@ -136,6 +138,7 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
           email: formData.email.trim() || null,
           source: formData.source,
           priority: formData.priority,
+          stage: formData.stage,
           assignedTo: formData.assignedTo || null,
           nextFollowUp: formData.nextFollowUp || null,
           requirements: constructedRequirements,
@@ -260,6 +263,15 @@ export function LeadModal({ isOpen, onClose, leadToEdit = null }) {
                   </select>
                 </div>
                 <div className="form-group">
+                  <label className="form-label">Stage</label>
+                  <select name="stage" value={formData.stage} onChange={handleChange} className="form-select">
+                    {STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group" style={{ width: '100%' }}>
                   <label className="form-label">Assign To</label>
                   <select name="assignedTo" value={formData.assignedTo} onChange={handleChange} className="form-select">
                     <option value="">⚠️ Unassigned</option>

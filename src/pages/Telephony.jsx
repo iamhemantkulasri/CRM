@@ -1,31 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { EmptyState } from '../components/EmptyState';
-import { PhoneCall } from 'lucide-react';
+import { PhoneCall, Phone, Plus, X, Search } from 'lucide-react';
+import * as Dialog from '@radix-ui/react-dialog';
 import { useCallStore } from '../store/callStore';
 import { useLeadStore } from '../store/leadStore';
 import { useEmployeeStore } from '../store/employeeStore';
 import { formatRelativeDate } from '../utils/formatters';
 import { AgentBadge } from '../components/AgentBadge';
+import { CallModal } from '../components/CallModal';
 
 export function Telephony() {
   const { calls } = useCallStore();
   const { leads } = useLeadStore();
   const { getEmployee } = useEmployeeStore();
 
+  const [activeCallLead, setActiveCallLead] = useState(null);
+  const [isDialerModalOpen, setIsDialerModalOpen] = useState(false);
+  const [dialerSearch, setDialerSearch] = useState('');
+
+  const filteredDialerLeads = dialerSearch.trim()
+    ? leads.filter(l => l.name.toLowerCase().includes(dialerSearch.toLowerCase()) || l.phone.includes(dialerSearch))
+    : leads.slice(0, 15);
+
+  const handleStartCall = (lead) => {
+    setIsDialerModalOpen(false);
+    setActiveCallLead(lead);
+  };
+
   return (
-    <div className="page">
-      <div className="page-header">
+    <div className="page h-full" style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className="page-header" style={{ marginBottom: 16 }}>
         <div>
           <h1 className="page-title">Telephony</h1>
-          <p className="page-subtitle">Call logs and dialer history</p>
+          <p className="page-subtitle">Call logs, simulated dialer, and client call outcomes</p>
         </div>
+
+        <button 
+          className="btn btn-primary"
+          onClick={() => setIsDialerModalOpen(true)}
+          style={{ gap: 6 }}
+        >
+          <Phone size={15} /> Quick Dial / Log Call
+        </button>
       </div>
       
       {calls.length === 0 ? (
         <EmptyState 
           icon={PhoneCall}
           title="No Calls Yet"
-          description="Make your first call from a lead's profile to see the history here."
+          description="Click '+ Quick Dial / Log Call' above or call a lead from their profile to start recording call logs."
         />
       ) : (
         <>
@@ -39,6 +62,7 @@ export function Telephony() {
                   <th>Status</th>
                   <th>Date</th>
                   <th>Notes</th>
+                  <th style={{ textAlign: 'right' }}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -67,6 +91,18 @@ export function Telephony() {
                       </td>
                       <td style={{ fontSize: 13, color: 'var(--color-muted-fg)', maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {call.notes || '-'}
+                      </td>
+                      <td style={{ textAlign: 'right' }}>
+                        {lead && (
+                          <button
+                            className="btn btn-outline btn-sm"
+                            style={{ gap: 4, padding: '4px 8px', fontSize: 12 }}
+                            onClick={() => setActiveCallLead(lead)}
+                            title={`Call ${lead.name}`}
+                          >
+                            <Phone size={12} /> Call Again
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -105,11 +141,22 @@ export function Telephony() {
                     </span>
                   </div>
 
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 15 }}>{lead?.name || 'Unknown Lead'}</div>
-                    <div style={{ fontSize: 12, color: 'var(--color-muted-fg)', marginTop: 2, fontFamily: 'var(--font-mono)' }}>
-                      📞 {lead?.phone || 'No phone'}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 15 }}>{lead?.name || 'Unknown Lead'}</div>
+                      <div style={{ fontSize: 12, color: 'var(--color-muted-fg)', marginTop: 2, fontFamily: 'var(--font-mono)' }}>
+                        📞 {lead?.phone || 'No phone'}
+                      </div>
                     </div>
+                    {lead && (
+                      <button
+                        className="btn btn-outline btn-sm"
+                        style={{ gap: 4, padding: '4px 8px', fontSize: 12 }}
+                        onClick={() => setActiveCallLead(lead)}
+                      >
+                        <Phone size={12} /> Call
+                      </button>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--color-border)', paddingTop: 8 }}>
@@ -125,6 +172,82 @@ export function Telephony() {
             })}
           </div>
         </>
+      )}
+
+      {/* Select Client to Call Modal */}
+      <Dialog.Root open={isDialerModalOpen} onOpenChange={setIsDialerModalOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="modal-backdrop" />
+          <Dialog.Content className="modal-content" style={{ maxWidth: 440 }}>
+            <div className="modal-header">
+              <Dialog.Title className="text-h2" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Phone size={18} style={{ color: 'var(--color-primary)' }} />
+                Quick Dial / Log Call
+              </Dialog.Title>
+              <Dialog.Close asChild>
+                <button className="btn btn-ghost btn-icon"><X size={18} /></button>
+              </Dialog.Close>
+            </div>
+
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div className="search-input-wrapper">
+                <Search size={15} className="search-icon" />
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Search client by name or phone..."
+                  value={dialerSearch}
+                  onChange={e => setDialerSearch(e.target.value)}
+                  style={{ width: '100%' }}
+                  autoFocus
+                />
+              </div>
+
+              <div style={{ maxHeight: 280, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }} className="custom-scrollbar">
+                {filteredDialerLeads.map(l => (
+                  <button
+                    key={l.id}
+                    type="button"
+                    onClick={() => handleStartCall(l)}
+                    className="card card-hoverable"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '10px 14px',
+                      textAlign: 'left',
+                      border: '1px solid var(--color-border)',
+                      background: 'var(--color-card)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 13.5 }}>{l.name}</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--color-muted-fg)', marginTop: 2, fontFamily: 'var(--font-mono)' }}>{l.phone}</div>
+                    </div>
+                    <span className="btn btn-primary btn-sm" style={{ gap: 4, height: 28, fontSize: 11.5 }}>
+                      <Phone size={11} /> Dial
+                    </span>
+                  </button>
+                ))}
+                {filteredDialerLeads.length === 0 && (
+                  <div style={{ padding: 16, textAlign: 'center', color: 'var(--color-muted-fg)', fontSize: 13 }}>
+                    No leads found matching "{dialerSearch}"
+                  </div>
+                )}
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {/* Active Call Simulator Modal */}
+      {activeCallLead && (
+        <CallModal
+          isOpen={Boolean(activeCallLead)}
+          onClose={() => setActiveCallLead(null)}
+          lead={activeCallLead}
+        />
       )}
     </div>
   );

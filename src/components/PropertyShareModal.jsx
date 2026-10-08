@@ -40,7 +40,7 @@ export function PropertyShareModal({ property, isOpen, onClose }) {
     const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
     const phoneWithCountry = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
     
-    const text = `Hi ${lead.name}, this is PropDesk Realty.\n\n` +
+    const text = `Hi ${lead.name}, this is TGV Estates.\n\n` +
       `Here is a selected property tailored for your requirement:\n` +
       `🏡 *${property.name}* (${property.configuration || property.bhk})\n` +
       `📍 ${property.locality}, ${property.city || 'India'}\n` +

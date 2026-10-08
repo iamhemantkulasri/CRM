@@ -37,7 +37,7 @@ export function Login() {
         </div>
 
         <div className="agent-grid">
-          {employees.map(employee => (
+          {employees.filter(e => e.status !== 'inactive').map(employee => (
             <button 
               key={employee.id} 
               className="agent-select-card card card-hoverable"

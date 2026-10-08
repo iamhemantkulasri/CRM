@@ -13,6 +13,7 @@ import { STAGES } from '../utils/constants';
 import { useActivityStore } from '../store/activityStore';
 import { useAuthStore } from '../store/authStore';
 import { useLeadStore } from '../store/leadStore';
+import { useDealStore } from '../store/dealStore';
 import { CallModal } from './CallModal';
 import { SiteVisitModal } from './SiteVisitModal';
 import { EmiCalculatorModal } from './EmiCalculatorModal';
@@ -26,7 +27,7 @@ import { printSingleProperty } from '../utils/propertyPdf';
 export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) {
   const { getEmployee, employees } = useEmployeeStore();
   const { getActivitiesForLead } = useActivityStore();
-  const { addNote, updateLead, deleteLead } = useLeadStore();
+  const { addNote, updateLead, deleteLead, updateLeadStage } = useLeadStore();
   const { currentUser } = useAuthStore();
   const { properties } = usePropertyStore();
   
@@ -50,7 +51,7 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
     const mapUrl = prop.locationLink || `https://maps.google.com/?q=${encodeURIComponent(prop.locality + ', ' + (prop.city || 'India'))}`;
     const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
     const phoneWithCountry = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-    const text = `Hi ${lead.name}, this is ${agent?.name || 'PropDesk Team'} from PropDesk Realty.\n\n` +
+    const text = `Hi ${lead.name}, this is ${agent?.name || 'TGV Estates Team'} from TGV Estates.\n\n` +
       `Here is a property specially matching your requirements:\n` +
       `🏡 *${prop.name}* (${prop.configuration || prop.bhk})\n` +
       `📍 ${prop.locality}, ${prop.city || 'India'}\n` +
@@ -168,11 +169,64 @@ export function LeadDrawer({ lead, isOpen, onClose, onEditLead, onDeleteLead }) 
 
             <div className="drawer-badges" style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               <PriorityBadge priorityId={lead.priority} />
-              <div 
-                className="badge"
-                style={{ backgroundColor: `var(--stage-${lead.stage})`, color: '#fff', border: 'none' }}
-              >
-                {stage?.label}
+              
+              {/* Interactive Stage Dropdown */}
+              <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+                <select
+                  value={lead.stage}
+                  onChange={(e) => {
+                    const newStage = e.target.value;
+                    updateLeadStage(lead.id, newStage);
+                    const stageObj = STAGES.find(s => s.id === newStage);
+                    useActivityStore.getState().logActivity(
+                      lead.id,
+                      currentUser?.id || 'system',
+                      'STAGE_CHANGED',
+                      `Stage updated to ${stageObj?.label || newStage}`
+                    );
+
+                    // If changed to won, auto-log deal if not already present
+                    if (newStage === 'won') {
+                      const existingDeals = useDealStore.getState().deals;
+                      const alreadyLogged = existingDeals.some(d => d.leadId === lead.id);
+                      if (!alreadyLogged) {
+                        const budgetVal = lead.requirements?.budgetMaxLakhs || lead.requirements?.budgetMinLakhs || 100;
+                        useDealStore.getState().addDeal({
+                          leadId: lead.id,
+                          agentId: lead.assignedTo || currentUser?.id || 'emp_admin',
+                          totalDealValueLakhs: budgetVal,
+                          brokeragePercentage: 2,
+                          status: 'pending_invoice'
+                        });
+                        useActivityStore.getState().logActivity(
+                          lead.id,
+                          currentUser?.id || 'system',
+                          'DEAL_CREATED',
+                          `Closed deal logged for ₹${budgetVal} Lakhs`
+                        );
+                      }
+                    }
+                  }}
+                  className="form-input"
+                  style={{
+                    height: 26,
+                    fontSize: 11.5,
+                    padding: '1px 8px',
+                    borderRadius: 14,
+                    background: `var(--stage-${lead.stage})`,
+                    color: '#fff',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    border: 'none'
+                  }}
+                  title="Change lead pipeline stage"
+                >
+                  {STAGES.map(s => (
+                    <option key={s.id} value={s.id} style={{ background: 'var(--color-card)', color: 'var(--color-fg)' }}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <SourceBadge sourceId={lead.source} />

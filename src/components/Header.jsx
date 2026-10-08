@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, X, Calculator, Menu, Copy, Moon, Sun, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Bell, X, Calculator, Menu, Copy, Moon, Sun, Check, Users, Building2, CheckSquare } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useUiStore } from '../store/uiStore';
 import { useLeadStore } from '../store/leadStore';
+import { usePropertyStore } from '../store/propertyStore';
+import { useTaskStore } from '../store/taskStore';
 import { useReminderStore } from '../store/reminderStore';
 import { HELPLINE_NUMBER } from '../utils/constants';
 import { AgentBadge } from './AgentBadge';
@@ -11,9 +14,12 @@ import { EmiCalculatorModal } from './EmiCalculatorModal';
 import './Header.css';
 
 export function Header() {
+  const navigate = useNavigate();
   const { currentUser, logout } = useAuthStore();
   const { theme, toggleTheme, toggleSidebar } = useUiStore();
   const { leads } = useLeadStore();
+  const { properties } = usePropertyStore();
+  const { tasks } = useTaskStore();
   const { getOverdueLeads } = useReminderStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [bellOpen, setBellOpen] = useState(false);
@@ -47,6 +53,95 @@ export function Header() {
     setTimeout(() => setCopiedHelpline(false), 2000);
   };
 
+  const q = searchQuery.toLowerCase().trim();
+  const matchedLeads = q ? leads.filter(l => l.name.toLowerCase().includes(q) || l.phone.includes(q)).slice(0, 4) : [];
+  const matchedProps = q ? properties.filter(p => p.name.toLowerCase().includes(q) || (p.locality && p.locality.toLowerCase().includes(q))).slice(0, 3) : [];
+  const matchedTasks = q ? tasks.filter(t => t.title.toLowerCase().includes(q)).slice(0, 3) : [];
+  const totalMatches = matchedLeads.length + matchedProps.length + matchedTasks.length;
+
+  const renderSearchResults = () => (
+    <div style={{ position: 'absolute', top: 44, left: 0, right: 0, background: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: 'var(--border-radius-md)', padding: '6px 0', boxShadow: '0 8px 24px rgba(0,0,0,0.18)', zIndex: 300, maxHeight: 380, overflowY: 'auto' }}>
+      {totalMatches === 0 ? (
+        <div style={{ padding: '12px 16px', fontSize: 13, color: 'var(--color-muted-fg)' }}>
+          No exact matches found for "{searchQuery}"
+        </div>
+      ) : (
+        <>
+          {matchedLeads.length > 0 && (
+            <div>
+              <div style={{ padding: '4px 14px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-muted-fg)', background: 'var(--color-muted)' }}>
+                Clients & Leads ({matchedLeads.length})
+              </div>
+              {matchedLeads.map(l => (
+                <div
+                  key={l.id}
+                  onClick={() => { navigate('/app/leads'); setSearchQuery(''); setShowMobileSearch(false); }}
+                  style={{ padding: '8px 14px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border)' }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Users size={14} style={{ color: 'var(--color-primary)' }} />
+                    <span style={{ fontWeight: 600, fontSize: 13 }}>{l.name}</span>
+                    <span style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>{l.phone}</span>
+                  </div>
+                  <span className="badge" style={{ fontSize: 10, background: `var(--stage-${l.stage})`, color: '#fff', border: 'none' }}>
+                    {l.stage}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {matchedProps.length > 0 && (
+            <div>
+              <div style={{ padding: '4px 14px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-muted-fg)', background: 'var(--color-muted)' }}>
+                Properties ({matchedProps.length})
+              </div>
+              {matchedProps.map(p => (
+                <div
+                  key={p.id}
+                  onClick={() => { navigate(`/app/properties/${p.id}`); setSearchQuery(''); setShowMobileSearch(false); }}
+                  style={{ padding: '8px 14px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border)' }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Building2 size={14} style={{ color: '#f59e0b' }} />
+                    <span style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</span>
+                    <span style={{ fontSize: 11, color: 'var(--color-muted-fg)' }}>{p.locality}</span>
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-success)' }}>
+                    ₹{p.priceLakhs}L
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {matchedTasks.length > 0 && (
+            <div>
+              <div style={{ padding: '4px 14px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-muted-fg)', background: 'var(--color-muted)' }}>
+                Tasks ({matchedTasks.length})
+              </div>
+              {matchedTasks.map(t => (
+                <div
+                  key={t.id}
+                  onClick={() => { navigate('/app/tasks'); setSearchQuery(''); setShowMobileSearch(false); }}
+                  style={{ padding: '8px 14px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <CheckSquare size={14} style={{ color: '#10b981' }} />
+                    <span style={{ fontSize: 13 }}>{t.title}</span>
+                  </div>
+                  <span className="badge" style={{ fontSize: 10 }}>
+                    {t.priority}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+
   return (
     <header className="app-header glass-surface">
       <div className="header-container">
@@ -63,7 +158,7 @@ export function Header() {
 
           <div 
             className="header-logo" 
-            onClick={() => window.location.href = '/app/dashboard'}
+            onClick={() => navigate('/app/dashboard')}
             role="button"
             tabIndex={0}
           >
@@ -77,7 +172,7 @@ export function Header() {
 
         {/* Center: Desktop Search Bar */}
         <div className="header-search desktop-search">
-          <div className="search-input-wrapper" style={{ width: '100%' }}>
+          <div className="search-input-wrapper" style={{ width: '100%', position: 'relative' }}>
             <Search size={16} className="search-icon" />
             <input 
               type="text"
@@ -87,12 +182,7 @@ export function Header() {
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ width: '100%', height: 38, fontSize: 13 }}
             />
-            {searchQuery && (
-              <div style={{ position: 'absolute', top: 44, left: 0, right: 0, background: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: 'var(--border-radius-md)', padding: 12, boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 100 }}>
-                <div style={{ fontSize: 13, color: 'var(--color-muted-fg)', fontStyle: 'italic' }}>Live searching...</div>
-                <div style={{ marginTop: 8, fontSize: 14, fontWeight: 500 }}>No exact matches for "{searchQuery}"</div>
-              </div>
-            )}
+            {searchQuery && renderSearchResults()}
           </div>
         </div>
 
@@ -280,6 +370,7 @@ export function Header() {
             >
               <X size={15} />
             </button>
+            {searchQuery && renderSearchResults()}
           </div>
         </div>
       )}

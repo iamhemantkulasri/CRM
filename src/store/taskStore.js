@@ -14,7 +14,7 @@ const seedTasks = [
     title: 'Call Vikram Malhotra for Price Negotiation',
     description: 'Vikram requested ₹5L discount on 3 BHK at Prestige Lake View. Discuss builder flexibility.',
     leadId: 'lead_1',
-    assignedTo: 'emp_rohan',
+    assignedTo: 'emp_admin',
     dueDate: today.toISOString().split('T')[0],
     priority: 'high',
     status: 'pending',
@@ -26,7 +26,7 @@ const seedTasks = [
     title: 'Prepare Cost Sheet for Ananya Reddy',
     description: 'Include GST and stamp duty for Sarjapur Road 2 BHK.',
     leadId: 'lead_2',
-    assignedTo: 'emp_priya',
+    assignedTo: 'emp_admin',
     dueDate: today.toISOString().split('T')[0],
     priority: 'high',
     status: 'pending',
@@ -38,7 +38,7 @@ const seedTasks = [
     title: 'Site Visit Follow-up with Neha Sharma',
     description: 'Check if she liked the villa location and wants to view alternative corner plots.',
     leadId: 'lead_4',
-    assignedTo: 'emp_amit',
+    assignedTo: 'emp_admin',
     dueDate: tomorrow.toISOString().split('T')[0],
     priority: 'medium',
     status: 'pending',
@@ -50,7 +50,7 @@ const seedTasks = [
     title: 'Send Bank Loan Checklist to Suresh Pillai',
     description: 'Provide list of approved banks for Bellandur project booking loan process.',
     leadId: 'lead_5',
-    assignedTo: 'emp_rohan',
+    assignedTo: 'emp_admin',
     dueDate: today.toISOString().split('T')[0],
     priority: 'medium',
     status: 'completed',
@@ -65,7 +65,7 @@ export function normalizeCrmTask(raw) {
     title: raw.title || 'Untitled Task',
     description: raw.description || '',
     leadId: raw.lead_id || raw.leadId || null,
-    assignedTo: raw.assigned_to || raw.assignedTo || 'emp_rohan',
+    assignedTo: raw.assigned_to || raw.assignedTo || 'emp_admin',
     dueDate: raw.due_date || raw.dueDate || new Date().toISOString().split('T')[0],
     priority: raw.priority || 'medium',
     status: raw.status || 'pending',
@@ -73,7 +73,7 @@ export function normalizeCrmTask(raw) {
     createdAt: raw.created_at || raw.createdAt || new Date().toISOString(),
     updatedAt: raw.updated_at || raw.updatedAt || new Date().toISOString()
   };
-}
+};
 
 export const useTaskStore = create(
   persist(
@@ -140,7 +140,7 @@ export const useTaskStore = create(
             title: newTask.title,
             description: newTask.description || '',
             lead_id: newTask.leadId || null,
-            assigned_to: newTask.assignedTo || 'emp_rohan',
+            assigned_to: newTask.assignedTo || 'emp_admin',
             due_date: newTask.dueDate || null,
             priority: newTask.priority || 'medium',
             status: 'pending',

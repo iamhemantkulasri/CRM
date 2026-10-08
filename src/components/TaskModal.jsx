@@ -17,7 +17,7 @@ export function TaskModal({ isOpen, onClose, defaultLeadId = null }) {
   const [dueDate, setDueDate] = useState(new Date().toISOString().split('T')[0]);
   const [priority, setPriority] = useState('medium');
   const [type, setType] = useState('call');
-  const [assignedTo, setAssignedTo] = useState(currentUser?.id || 'emp_rohan');
+  const [assignedTo, setAssignedTo] = useState(currentUser?.id || 'emp_admin');
   const [leadId, setLeadId] = useState(defaultLeadId || '');
 
   const handleSubmit = (e) => {

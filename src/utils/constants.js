@@ -96,7 +96,7 @@ export const CITIES = [
   'Kolkata', 'Bhubaneswar',
 ];
 
-export const HELPLINE_NUMBER = '+91 80 6900 1234';
+export const HELPLINE_NUMBER = '+91 85868 28107';
 
 export const COMPANY_NAME = 'TGV Estates';
 

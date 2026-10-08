@@ -6,15 +6,16 @@ import {
 } from 'lucide-react';
 import { useBuilderStore } from '../store/builderStore';
 import { usePropertyStore } from '../store/propertyStore';
+import { toApprovalUpdate } from '../store/partnerAdmin.js';
 import { BuilderSellerModal } from '../components/BuilderSellerModal';
 import { formatINR } from '../utils/formatters';
 import { Link } from 'react-router-dom';
 
 export function BuildersSellers() {
   const { builders, fetchBuilders, deleteBuilder, isLoading } = useBuilderStore();
-  const { properties } = usePropertyStore();
+  const { properties, updateProperty } = usePropertyStore();
 
-  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'builder' | 'individual_seller' | 'investor'
+  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'builder' | 'individual_seller' | 'investor' | 'channel_partner' | 'approvals'
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
@@ -86,6 +87,37 @@ export function BuildersSellers() {
       (prop.builder && prop.builder.trim().toLowerCase() === selectedBuilderForInventory.name.trim().toLowerCase())
     );
   }, [selectedBuilderForInventory, properties]);
+
+  // ── Approvals inbox (folded in from the retired Partners page) ──
+  const pendingApprovals = useMemo(
+    () => (properties || []).filter(p => p.approval_status === 'pending'),
+    [properties]
+  );
+  const partnerNameById = useMemo(() => {
+    const m = {};
+    (builders || []).forEach(b => { m[b.id] = b.name; });
+    return m;
+  }, [builders]);
+  const [commissions, setCommissions] = useState({});
+  const [websiteFlags, setWebsiteFlags] = useState({});
+  const [reasons, setReasons] = useState({});
+  const [rejectError, setRejectError] = useState('');
+
+  const handleApprove = async (row) => {
+    await updateProperty(row.id, toApprovalUpdate({
+      commission_pct: commissions[row.id] ?? null,
+      show_on_website: websiteFlags[row.id] ?? false,
+    }));
+  };
+
+  const handleReject = async (row) => {
+    if (!String(reasons[row.id] ?? '').trim()) {
+      setRejectError('Rejection reason required');
+      return;
+    }
+    setRejectError('');
+    await updateProperty(row.id, toApprovalUpdate({ decision: 'rejected', reason: reasons[row.id] ?? '' }));
+  };
 
   return (
     <div className="page">
@@ -170,6 +202,8 @@ export function BuildersSellers() {
             { id: 'builder', label: '🏢 Builders' },
             { id: 'individual_seller', label: '👤 Individual Sellers' },
             { id: 'investor', label: '💼 Investors' },
+            { id: 'channel_partner', label: '🤝 Channel Partners' },
+            { id: 'approvals', label: `✅ Approvals (${pendingApprovals.length})` },
           ].map(tab => (
             <button
               key={tab.id}
@@ -212,7 +246,75 @@ export function BuildersSellers() {
       </div>
 
       {/* Content View */}
-      {filteredBuilders.length === 0 ? (
+      {activeTab === 'approvals' ? (
+        <div className="table-container">
+          {rejectError && (
+            <div style={{ padding: '8px 16px', color: '#ef4444', fontSize: 13 }}>{rejectError}</div>
+          )}
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Partner</th>
+                <th>Price (₹L)</th>
+                <th>City / Sector</th>
+                <th>Commission %</th>
+                <th>Website</th>
+                <th>Reject reason</th>
+                <th style={{ textAlign: 'right', paddingRight: 16 }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingApprovals.map((row) => (
+                <tr key={row.id}>
+                  <td style={{ fontWeight: 600 }}>{row.name || row.title}</td>
+                  <td style={{ fontSize: 12 }}>{(row.builder_id && partnerNameById[row.builder_id]) || row.builder || '—'}</td>
+                  <td>{row.priceLakhs ?? row.price_lakhs}</td>
+                  <td>{[row.city ?? row.location_city, row.locality ?? row.location_sector].filter(Boolean).join(' / ')}</td>
+                  <td>
+                    <input
+                      type="number"
+                      className="form-input"
+                      style={{ width: 80, height: 30 }}
+                      value={commissions[row.id] ?? ''}
+                      onChange={(e) => setCommissions((c) => ({ ...c, [row.id]: e.target.value }))}
+                      placeholder="%"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={websiteFlags[row.id] ?? false}
+                      onChange={(e) => setWebsiteFlags((f) => ({ ...f, [row.id]: e.target.checked }))}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      className="form-input"
+                      style={{ width: 160, height: 30 }}
+                      value={reasons[row.id] ?? ''}
+                      onChange={(e) => setReasons((r) => ({ ...r, [row.id]: e.target.value }))}
+                      placeholder="Rejection reason"
+                    />
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <div style={{ display: 'inline-flex', gap: 6 }}>
+                      <button className="btn btn-sm btn-primary" onClick={() => handleApprove(row)}>Approve</button>
+                      <button className="btn btn-sm btn-ghost" style={{ color: '#ef4444' }} onClick={() => handleReject(row)}>Reject</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {pendingApprovals.length === 0 && (
+            <div style={{ padding: 32, textAlign: 'center', color: 'var(--color-muted-fg)', fontSize: 13 }}>
+              No pending partner listings.
+            </div>
+          )}
+        </div>
+      ) : filteredBuilders.length === 0 ? (
         <div style={{ 
           padding: 48, 
           textAlign: 'center', 
@@ -274,8 +376,23 @@ export function BuildersSellers() {
                         background: item.type === 'builder' ? 'rgba(37,99,235,0.1)' : 'rgba(139,92,246,0.1)',
                         color: item.type === 'builder' ? 'var(--color-primary)' : '#8b5cf6'
                       }}>
-                        {item.type === 'builder' ? '🏢 Developer' : item.type === 'individual_seller' ? '👤 Seller' : '💼 Investor'}
+                        {item.type === 'builder' ? '🏢 Developer' : item.type === 'individual_seller' ? '👤 Seller' : item.type === 'channel_partner' ? '🤝 Channel Partner' : '💼 Investor'}
                       </span>
+                      {item.auth_user_id && (
+                        <span
+                          title="Portal login enabled"
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            padding: '2px 6px',
+                            borderRadius: 6,
+                            background: 'rgba(16,185,129,0.12)',
+                            color: '#059669'
+                          }}
+                        >
+                          🔑 login
+                        </span>
+                      )}
                     </div>
 
                     <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: 'var(--color-fg)' }}>
@@ -377,7 +494,7 @@ export function BuildersSellers() {
                 {/* Action Buttons */}
                 <div style={{ display: 'flex', gap: 8, marginTop: 'auto', paddingTop: 6 }}>
                   <a
-                    href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hello ${item.contact_person || item.name}, this is regarding properties and client bookings from PropDesk Realty.`)}`}
+                    href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hello ${item.contact_person || item.name}, this is regarding properties and client bookings from TGV Estates.`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="btn btn-outline"
@@ -418,7 +535,17 @@ export function BuildersSellers() {
                 return (
                   <tr key={item.id}>
                     <td>
-                      <div style={{ fontWeight: 600, fontSize: 14 }}>{item.name}</div>
+                      <div style={{ fontWeight: 600, fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span>{item.name}</span>
+                        {item.auth_user_id && (
+                          <span
+                            title="Portal login enabled"
+                            style={{ fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 6, background: 'rgba(16,185,129,0.12)', color: '#059669' }}
+                          >
+                            🔑 login
+                          </span>
+                        )}
+                      </div>
                       {item.contact_person && (
                         <div style={{ fontSize: 12, color: 'var(--color-muted-fg)' }}>POC: {item.contact_person}</div>
                       )}

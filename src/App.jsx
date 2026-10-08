@@ -20,6 +20,8 @@ import { useUiStore } from './store/uiStore';
 import { usePropertyStore } from './store/propertyStore';
 import { useLeadStore } from './store/leadStore';
 import { useBuilderStore } from './store/builderStore';
+import { useEmployeeStore } from './store/employeeStore';
+import { useTaskStore } from './store/taskStore';
 import { LayoutDashboard, Users, Building2, CalendarDays, PhoneCall, Handshake } from 'lucide-react';
 import { PwaUpdatePrompt } from './components/PwaUpdatePrompt';
 
@@ -53,17 +55,21 @@ const AppLayout = () => {
   const { fetchProperties } = usePropertyStore();
   const { fetchLeads, subscribeToLeads } = useLeadStore();
   const { fetchBuilders } = useBuilderStore();
+  const { fetchEmployees } = useEmployeeStore();
+  const { fetchTasks } = useTaskStore();
 
   // Load live Supabase data on mount & listen for incoming website leads in realtime
   useEffect(() => {
     fetchProperties();
     fetchLeads();
     fetchBuilders();
+    fetchEmployees();
+    fetchTasks();
     const unsubscribe = subscribeToLeads();
     return () => {
       if (typeof unsubscribe === 'function') unsubscribe();
     };
-  }, [fetchProperties, fetchLeads, fetchBuilders, subscribeToLeads]);
+  }, [fetchProperties, fetchLeads, fetchBuilders, fetchEmployees, fetchTasks, subscribeToLeads]);
 
   // Sync router path with UI store
   useEffect(() => {

@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { LayoutGrid, List, Search, Plus, Upload, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { LayoutGrid, List, Search, Plus, Upload, Download, ChevronDown, FileSpreadsheet, FileCode, AlertTriangle } from 'lucide-react';
 import { useUiStore } from '../store/uiStore';
 import { useLeadStore } from '../store/leadStore';
 import { useReminderStore } from '../store/reminderStore';
+import { useEmployeeStore } from '../store/employeeStore';
 import { KanbanBoard } from './KanbanBoard';
 import { TableView } from './TableView';
 import { LeadDrawer } from '../components/LeadDrawer';
 import { LeadModal } from '../components/LeadModal';
 import { LeadImportModal } from '../components/LeadImportModal';
 import { useAuthStore } from '../store/authStore';
+import { exportLeadsToCSV, exportLeadsToJSON } from '../utils/exportLeads';
 
 import { STAGES } from '../utils/constants';
 
@@ -16,6 +18,7 @@ export function Leads() {
   const { leadViewMode, setLeadViewMode, leadFilter, setLeadFilter } = useUiStore();
   const { getLeads, getLeadsByAgent, getUnassignedLeads, deleteLead } = useLeadStore();
   const { getOverdueLeads } = useReminderStore();
+  const { employees } = useEmployeeStore();
   const { currentUser } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [stageFilter, setStageFilter] = useState('all');
@@ -23,6 +26,22 @@ export function Leads() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [leadToEdit, setLeadToEdit] = useState(null);
+  const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
+  const exportMenuRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target)) {
+        setIsExportMenuOpen(false);
+      }
+    }
+    if (isExportMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isExportMenuOpen]);
 
   const allLeads = getLeads();
 
@@ -79,6 +98,18 @@ export function Leads() {
   const handleCloseLeadModal = () => {
     setIsAddModalOpen(false);
     setLeadToEdit(null);
+  };
+
+  const handleExportCSV = () => {
+    if (displayedLeads.length === 0) return;
+    exportLeadsToCSV(displayedLeads, employees);
+    setIsExportMenuOpen(false);
+  };
+
+  const handleExportJSON = () => {
+    if (displayedLeads.length === 0) return;
+    exportLeadsToJSON(displayedLeads, employees);
+    setIsExportMenuOpen(false);
   };
 
   const filterTabs = [
@@ -142,6 +173,59 @@ export function Leads() {
             >
               <Upload size={16} /> <span className="leads-btn-label">Import</span>
             </button>
+
+            {/* Export Leads Dropdown */}
+            <div className="leads-export-container" ref={exportMenuRef}>
+              <button
+                type="button"
+                className="btn btn-outline leads-export-btn"
+                onClick={() => setIsExportMenuOpen(prev => !prev)}
+                disabled={displayedLeads.length === 0}
+                title={displayedLeads.length === 0 ? "No leads matching criteria to export" : `Export ${displayedLeads.length} leads`}
+                aria-haspopup="true"
+                aria-expanded={isExportMenuOpen}
+              >
+                <Download size={16} />
+                <span className="leads-btn-label">Export ({displayedLeads.length})</span>
+                <ChevronDown size={13} className={`leads-export-chevron ${isExportMenuOpen ? 'open' : ''}`} />
+              </button>
+
+              {isExportMenuOpen && (
+                <div className="leads-export-menu" role="menu">
+                  <div className="leads-export-header">
+                    <span>Export {displayedLeads.length} {displayedLeads.length === 1 ? 'Lead' : 'Leads'}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="leads-export-menu-item"
+                    onClick={handleExportCSV}
+                    role="menuitem"
+                  >
+                    <div className="leads-export-item-icon csv">
+                      <FileSpreadsheet size={16} />
+                    </div>
+                    <div className="leads-export-menu-text">
+                      <span className="leads-export-menu-title">Export as CSV</span>
+                      <span className="leads-export-menu-desc">Excel & Google Sheets compatible</span>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className="leads-export-menu-item"
+                    onClick={handleExportJSON}
+                    role="menuitem"
+                  >
+                    <div className="leads-export-item-icon json">
+                      <FileCode size={16} />
+                    </div>
+                    <div className="leads-export-menu-text">
+                      <span className="leads-export-menu-title">Export as JSON</span>
+                      <span className="leads-export-menu-desc">Structured backup with full objects</span>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
             
             <button 
               className="btn btn-primary leads-add-btn"

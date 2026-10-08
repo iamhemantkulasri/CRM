@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { EmptyState } from '../components/EmptyState';
-import { CalendarDays, MapPin, User, LayoutList, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarDays, MapPin, User, LayoutList, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, CheckCircle, MessageSquare } from 'lucide-react';
 import { useVisitStore } from '../store/visitStore';
 import { usePropertyStore } from '../store/propertyStore';
 import { useLeadStore } from '../store/leadStore';
 import { useEmployeeStore } from '../store/employeeStore';
 import { CalendarMonthView } from '../components/CalendarMonthView';
+import { SiteVisitModal } from '../components/SiteVisitModal';
+import { VisitFeedbackModal } from '../components/VisitFeedbackModal';
 import { addMonths, subMonths, format } from 'date-fns';
 
 export function Calendar() {
@@ -16,6 +18,8 @@ export function Calendar() {
   
   const [viewMode, setViewMode] = useState('agenda'); // 'agenda' | 'month'
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [feedbackVisit, setFeedbackVisit] = useState(null);
 
   const sortedVisits = [...visits].sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate));
 
@@ -23,12 +27,15 @@ export function Calendar() {
   const handleNextMonth = () => setCurrentDate(addMonths(currentDate, 1));
   const handleToday = () => setCurrentDate(new Date());
 
+  const activeFeedbackLead = feedbackVisit ? getLead(feedbackVisit.leadId) : null;
+  const activeFeedbackProperty = feedbackVisit ? getProperty(feedbackVisit.propertyId) : null;
+
   return (
     <div className="page h-full" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="page-header" style={{ marginBottom: 16 }}>
         <div>
           <h1 className="page-title">Site Visits</h1>
-          <p className="page-subtitle">Schedule and track property tours</p>
+          <p className="page-subtitle">Schedule, track, and log feedback for property tours</p>
         </div>
         
         <div className="calendar-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
@@ -57,6 +64,10 @@ export function Calendar() {
               <CalendarIcon size={15} style={{ marginRight: 6 }} /> Month
             </button>
           </div>
+
+          <button className="btn btn-primary" onClick={() => setIsScheduleModalOpen(true)} style={{ gap: 6 }}>
+            <Plus size={16} /> Schedule Visit
+          </button>
         </div>
       </div>
       
@@ -66,7 +77,7 @@ export function Calendar() {
             <EmptyState 
               icon={CalendarDays}
               title="No Scheduled Visits"
-              description="When you schedule a site visit from a Lead's drawer, it will appear here."
+              description="Click '+ Schedule Visit' above or schedule a site visit from a Lead's profile."
             />
           </div>
         ) : (
@@ -76,6 +87,7 @@ export function Calendar() {
               const lead = getLead(visit.leadId);
               const agent = getEmployee(visit.agentId);
               const date = new Date(visit.scheduledDate);
+              const isCompleted = visit.status === 'completed';
               
               return (
                 <div key={visit.id} className="card" style={{ padding: 16, display: 'flex', gap: 16, alignItems: 'center' }}>
@@ -89,21 +101,54 @@ export function Calendar() {
                   </div>
                   
                   <div style={{ flex: 1 }}>
-                    <h3 className="text-h3" style={{ margin: '0 0 4px 0' }}>{lead?.name}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                      <h3 className="text-h3" style={{ margin: 0 }}>{lead?.name || 'Unknown Lead'}</h3>
+                      <span className="badge" style={{ 
+                        backgroundColor: isCompleted ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                        color: isCompleted ? 'var(--color-success)' : '#d97706',
+                        border: 'none',
+                        fontWeight: 700,
+                        fontSize: 11
+                      }}>
+                        {visit.status.toUpperCase()}
+                      </span>
+                    </div>
+
                     <div style={{ display: 'flex', gap: 12, color: 'var(--color-muted-fg)', fontSize: 13 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <MapPin size={14} /> {property?.name}
+                        <MapPin size={14} /> {property?.name || 'Property'}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <User size={14} /> {agent?.name}
+                        <User size={14} /> {agent?.name || 'Agent'}
                       </div>
                     </div>
+
+                    {visit.feedbackNotes && (
+                      <div style={{ fontSize: 12, color: 'var(--color-muted-fg)', marginTop: 6, fontStyle: 'italic', background: 'var(--color-muted)', padding: '4px 8px', borderRadius: 4, display: 'inline-block' }}>
+                        Feedback: "{visit.feedbackNotes}"
+                      </div>
+                    )}
                   </div>
                   
                   <div>
-                    <div className="badge" style={{ backgroundColor: visit.status === 'completed' ? 'var(--color-success)' : 'var(--color-warning)', color: '#000', border: 'none' }}>
-                      {visit.status}
-                    </div>
+                    {!isCompleted ? (
+                      <button
+                        className="btn btn-outline btn-sm"
+                        style={{ gap: 6, borderColor: 'var(--color-success)', color: 'var(--color-success)' }}
+                        onClick={() => setFeedbackVisit(visit)}
+                      >
+                        <CheckCircle size={14} /> Log Outcome
+                      </button>
+                    ) : (
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        style={{ gap: 4, color: 'var(--color-muted-fg)' }}
+                        onClick={() => setFeedbackVisit(visit)}
+                        title="Update visit feedback"
+                      >
+                        <MessageSquare size={13} /> Edit Note
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -112,6 +157,24 @@ export function Calendar() {
         )
       ) : (
         <CalendarMonthView currentDate={currentDate} visits={visits} getProperty={getProperty} />
+      )}
+
+      {/* Standalone Schedule Visit Modal */}
+      <SiteVisitModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        lead={null}
+      />
+
+      {/* Feedback & Disposition Modal */}
+      {feedbackVisit && (
+        <VisitFeedbackModal
+          isOpen={Boolean(feedbackVisit)}
+          onClose={() => setFeedbackVisit(null)}
+          visit={feedbackVisit}
+          lead={activeFeedbackLead}
+          property={activeFeedbackProperty}
+        />
       )}
     </div>
   );
